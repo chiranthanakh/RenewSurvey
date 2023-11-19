@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black80per"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.proteam.fieldServay.utilitys.AutoFitTextureView
+        android:id="@+id/textureview"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/rl_camera_view"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_camera_view"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:visibility="visible"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+
+        <ImageButton
+            android:id="@+id/switch_cam"
+            android:background="@null"
+            android:src="@drawable/change"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_width="@dimen/margin_40_dp"
+            android:layout_height="@dimen/margin_40_dp"
+            app:tint="@color/white" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_10dp"
+            android:orientation="vertical">
+
+
+            <ImageButton
+                android:id="@+id/getpicture"
+                android:background="@null"
+                android:layout_weight="1"
+                android:src="@drawable/capture_button"
+                android:layout_width="@dimen/dp_70"
+                android:layout_height="@dimen/dp_70"
+                android:text="getPicture" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_image_view"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/picked_image"
+            android:src="@drawable/ic_person"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <ImageButton
+            android:id="@+id/flip_image"
+            android:src="@drawable/reflect"
+            android:background="@null"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_10dp"
+            android:layout_width="@dimen/margin_40_dp"
+            android:layout_height="@dimen/margin_40_dp"
+            app:tint="@color/white" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:background="@null"
+                android:id="@+id/image_cancel"
+                android:layout_weight="1"
+                android:src="@drawable/cancel"
+                android:rotation="45"
+                android:layout_marginEnd="@dimen/dp_30"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"/>
+            <ImageButton
+                android:background="@null"
+                android:id="@+id/image_ok"
+                android:src="@drawable/tick"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/dp_30"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

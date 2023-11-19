@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Renew</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Project">Project<font color='#EA0C27'>*</font></string>
+    <string name="name">Name of the Employee<font color='#EA0C27'>*</font></string>
+    <string name="dob">Date of Birth (DD-MM-YYYY)<font color='#EA0C27'>*</font></string>
+    <string name="gender">Gender<font color='#EA0C27'>*</font></string>
+    <string name="phone">Worker Phone Number<font color='#EA0C27'>*</font></string>
+    <string name="emergency_contact">Emergency Contact Number<font color='#EA0C27'>*</font></string>
+    <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
+    <string name="address">Address<font color='#EA0C27'>*</font></string>
+    <string name="state">State<font color='#EA0C27'>*</font></string>
+    <string name="locatioon">District<font color='#EA0C27'>*</font></string>
+    <string name="skill_type">Skill Type<font color='#EA0C27'>*</font></string>
+    <string name="skill_set">Skill Set<font color='#EA0C27'>*</font></string>
+    <string name="doj">DOJ<font color='#EA0C27'>*</font></string>
+    <string name="supervisor">Supervisor Name(Renew)<font color='#EA0C27'>*</font></string>
+    <string name="contractor">Sub Contractor/ Firm Name<font color='#EA0C27'>*</font></string>
+    <string name="contractor_num">Contractor Contact Number<font color='#EA0C27'>*</font></string>
+    <string name="status">Status<font color='#EA0C27'>*</font></string>
+
+    <string name="driving">Driving licence no<font color='#EA0C27'>*</font></string>
+    <string name="induction_state">Induction Status<font color='#EA0C27'>*</font></string>
+    <string name="aadhar">Aadhaar Card<font color='#EA0C27'>*</font></string>
+    <string name="medical_states">Medical test status<font color='#EA0C27'>*</font></string>
+    <string name="report">Medical Report is Ok<font color='#EA0C27'>*</font></string>
+
+    <string name="induction_date">Induction date<font color='#EA0C27'>*</font></string>
+    <string name="medical_date">Date Of Medical Test<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_image">Upload Aadhaar Card<font color='#EA0C27'>*</font></string>
+    <string name="medical_certificate">Medical Certificate <font color='#EA0C27'>*</font></string>
+    <string name="medical_cert">Upload Medical Certificate<font color='#EA0C27'>*</font></string>
+    <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
+    <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
+
+
+
+
+
+
+
+</resources>

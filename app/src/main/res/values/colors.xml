@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="demo_state_foreground_color">#0d6e42</color>
+    <color name="demo_state_second">#7ab629</color>
+    <color name="demo_state_third">#33a873</color>
+    <color name="demo_state_fourth">#48966c</color>
+
+    <color name="black80per">#cd000000</color>
+
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <color name="startaction">#009900</color>
+    <color name="endaction">#ede8e8</color>
+    <color name="startactionnew">#933b4d</color>
+    <color name="endactionnew">#3267a1</color>
+    <color name="gray">#e2e2e2</color>
+    <color name="lineColor">#bcc8e2</color>
+    <color name="iconColor">#b4c2df</color>
+    <color name="gradient_startColor">#467f03</color>
+    <color name="gradient_endColor">#60a411</color>
+    <color name="bgGray">#d1dbde</color>
+    <color name="green">#009900</color>
+    <color name="dark_grey">#231F20</color>
+    <color name="postman">#EF5B25</color>
+    <color name="text_color">#86920a</color>
+    <color name="lightGray">#f4f0f0</color>
+
+    <color name="reportsub">#fb8c00</color>
+    <color name="grey">#d3d3d3</color>
+    <color name="yellowish">#f0b041</color>
+    <color name="orange">#FFBF00</color>
+    <color name="darkGray">#B3B3B3</color>
+    <color name="green2">#78d57d</color>
+    <color name="lime">#9E9D24</color>
+    <color name="lime1">#CDDC39</color>
+    <color name="lime2">#DCE775</color>
+
+    <color name="tela">#3E2723</color>
+    <color name="tela1">#795548</color>
+    <color name="tela2">#BCAAA4</color>
+    <color name="red">#EA0C27</color>
+    <color name="birdsbg1">#EC877E</color>
+    <color name="birdsbg2">#BA655E</color>
+    <color name="birdsbg">#CB5E55</color>
+
+
+    <color name="plus_91">#f09797</color>
+    <color name="inactive_blue">#9fabe0</color>
+    <color name="grey_my">#808080</color>
+    <color name="grey_dark">#696969</color>
+    <color name="grey_light">#D3D3D3</color>
+    <color name="grey_icon_color">#afafaf</color>
+    <color name="grey_very_light">#e0e0e0</color>
+    <color name="grey_super_light">#f0f0f0</color>
+    <color name="grey_silver">#C0C0C0</color>
+    <color name="background_color">#f4f5fa</color>
+    <color name="blue_light">#88c3f5</color>
+    <color name="splash_color">#2151fb</color>
+    <color name="card_bottom_light_blue">#e3f3ff</color>
+    <color name="indigo">#4B0082</color>
+    <color name="pink">#df58ff</color>
+    <color name="blue_back">#00ada8</color>
+    <color name="dark_blue_back">#00294e</color>
+    <color name="image_cirle_back">#f4f4f4</color>
+    <color name="dark_text">#b3000000</color>
+    <color name="text_4b">#b3000000</color>
+    <color name="red_my">#ee4d4b</color>
+    <color name="red_clear">#ee4d4b</color>
+    <color name="greenish_blue">#10c2bf</color>
+    <color name="background_blue">#566bc6</color>
+    <color name="background_dashboard">#f1f5ff</color>
+    <color name="green_my">#00bd67</color>
+    <color name="skin">#fff9e5</color>
+    <color name="skin_light">#f7f4f4</color>
+    <color name="waiting_color">#6285a0</color>
+    <color name="toolbar_back">#fafafa</color>
+    <color name="search_back">#f2f2f2</color>
+    <color name="multi_switch_back">#e2e8f7</color>
+    <color name="hint_color">#9f9f9f</color>
+    <color name="header_color">#efefef</color>
+    <color name="cofetti_color_purple">#b0affd</color>
+    <color name="cofetti_color_yellow">#f9d04e</color>
+    <color name="waiting_time">#c125fc</color>
+    <color name="waiting_grey">#717171</color>
+    <color name="color_tabcolor">#0d7cee</color>
+    <color name="splash_color_dark">#1f2045</color>
+    <color name="ready_yellow">#f5ff00</color>
+    <color name="pager_color_1">#FF8A65</color>
+    <color name="pager_color_2">#FFC107</color>
+    <color name="pager_color_3">#4CAF50</color>
+
+    <color name="textSecondary">#515151</color>
+    <color name="grey_medium">#a0a0a0</color>
+</resources>

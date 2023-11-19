@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_bottom_home"
+        android:title="" />
+
+    <item
+        android:id="@+id/it_scan"
+        android:icon="@drawable/ic_bottom_scan"
+        android:title="" />
+
+    <item
+        android:id="@+id/it_approve"
+        android:icon="@drawable/ic_bottom_approve"
+        android:title="" />
+
+    <item
+        android:id="@+id/it_worker"
+        android:icon="@drawable/ic_bottom_worker"
+        android:title="" />
+
+</menu>

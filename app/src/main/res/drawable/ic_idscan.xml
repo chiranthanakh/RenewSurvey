@@ -1,0 +1,30 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="vector"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <group android:name="group">
+        <path
+            android:name="path"
+            android:pathData="M 0 60 L 0 120 L 30 120 L 30 30 L 120 30 L 120 0 L 0 0 L 0 60 Z M 392 15 L 392 30 L 482 30 L 482 120 L 512 120 L 512 0 L 392 0 L 392 15 Z"
+            android:fillColor="#000"
+            android:strokeWidth="1"/>
+        <path
+            android:name="path_1"
+            android:pathData="M 61 135 L 61 210 L 211 210 L 211 120 L 241 120 L 241 180 L 271 180 L 271 120 L 241 120 L 241 90 L 271 90 L 271 60 L 241 60 L 241 90 L 211 90 L 211 60 L 61 60 L 61 135 Z M 181 135 L 181 180 L 91 180 L 91 90 L 181 90 L 181 135 Z"
+            android:fillColor="#000"
+            android:strokeWidth="1"/>
+        <path
+            android:name="path_2"
+            android:pathData="M 121 135 L 121 150 L 151 150 L 151 120 L 121 120 L 121 135 Z M 301 135 L 301 210 L 361 210 L 361 240 L 271 240 L 271 210 L 241 210 L 241 270 L 211 270 L 211 240 L 61 240 L 61 270 L 121 270 L 121 300 L 91 300 L 91 330 L 61 330 L 61 390 L 91 390 L 91 420 L 61 420 L 61 450 L 91 450 L 91 420 L 121 420 L 121 450 L 271 450 L 271 420 L 241 420 L 241 390 L 211 390 L 211 420 L 151 420 L 151 390 L 181 390 L 181 360 L 211 360 L 211 300 L 241 300 L 241 270 L 361 270 L 361 300 L 271 300 L 271 330 L 241 330 L 241 360 L 271 360 L 271 390 L 301 390 L 301 450 L 451 450 L 451 300 L 391 300 L 391 270 L 451 270 L 451 240 L 391 240 L 391 210 L 451 210 L 451 60 L 301 60 L 301 135 Z M 421 135 L 421 180 L 331 180 L 331 90 L 421 90 L 421 135 Z M 391 255 L 391 270 L 361 270 L 361 240 L 391 240 L 391 255 Z M 211 285 L 211 300 L 181 300 L 181 360 L 151 360 L 151 270 L 211 270 L 211 285 Z M 121 360 L 121 390 L 91 390 L 91 330 L 121 330 L 121 360 Z M 301 345 L 301 360 L 271 360 L 271 330 L 301 330 L 301 345 Z M 421 375 L 421 420 L 331 420 L 331 330 L 421 330 L 421 375 Z"
+            android:fillColor="#000"
+            android:strokeWidth="1"/>
+        <path
+            android:name="path_3"
+            android:pathData="M 361 135 L 361 150 L 391 150 L 391 120 L 361 120 L 361 135 Z M 361 375 L 361 390 L 391 390 L 391 360 L 361 360 L 361 375 Z M 0 452 L 0 512 L 120 512 L 120 482 L 30 482 L 30 392 L 0 392 L 0 452 Z M 482 437 L 482 482 L 392 482 L 392 512 L 512 512 L 512 392 L 482 392 L 482 437 Z"
+            android:fillColor="#000"
+            android:strokeWidth="1"/>
+    </group>
+</vector>
