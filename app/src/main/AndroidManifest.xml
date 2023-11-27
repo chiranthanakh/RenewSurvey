@@ -5,6 +5,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -25,6 +26,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Renew"
         tools:targetApi="31">
+        <activity
+            android:name=".views.UserRoleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.ProjectActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.LanguageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.SignUpDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.SignUpActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
