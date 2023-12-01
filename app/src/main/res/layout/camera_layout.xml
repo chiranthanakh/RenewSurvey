@@ -6,12 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <com.proteam.fieldServay.utilitys.AutoFitTextureView
+   <!-- <com.proteam.fieldServay.utilitys.AutoFitTextureView
         android:id="@+id/textureview"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/rl_camera_view"/>
+        app:layout_constraintBottom_toTopOf="@id/rl_camera_view"/>-->
 
 
     <RelativeLayout

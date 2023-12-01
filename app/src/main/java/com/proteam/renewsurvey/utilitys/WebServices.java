@@ -1,4 +1,4 @@
-package com.example.renewsurvey.utilitys;
+package com.proteam.renewsurvey.utilitys;
 
 
 import android.app.Activity;
@@ -6,7 +6,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.widget.Adapter;
 
-import com.example.renewsurvey.Request.Loginmodel;
+import com.proteam.renewsurvey.Request.Loginmodel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;

@@ -1,7 +1,8 @@
-package com.example.renewsurvey
+package com.proteam.renewsurvey
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.renewsurvey.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,9 +1,9 @@
-package com.example.renewsurvey.Responsce;
+package com.proteam.renewsurvey.Responsce;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse {
+public class LoginResponseJava {
 
     @SerializedName("status")
     @Expose

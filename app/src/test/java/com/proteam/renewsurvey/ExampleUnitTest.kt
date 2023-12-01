@@ -1,4 +1,4 @@
-package com.example.renewsurvey
+package com.proteam.renewsurvey
 
 import org.junit.Test
 
