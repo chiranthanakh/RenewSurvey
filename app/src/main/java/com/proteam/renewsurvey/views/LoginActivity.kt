@@ -1,24 +1,34 @@
-package com.proteam.renewsurvey.views
+package com.proteam.fieldServay.views
 
+import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
-import com.example.renewsurvey.databinding.ActivityLoginBinding
-import com.proteam.renewsurvey.MainActivity
-import com.proteam.renewsurvey.utilitys.ApiInterface
-import com.proteam.renewsurvey.utilitys.OnResponseListener
-import com.proteam.renewsurvey.utilitys.WebServices
-import kotlinx.coroutines.launch
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import com.example.renewsurvey.MainActivity
+import com.example.renewsurvey.R
+import com.example.renewsurvey.utilitys.OnResponseListener
+import com.example.renewsurvey.utilitys.WebServices
+import com.example.renewsurvey.views.LanguageActivity
+import com.example.renewsurvey.views.SignUpActivity
 
-class LoginActivity : BaseActivity(), OnResponseListener<Any?> {
-    lateinit var binding: ActivityLoginBinding
+class LoginActivity : AppCompatActivity(), View.OnClickListener, OnResponseListener<Any?> {
+    var btn_continue: AppCompatButton? = null
+    var progressDialog: ProgressDialog? = null
+    var edt_email: EditText? = null
+    var edt_pass: EditText? = null
+    var tv_signup: TextView? = null
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding=ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_login)
 
         val sharedPreferences2: SharedPreferences =getSharedPreferences("myPref", Context.MODE_PRIVATE)!!
         val  rollid = sharedPreferences2.getString("rollid", "")!!
@@ -28,38 +38,29 @@ class LoginActivity : BaseActivity(), OnResponseListener<Any?> {
             startActivity(intent)
             finish()
         }
-        binding.btnContinue.setOnClickListener {
-            if (binding.etUserName.text.toString() != "") {
-                if (binding.etPassword.text.toString() != "") {
-                    callLoginapi()
-                } else {
-                    Toast.makeText(this@LoginActivity, "Enter your password", Toast.LENGTH_LONG)
-                        .show()
-                }
-            } else {
-                Toast.makeText(this@LoginActivity, "Enter your email-id", Toast.LENGTH_LONG)
-                    .show()
-            }
-        }
+        btn_continue = findViewById(R.id.btn_continue)
+        edt_pass = findViewById(R.id.et_password)
+        edt_email = findViewById(R.id.et_user_name)
+        tv_signup = findViewById(R.id.tv_signup)
+        btn_continue?.setOnClickListener(this)
+        tv_signup?.setOnClickListener(this)
+
     }
 
     private fun callLoginapi() {
-        lifecycleScope.launch {
-            val response=ApiInterface.retrofitService.getAllMovies()
-            if (response.isSuccessful){
-                if (response.body()?.success=="1"){
-                    if (response.body()?.data!=null){
-                        response.body()?.data?.accessToken?.let {
-                            preferenceManager.saveToken(it)
-                        }
-                        response.body()?.data?.userId?.let {
-                            preferenceManager.saveUserId(it)
-                        }
-                    }
-                }
+        progressDialog = ProgressDialog(this@LoginActivity)
+        if (progressDialog != null) {
+            if (!progressDialog!!.isShowing) {
+                progressDialog?.setCancelable(false)
+                progressDialog?.setMessage("Please wait...")
+                progressDialog?.show()
+                /*val loginmodel = Loginmodel(edt_email?.text.toString().trim { it <= ' ' },
+                    edt_pass?.text.toString().trim { it <= ' ' })
+                val webServices = WebServices<Any>(this@LoginActivity)
+                webServices.login(WebServices.ApiType.login, loginmodel)*/
+            } else {
             }
         }
-
     }
 
     override fun onResponse(
@@ -101,4 +102,26 @@ class LoginActivity : BaseActivity(), OnResponseListener<Any?> {
         }
     }
 
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.btn_continue ->
+                if (edt_email!!.text.toString() != "") {
+                    if (edt_pass!!.text.toString() != "") {
+                        val intent = Intent(this@LoginActivity, LanguageActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this@LoginActivity, "Enter your password", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                } else {
+                    Toast.makeText(this@LoginActivity, "Enter your email-id", Toast.LENGTH_LONG)
+                        .show()
+                }
+            R.id.tv_signup -> {
+                val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
+                startActivity(intent)
+            }
+
+        }
+    }
 }

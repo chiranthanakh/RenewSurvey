@@ -26,12 +26,7 @@
         android:theme="@style/Theme.Renew"
         tools:targetApi="31">
         <activity
-            android:name="com.proteam.renewsurvey.MainActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name="com.proteam.renewsurvey.views.LoginActivity"
-            android:exported="false"/>
-        <activity android:name="com.proteam.renewsurvey.views.SplashActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
