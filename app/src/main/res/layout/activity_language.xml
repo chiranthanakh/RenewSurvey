@@ -117,6 +117,7 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/ll_english"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -182,11 +183,10 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/ll_hindi"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
-
-
 
                     <ImageView
                         android:layout_width="60dp"
@@ -251,6 +251,7 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/ll_marathi"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">

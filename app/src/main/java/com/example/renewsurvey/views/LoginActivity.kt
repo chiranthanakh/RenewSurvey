@@ -16,6 +16,8 @@ import com.example.renewsurvey.MainActivity
 import com.example.renewsurvey.R
 import com.example.renewsurvey.utilitys.OnResponseListener
 import com.example.renewsurvey.utilitys.WebServices
+import com.example.renewsurvey.views.LanguageActivity
+import com.example.renewsurvey.views.SignUpActivity
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener, OnResponseListener<Any?> {
     var btn_continue: AppCompatButton? = null
@@ -41,6 +43,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, OnResponseListe
         edt_email = findViewById(R.id.et_user_name)
         tv_signup = findViewById(R.id.tv_signup)
         btn_continue?.setOnClickListener(this)
+        tv_signup?.setOnClickListener(this)
+
     }
 
     private fun callLoginapi() {
@@ -103,7 +107,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, OnResponseListe
             R.id.btn_continue ->
                 if (edt_email!!.text.toString() != "") {
                     if (edt_pass!!.text.toString() != "") {
-                        callLoginapi()
+                        val intent = Intent(this@LoginActivity, LanguageActivity::class.java)
+                        startActivity(intent)
                     } else {
                         Toast.makeText(this@LoginActivity, "Enter your password", Toast.LENGTH_LONG)
                             .show()
@@ -112,6 +117,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, OnResponseListe
                     Toast.makeText(this@LoginActivity, "Enter your email-id", Toast.LENGTH_LONG)
                         .show()
                 }
+            R.id.tv_signup -> {
+                val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
+                startActivity(intent)
+            }
+
         }
     }
 }
