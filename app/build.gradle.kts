@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.renewsurvey"
+    namespace = "com.renew.survey"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.renewsurvey"
+        applicationId = "com.renew.survey"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -58,5 +58,6 @@ dependencies {
     val lifecycle_ver = "2.6.2"
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_ver")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ver")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
 }

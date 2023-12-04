@@ -8,7 +8,6 @@
     <color name="demo_state_third">#33a873</color>
     <color name="demo_state_fourth">#48966c</color>
 
-    <color name="black80per">#cd000000</color>
 
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
@@ -46,6 +45,14 @@
     <color name="birdsbg1">#EC877E</color>
     <color name="birdsbg2">#BA655E</color>
     <color name="birdsbg">#CB5E55</color>
+
+    <color name="black10per">#e5e5e5</color>
+    <color name="black20per">#cccccc</color>
+    <color name="black30per">#b2b2b2</color>
+    <color name="black40per">#999999</color>
+    <color name="black50per">#7f7f7f</color>
+    <color name="black70per">#4c4c4c</color>
+    <color name="black80per">#323232</color>
 
 
     <color name="plus_91">#f09797</color>
