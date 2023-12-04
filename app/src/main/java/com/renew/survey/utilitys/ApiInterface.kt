@@ -20,6 +20,33 @@ interface ApiInterface {
         @Field("password")password:String,
         @Field("app_key")appKey:String,
     ) : Response<JsonElement>
+
+    @FormUrlEncoded
+    @POST("Auth/register")
+    suspend fun register(
+        @Field("tbl_projects_id")tbl_projects_id:String,
+        @Field("project_code")project_code:String,
+        @Field("aadhar_card")aadhar_card:String,
+        @Field("mobile")mobile:String,
+        @Field("password")password:String,
+        @Field("full_name")full_name:String,
+        @Field("username")username:String,
+        @Field("address")address:String,
+        @Field("mst_state_id")mst_state_id:String,
+        @Field("mst_village_id")mst_village_id:String,
+        @Field("mst_district_id")mst_district_id:String,
+        @Field("mst_tehsil_id")mst_tehsil_id:String,
+        @Field("mst_panchayat_id")mst_panchayat_id:String,
+        @Field("pincode")pincode:String,
+        @Field("email")email:String,
+        @Field("app_key")app_key:String,
+        @Field("device_type")device_type:String,
+        @Field("device_id")device_id:String,
+        @Field("fcm_token")fcm_token:String,
+        @Field("gender")gender:String,
+        @Field("date_of_birth")date_of_birth:String,
+    ) : Response<JsonElement>
+
     @GET("Common/get_languages")
     suspend fun getLanguage(@Header("Authorization")headers: String) : Response<JsonElement>
 

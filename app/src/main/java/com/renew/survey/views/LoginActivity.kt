@@ -8,12 +8,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.renew.example.LoginResponse
+import com.renew.survey.response.LoginResponse
 import com.renew.survey.databinding.ActivityLoginBinding
 import com.renew.survey.databinding.DialogRegisterAsUserTeamBinding
 import com.renew.survey.utilitys.ApiInterface
-import com.renew.survey.utilitys.OnResponseListener
-import com.renew.survey.utilitys.WebServices
 import com.squareup.picasso.BuildConfig
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -69,7 +67,7 @@ class LoginActivity : BaseActivity() {
                 if (response.isSuccessful){
                     val jsonObject=JSONObject(response.body().toString())
                     if (jsonObject.getString("success")=="1"){
-                        val data=gson.fromJson(jsonObject.toString(),LoginResponse::class.java)
+                        val data=gson.fromJson(jsonObject.toString(), LoginResponse::class.java)
                         if (data!=null){
                             data.data?.accessToken?.let {
                                 preferenceManager.saveToken(it)

@@ -185,7 +185,7 @@
                     app:startIconTint="@color/grey_dark">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/project"
+                        android:id="@+id/edt_aadhaar_card"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@null"
