@@ -168,7 +168,7 @@
             android:background="@color/demo_state_second" />
 
         <LinearLayout
-            android:id="@+id/ll_id_scan"
+            android:id="@+id/ll_distrubutor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -251,6 +251,7 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/ll_monitoring"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
