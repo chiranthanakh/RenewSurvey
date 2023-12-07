@@ -28,6 +28,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".views.SyncDataActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.ApprovalPendingActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.FormsDetailsActivity"
             android:exported="false" />
         <activity
@@ -52,6 +58,12 @@
             android:name=".views.SignUpActivity"
             android:exported="true" />
         <activity
+            android:name=".views.ProjectActivity"
+            android:exported="true" />
+        <activity
+            android:name=".views.UserRoleActivity"
+            android:exported="true" />
+        <activity
             android:name=".views.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
@@ -64,6 +76,21 @@
         <activity
             android:name=".views.LoginActivity"
             android:exported="false" />
+
+        <service
+            android:name=".utilities.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/header_logo" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/demo_state_foreground_color" />
     </application>
 
 </manifest>

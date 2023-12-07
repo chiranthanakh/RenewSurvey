@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "724105982877",
+    "project_id": "carbon-business-app",
+    "storage_bucket": "carbon-business-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724105982877:android:cb9eaa86c02b1869a2f574",
+        "android_client_info": {
+          "package_name": "com.renew.survey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxN57pejmWROgaLw0dTEtJkPu_7kRUUjk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

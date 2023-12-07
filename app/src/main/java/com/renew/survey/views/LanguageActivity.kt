@@ -1,5 +1,6 @@
 package com.renew.survey.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -9,11 +10,11 @@ import com.google.gson.reflect.TypeToken
 import com.renew.survey.response.Language
 import com.renew.survey.adapter.LanguageAdapter
 import com.renew.survey.databinding.ActivityLanguageBinding
-import com.renew.survey.utilitys.ApiInterface
+import com.renew.survey.utilities.ApiInterface
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class LanguageActivity : BaseActivity() {
+class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
     lateinit var binding: ActivityLanguageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +36,19 @@ class LanguageActivity : BaseActivity() {
                     if (jsonObject.getString("success")=="1"){
                         val itemType = object : TypeToken<List<Language>>() {}.type
                         val itemList = gson.fromJson<List<Language>>(jsonObject.getJSONArray("data").toString(), itemType)
-                        binding.recyclerView.adapter=LanguageAdapter(this@LanguageActivity,itemList)
+                        binding.recyclerView.adapter=LanguageAdapter(this@LanguageActivity,itemList,this@LanguageActivity)
                     }else{
                         Toast.makeText(this@LanguageActivity,jsonObject.getString("message"), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
+    }
+
+    override fun onLanguageSelected(language: Language) {
+        preferenceManager.saveLanguage(language.mst_language_id!!)
+        Intent(this,ProjectActivity::class.java).apply {
+            startActivity(this)
         }
     }
 }

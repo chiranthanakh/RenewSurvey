@@ -18,8 +18,8 @@ class SplashActivity:BaseActivity() {
         setContentView(binding.root)
         lifecycleScope.launch {
             delay(2000)
-            if (preferenceManager.getToken()==null){
-                Intent(this@SplashActivity, LanguageActivity::class.java).apply {
+            if (preferenceManager.getToken()!=""){
+                Intent(this@SplashActivity, DashboardActivity::class.java).apply {
                     startActivity(this)
                 }
             }else{

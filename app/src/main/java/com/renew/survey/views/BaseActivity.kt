@@ -8,7 +8,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.renew.survey.utilitys.PreferenceManager
+import com.renew.survey.utilities.PreferenceManager
 
 open class BaseActivity: AppCompatActivity() {
     lateinit var preferenceManager:PreferenceManager

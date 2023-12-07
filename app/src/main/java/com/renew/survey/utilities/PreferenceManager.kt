@@ -1,4 +1,4 @@
-package com.renew.survey.utilitys
+package com.renew.survey.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -25,6 +25,25 @@ class PreferenceManager constructor(context: Context){
 
     fun getToken(): String?{
         return  sharedPreferences.getString("token","")
+    }
+    fun saveFCMToken(string: String){
+        val editor = sharedPreferences.edit()
+        editor.putString("FCMToken",string)
+        editor.apply()
+    }
+
+    fun getFCMToken(): String?{
+        return  sharedPreferences.getString("FCMToken","")
+    }
+
+    fun saveLanguage(string: String){
+        val editor = sharedPreferences.edit()
+        editor.putString("language",string)
+        editor.apply()
+    }
+
+    fun getLanguage(): String?{
+        return  sharedPreferences.getString("language","")
     }
 
 

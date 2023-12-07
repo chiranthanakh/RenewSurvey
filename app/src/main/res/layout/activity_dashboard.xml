@@ -322,6 +322,12 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <Button
+                android:id="@+id/btn_sync"
+                android:text="Sync Data"
+                android:layout_marginTop="@dimen/margin_30_dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
 
         </LinearLayout>

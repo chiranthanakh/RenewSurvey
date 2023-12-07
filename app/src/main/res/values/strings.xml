@@ -34,10 +34,19 @@
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
     <string-array name="state">
-        <item>Karnataka</item>
-        <item>Maharastra</item>
-        <item>GOA</item>
-        <item>Tamil Nadu</item>
+        <item>Select State</item>
+    </string-array>
+    <string-array name="district">
+        <item>Select State</item>
+    </string-array>
+    <string-array name="tehsil">
+        <item>Select State</item>
+    </string-array>
+    <string-array name="panchayath">
+        <item>Select State</item>
+    </string-array>
+    <string-array name="village">
+        <item>Select State</item>
     </string-array>
 
 

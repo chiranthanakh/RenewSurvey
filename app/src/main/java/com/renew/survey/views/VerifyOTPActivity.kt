@@ -1,15 +1,14 @@
 package com.renew.survey.views
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
-import androidx.core.widget.addTextChangedListener
-import com.renew.survey.R
 import com.renew.survey.databinding.ActivityVerifyOtpactivityBinding
+import com.renew.survey.utilities.UtilMethods
+import com.squareup.picasso.BuildConfig
 
 class VerifyOTPActivity : BaseActivity() {
     lateinit var binding: ActivityVerifyOtpactivityBinding
@@ -18,10 +17,24 @@ class VerifyOTPActivity : BaseActivity() {
         binding= ActivityVerifyOtpactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setOTPPins()
+        if (BuildConfig.DEBUG){
+            binding.edtAllOtp.setText(intent.getStringExtra("otp"))
+        }
         binding.btnVerify.setOnClickListener {
-            Intent(this,SignUpDetailsActivity::class.java).apply {
-                startActivity(this)
+            if (intent.getStringExtra("otp").equals(binding.edtAllOtp.text.toString())){
+                Intent(this,SignUpDetailsActivity::class.java).apply {
+                    putExtra("mobile",intent.getStringExtra("mobile"))
+                    putExtra("aadhar",intent.getStringExtra("aadhar"))
+                    putExtra("project",intent.getStringExtra("project"))
+                    putExtra("project_id",intent.getStringExtra("project_id"))
+                    putExtra("coordinator_id",intent.getStringExtra("coordinator_id"))
+                    putExtra("user_type",intent.getStringExtra("user_type"))
+                    startActivity(this)
+                }
+            }else{
+                UtilMethods.showToast(this,"Please enter correct OTP")
             }
+
         }
     }
 
@@ -46,7 +59,7 @@ class VerifyOTPActivity : BaseActivity() {
             showSoftKeyboard(binding.edtAllOtp)
             binding.edtAllOtp.setSelection(binding.edtAllOtp.getText().toString().length)
         })
-        binding.edtOtpFive.setOnClickListener(View.OnClickListener {
+       /* binding.edtOtpFive.setOnClickListener(View.OnClickListener {
             binding.edtAllOtp.requestFocus()
             showSoftKeyboard(binding.edtAllOtp)
             binding.edtAllOtp.setSelection(binding.edtAllOtp.getText().toString().length)
@@ -55,7 +68,7 @@ class VerifyOTPActivity : BaseActivity() {
             binding.edtAllOtp.requestFocus()
             showSoftKeyboard(binding.edtAllOtp)
             binding.edtAllOtp.setSelection(binding.edtAllOtp.getText().toString().length)
-        })
+        })*/
         binding.edtAllOtp.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -65,24 +78,24 @@ class VerifyOTPActivity : BaseActivity() {
                     binding.edtOtpTwo.text = ""
                     binding.edtOtpThree.text = ""
                     binding.edtOtpFour.text = ""
-                    binding.edtOtpFive.text = ""
-                    binding.edtOtpSix.text = ""
+                   /* binding.edtOtpFive.text = ""
+                    binding.edtOtpSix.text = ""*/
                 }
                 if (s.length == 1) {
                     binding.edtOtpOne.text = s.toString()[0].toString()
                     binding.edtOtpTwo.text = ""
                     binding.edtOtpThree.text = ""
                     binding.edtOtpFour.text = ""
-                    binding.edtOtpFive.text = ""
-                    binding.edtOtpSix.setText("")
+                   /* binding.edtOtpFive.text = ""
+                    binding.edtOtpSix.setText("")*/
                 }
                 if (s.length == 2) {
                     binding.edtOtpOne.text = s.toString()[0].toString()
                     binding.edtOtpTwo.text = s.toString()[1].toString()
                     binding.edtOtpThree.text = ""
                     binding.edtOtpFour.text = ""
-                    binding.edtOtpFive.text = ""
-                    binding.edtOtpSix.text = ""
+                   /* binding.edtOtpFive.text = ""
+                    binding.edtOtpSix.text = ""*/
                 }
                 if (s.length == 3) {
                     binding.edtOtpOne.text = s.toString()[0].toString()
@@ -97,24 +110,24 @@ class VerifyOTPActivity : BaseActivity() {
                     binding.edtOtpTwo.text = s.toString()[1].toString()
                     binding.edtOtpThree.text = s.toString()[2].toString()
                     binding.edtOtpFour.text = s.toString()[3].toString()
-                    binding.edtOtpFive.text = ""
-                    binding.edtOtpSix.text = ""
+                   /* binding.edtOtpFive.text = ""
+                    binding.edtOtpSix.text = ""*/
                 }
                 if (s.length == 5) {
                     binding.edtOtpOne.text = s.toString()[0].toString()
                     binding.edtOtpTwo.text = s.toString()[1].toString()
                     binding.edtOtpThree.text = s.toString()[2].toString()
                     binding.edtOtpFour.text = s.toString()[3].toString()
-                    binding.edtOtpFive.text = s.toString()[4].toString()
-                    binding.edtOtpSix.text = ""
+                    /*binding.edtOtpFive.text = s.toString()[4].toString()
+                    binding.edtOtpSix.text = ""*/
                 }
                 if (s.length == 6) {
                     binding.edtOtpOne.text = s.toString()[0].toString()
                     binding.edtOtpTwo.text = s.toString()[1].toString()
                     binding.edtOtpThree.text = s.toString()[2].toString()
                     binding.edtOtpFour.text = s.toString()[3].toString()
-                    binding.edtOtpFive.text = s.toString()[4].toString()
-                    binding.edtOtpSix.text = s.toString()[5].toString()
+                    /*binding.edtOtpFive.text = s.toString()[4].toString()
+                    binding.edtOtpSix.text = s.toString()[5].toString()*/
                     //verifyOTP()
                 }
             }

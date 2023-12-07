@@ -1,9 +1,8 @@
-package com.renew.survey.utilitys
+package com.renew.survey.utilities
 
 import android.content.Context
 import android.widget.Toast
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 

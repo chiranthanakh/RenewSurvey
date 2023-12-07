@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.renew.survey.response.Language
 import com.renew.survey.databinding.ItemLanguageBinding
+import java.util.Locale
 
-class LanguageAdapter(val context:Context, private var list: List<Language>) :
+class LanguageAdapter(val context:Context, private var list: List<Language>,var clickListener: ClickListener) :
     RecyclerView.Adapter<LanguageAdapter.ViewHolder>() {
 
     class ViewHolder (val binding: ItemLanguageBinding):RecyclerView.ViewHolder(binding.root)
@@ -25,7 +26,13 @@ class LanguageAdapter(val context:Context, private var list: List<Language>) :
         with(holder){
             with(list[position]){
                 binding.text.text=this.title
+                binding.tvShort.text= this.symbol!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()) else it.toString() }
+                binding.llLanguage.setOnClickListener { clickListener.onLanguageSelected(this) }
             }
         }
+    }
+    interface ClickListener{
+        fun onLanguageSelected(language: Language)
     }
 }

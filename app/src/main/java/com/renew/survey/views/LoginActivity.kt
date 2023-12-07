@@ -1,8 +1,6 @@
 package com.renew.survey.views
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -11,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.renew.survey.response.LoginResponse
 import com.renew.survey.databinding.ActivityLoginBinding
 import com.renew.survey.databinding.DialogRegisterAsUserTeamBinding
-import com.renew.survey.utilitys.ApiInterface
+import com.renew.survey.utilities.ApiInterface
 import com.squareup.picasso.BuildConfig
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -34,15 +32,6 @@ class LoginActivity : BaseActivity() {
             binding.etUserName.setText("9924618599")
             binding.etPassword.setText("123456")
         }
-
-        val sharedPreferences2: SharedPreferences =getSharedPreferences("myPref", Context.MODE_PRIVATE)!!
-        val  rollid = sharedPreferences2.getString("rollid", "")!!
-
-        if(rollid != ""){
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
         binding.btnContinue.setOnClickListener {
             if (binding.etUserName.text.toString() != "") {
                 if (binding.etPassword.text.toString() != "") {
@@ -52,7 +41,7 @@ class LoginActivity : BaseActivity() {
                         .show()
                 }
             } else {
-                Toast.makeText(this@LoginActivity, "Enter your email-id", Toast.LENGTH_LONG)
+                Toast.makeText(this@LoginActivity, "Enter your mobile number", Toast.LENGTH_LONG)
                     .show()
             }
         }
@@ -75,7 +64,7 @@ class LoginActivity : BaseActivity() {
                             data.data?.userId?.let {
                                 preferenceManager.saveUserId(it)
                             }
-                            Intent(this@LoginActivity,LanguageActivity::class.java).apply {
+                            Intent(this@LoginActivity,DashboardActivity::class.java).apply {
                                 startActivity(this)
                             }
                         }

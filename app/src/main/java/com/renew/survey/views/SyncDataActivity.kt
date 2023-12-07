@@ -4,17 +4,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.renew.survey.R
-import com.renew.survey.databinding.ActivityDashboardBinding
-import com.renew.survey.databinding.ActivityMainBinding
+import com.renew.survey.databinding.ActivitySyncDataBinding
 
-class DashboardActivity : BaseActivity() {
-    lateinit var binding: ActivityDashboardBinding
+class SyncDataActivity : BaseActivity() {
+    lateinit var binding:ActivitySyncDataBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-      //  setContentView(R.layout.activity_dashboard)
-        binding= ActivityDashboardBinding.inflate(layoutInflater)
+        binding=ActivitySyncDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.btnSync.setOnClickListener {
+        binding.btnContinue.setOnClickListener {
             Intent(this,LanguageActivity::class.java).apply {
                 startActivity(this)
             }

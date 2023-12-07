@@ -1,4 +1,4 @@
-package com.renew.survey.utilitys
+package com.renew.survey.utilities
 
 import android.content.Context
 

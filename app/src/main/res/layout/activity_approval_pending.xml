@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.ApprovalPendingActivity">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_auth"/>
+    <LinearLayout
+        android:id="@+id/ll_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/demo_state_foreground_color"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_approve"
+                app:tint="@color/grey_silver" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/proxima_nova_bold"
+                android:text="Approval Pending"
+                android:textColor="@color/white"
+                android:textSize="28sp" />
+        </LinearLayout>
+
+        <TextView
+            android:text="Your request sent Successfully"
+            android:gravity="center"
+            android:layout_margin="@dimen/text_size_18sp"
+            android:textSize="@dimen/dp_18"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/demo_state_second" />
+        <TextView
+            android:text="We will notify once your request is approved or rejected"
+            android:gravity="center"
+            android:layout_margin="@dimen/text_size_18sp"
+            android:textSize="@dimen/dp_18"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -240,8 +240,7 @@
                                         android:layout_height="50dp"
                                         android:background="@null"
                                         android:hint="Email"
-                                        android:inputType="text"
-                                        android:lines="4"
+                                        android:inputType="textEmailAddress"
                                         android:padding="@dimen/dp_0"
                                         android:textColor="@color/black"
                                         android:textColorHint="@color/black"
@@ -273,8 +272,7 @@
                                         android:layout_height="50dp"
                                         android:background="@null"
                                         android:hint="Password"
-                                        android:inputType="text"
-                                        android:lines="4"
+                                        android:inputType="textPassword"
                                         android:padding="@dimen/dp_0"
                                         android:textColor="@color/black"
                                         android:textColorHint="@color/black"
@@ -329,7 +327,7 @@
                                 android:background="@drawable/spinner_background">
                                 <Spinner
                                     android:id="@+id/sp_district"
-                                    android:entries="@array/state"
+                                    android:entries="@array/district"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"/>
 
@@ -341,7 +339,7 @@
                                 android:background="@drawable/spinner_background">
                                 <Spinner
                                     android:id="@+id/sp_tehsil"
-                                    android:entries="@array/state"
+                                    android:entries="@array/tehsil"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"/>
 
@@ -353,7 +351,7 @@
                                 android:background="@drawable/spinner_background">
                                 <Spinner
                                     android:id="@+id/sp_panchayat"
-                                    android:entries="@array/state"
+                                    android:entries="@array/panchayath"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"/>
 
@@ -365,7 +363,7 @@
                                 android:background="@drawable/spinner_background">
                                 <Spinner
                                     android:id="@+id/sp_village"
-                                    android:entries="@array/state"
+                                    android:entries="@array/village"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"/>
 
@@ -391,8 +389,8 @@
                                         android:layout_height="50dp"
                                         android:background="@null"
                                         android:hint="Pincode"
-                                        android:inputType="text"
-                                        android:lines="4"
+                                        android:inputType="number"
+                                        android:maxLength="6"
                                         android:padding="@dimen/dp_0"
                                         android:textColor="@color/black"
                                         android:textColorHint="@color/black"
@@ -506,5 +504,16 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+    <RelativeLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80FFFFFF"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.tvSubmitDetails.setOnClickListener {
             Intent(this,VerifyOTPActivity::class.java).apply {
+                putExtra("forgotPassword",true)
                 startActivity(this)
             }
         }

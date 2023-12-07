@@ -110,10 +110,12 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:layout_height="match_parent"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:gravity="center">
                 <TextView
                     android:id="@+id/edt_otp_five"
@@ -122,9 +124,11 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:layout_height="match_parent"/>
             <LinearLayout
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="match_parent"
                 android:gravity="center">
                 <TextView
@@ -151,7 +155,7 @@
             android:id="@+id/edt_all_otp"
             android:inputType="number"
             app:layout_constraintStart_toStartOf="parent"
-            android:maxLength="6"
+            android:maxLength="4"
             android:layout_width="1dp"
             android:layout_height="1dp"/>
 

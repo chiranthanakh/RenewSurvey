@@ -19,29 +19,22 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/ll_language"
+                android:id="@+id/ll_project1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
 
-                <TextView
-                    android:id="@+id/tv_short"
+                <ImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:text="En"
-                    android:textStyle="bold"
-                    android:textColor="@color/demo_state_foreground_color"
-                    android:textSize="@dimen/sp_30"
-                    android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/dp_10"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginEnd="@dimen/margin_10dp"
                     android:layout_marginBottom="@dimen/dp_10"
                     android:src="@drawable/ic_add_worker"
-                    app:tint="@color/demo_state_foreground_color"
-                    android:background="@drawable/language_short_back"/>
+                    app:tint="@color/demo_state_foreground_color" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -51,7 +44,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/text"
+                        android:id="@+id/tv_project"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -61,7 +54,7 @@
                         android:gravity="center_vertical"
                         android:maxLines="2"
                         android:minLines="2"
-                        android:text="English"
+                        android:text="Project 1"
                         android:textColor="@color/demo_state_foreground_color"
                         android:textSize="20sp" />
 
@@ -77,5 +70,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
         android:background="@color/demo_state_second" />
+
 
 </LinearLayout>
