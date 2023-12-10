@@ -3,7 +3,7 @@ package com.renew.survey.room.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 @Entity
-data class FormQuestion(
+data class FormQuestionEntity(
     @PrimaryKey
     val id: Int? = null,
     val allowed_file_type: String,

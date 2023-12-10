@@ -3,7 +3,7 @@ package com.renew.survey.room.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 @Entity
-data class FormQuestionOptions(
+data class FormQuestionOptionsEntity(
     @PrimaryKey
     val id: Int? = null,
     val tbl_form_questions_id: Int,

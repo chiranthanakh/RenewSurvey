@@ -1,5 +1,6 @@
 package com.renew.survey.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,12 +10,12 @@ import com.renew.survey.response.sync.SyncData
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.DivisionEntity
-import com.renew.survey.room.entities.FileType
+import com.renew.survey.room.entities.FileTypeEntity
 import com.renew.survey.room.entities.FormEntity
-import com.renew.survey.room.entities.FormLanguage
-import com.renew.survey.room.entities.FormQuestion
-import com.renew.survey.room.entities.FormQuestionGroup
-import com.renew.survey.room.entities.FormQuestionOptions
+import com.renew.survey.room.entities.FormLanguageEntity
+import com.renew.survey.room.entities.FormQuestionEntity
+import com.renew.survey.room.entities.FormQuestionGroupEntity
+import com.renew.survey.room.entities.FormQuestionOptionsEntity
 import com.renew.survey.room.entities.LanguageEntity
 import com.renew.survey.room.entities.PanchayathEntity
 import com.renew.survey.room.entities.ProjectEntity
@@ -103,49 +104,49 @@ class SyncDataActivity : BaseActivity() {
                                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllForms(formEntityList)
                                     }
                                     "mst_question_group"->{
-                                        val formQuestionGroups= arrayListOf<FormQuestionGroup>()
+                                        val formQuestionGroups= arrayListOf<FormQuestionGroupEntity>()
                                         for (d in s.data){
-                                            val formQuestionGroup=FormQuestionGroup(d.mst_question_group_id.toInt(),d.mst_question_group_id.toInt(),d.order_by.toInt())
+                                            val formQuestionGroup=FormQuestionGroupEntity(d.mst_question_group_id.toInt(),d.mst_question_group_id.toInt(),d.order_by.toInt())
                                             formQuestionGroups.add(formQuestionGroup)
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
                                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsQuestionGroup(formQuestionGroups)
                                     }
                                     "tbl_form_questions"->{
-                                        val formQuestions= arrayListOf<FormQuestion>()
+                                        val formQuestions= arrayListOf<FormQuestionEntity>()
                                         for (d in s.data){
-                                            val formQuestion=FormQuestion(d.tbl_form_questions_id.toInt(),d.allowed_file_type,d.format,d.is_mandatory,d.is_special_char_allowed,d.is_validation_required,d.max_file_size,d.max_length,d.min_length,d.mst_question_group_id.toInt(),d.order_by.toInt(),d.question_type,d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt())
+                                            val formQuestion=FormQuestionEntity(d.tbl_form_questions_id.toInt(),d.allowed_file_type,d.format,d.is_mandatory,d.is_special_char_allowed,d.is_validation_required,d.max_file_size,d.max_length,d.min_length,d.mst_question_group_id.toInt(),d.order_by.toInt(),d.question_type,d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt())
                                             formQuestions.add(formQuestion)
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
                                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsQuestions(formQuestions)
                                     }
                                     "tbl_form_questions_option"->{
-                                        val formQuestionOptions= arrayListOf<FormQuestionOptions>()
+                                        val formQuestionOptions= arrayListOf<FormQuestionOptionsEntity>()
                                         for (d in s.data){
-                                            val formQuestionOption=FormQuestionOptions(d.tbl_form_questions_option_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_form_questions_option_id.toInt(),d.tbl_forms_id.toInt())
+                                            val formQuestionOption=FormQuestionOptionsEntity(d.tbl_form_questions_option_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_form_questions_option_id.toInt(),d.tbl_forms_id.toInt())
                                             formQuestionOptions.add(formQuestionOption)
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
                                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsQuestionOptions(formQuestionOptions)
                                     }
                                     "mst_form_language"->{
-                                        val formLanguages= arrayListOf<FormLanguage>()
+                                        val formLanguages= arrayListOf<FormLanguageEntity>()
                                         for (d in s.data){
-                                            val formLanguage=FormLanguage(d.mst_form_language_id.toInt(),d.module,d.module_id.toInt(),d.mst_form_language_id.toInt(),d.mst_language_id.toInt(),d.title)
+                                            val formLanguage=FormLanguageEntity(d.mst_form_language_id.toInt(),d.module,d.module_id.toInt(),d.mst_form_language_id.toInt(),d.mst_language_id.toInt(),d.title)
                                             formLanguages.add(formLanguage)
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
                                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsLanguages(formLanguages)
                                     }
                                     "mst_file_types"->{
-                                        val fileTypeList= arrayListOf<FileType>()
+                                        val fileTypeEntityList= arrayListOf<FileTypeEntity>()
                                         for (d in s.data){
-                                            val fileType=FileType(d.mst_file_types_id.toInt(),d.extension,d.mst_file_types_id.toInt())
-                                            fileTypeList.add(fileType)
+                                            val fileTypeEntity=FileTypeEntity(d.mst_file_types_id.toInt(),d.extension,d.mst_file_types_id.toInt())
+                                            fileTypeEntityList.add(fileTypeEntity)
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
-                                        AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFileTypes(fileTypeList)
+                                        AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFileTypes(fileTypeEntityList)
                                     }
                                     "tbl_project_phase"->{
                                         val projectsPhaseList= arrayListOf<ProjectsPhase>()
@@ -194,6 +195,9 @@ class SyncDataActivity : BaseActivity() {
                                     }
                                 }
                             }
+                            runOnUiThread(Runnable {
+                                navigateToNext()
+                            })
                         }
 
                     }else{
@@ -205,6 +209,11 @@ class SyncDataActivity : BaseActivity() {
             /*Intent(this,LanguageActivity::class.java).apply {
                 startActivity(this)
             }*/
+        }
+    }
+    fun navigateToNext(){
+        Intent(this,LanguageActivity::class.java).apply {
+            startActivity(this)
         }
     }
     fun showProgress(){

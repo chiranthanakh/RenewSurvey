@@ -3,16 +3,14 @@ package com.renew.survey.views
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.reflect.TypeToken
 import com.renew.survey.response.Language
 import com.renew.survey.adapter.LanguageAdapter
 import com.renew.survey.databinding.ActivityLanguageBinding
-import com.renew.survey.utilities.ApiInterface
+import com.renew.survey.room.AppDatabase
+import com.renew.survey.room.entities.LanguageEntity
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
     lateinit var binding: ActivityLanguageBinding
@@ -26,9 +24,11 @@ class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
 
     }
     fun getLanguageData(){
-        binding.progressLayout.visibility= View.VISIBLE
         lifecycleScope.launch {
-            ApiInterface.getInstance()?.apply {
+            val languages=AppDatabase.getInstance(this@LanguageActivity).languageDao().getAll()
+            binding.recyclerView.adapter=LanguageAdapter(this@LanguageActivity,languages,this@LanguageActivity)
+
+           /* ApiInterface.getInstance()?.apply {
                 val response= preferenceManager.getToken()?.let { getLanguage(it) }
                 binding.progressLayout.visibility= View.GONE
                 if (response!!.isSuccessful){
@@ -41,12 +41,12 @@ class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
                         Toast.makeText(this@LanguageActivity,jsonObject.getString("message"), Toast.LENGTH_SHORT).show()
                     }
                 }
-            }
+            }*/
         }
     }
 
-    override fun onLanguageSelected(language: Language) {
-        preferenceManager.saveLanguage(language.mst_language_id!!)
+    override fun onLanguageSelected(language: LanguageEntity) {
+        preferenceManager.saveLanguage(language.mst_language_id)
         Intent(this,ProjectActivity::class.java).apply {
             startActivity(this)
         }

@@ -3,7 +3,7 @@ package com.renew.survey.room.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 @Entity
-data class FormLanguage(
+data class FormLanguageEntity(
     @PrimaryKey
     val id: Int? = null,
     val module: String,

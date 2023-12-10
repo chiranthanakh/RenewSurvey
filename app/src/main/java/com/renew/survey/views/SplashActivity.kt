@@ -19,7 +19,7 @@ class SplashActivity:BaseActivity() {
         lifecycleScope.launch {
             delay(2000)
             if (preferenceManager.getToken()!=""){
-                Intent(this@SplashActivity, SyncDataActivity::class.java).apply {
+                Intent(this@SplashActivity, LanguageActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(this)

@@ -10,23 +10,22 @@ import com.renew.survey.room.dao.PlacesDao
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.DistrictEntity
 import com.renew.survey.room.entities.DivisionEntity
-import com.renew.survey.room.entities.FileType
+import com.renew.survey.room.entities.FileTypeEntity
 import com.renew.survey.room.entities.FormEntity
-import com.renew.survey.room.entities.FormLanguage
-import com.renew.survey.room.entities.FormQuestion
-import com.renew.survey.room.entities.FormQuestionGroup
-import com.renew.survey.room.entities.FormQuestionOptions
+import com.renew.survey.room.entities.FormLanguageEntity
+import com.renew.survey.room.entities.FormQuestionEntity
+import com.renew.survey.room.entities.FormQuestionGroupEntity
+import com.renew.survey.room.entities.FormQuestionOptionsEntity
 import com.renew.survey.room.entities.LanguageEntity
 import com.renew.survey.room.entities.PanchayathEntity
 import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
 import com.renew.survey.room.entities.ProjectsPhase
-import com.renew.survey.room.entities.ProjectsQuestion
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
 
-@Database(entities = [LanguageEntity::class,StatesEntity::class,DistrictEntity::class,TehsilEntity::class,PanchayathEntity::class,VillageEntity::class,FileType::class,FormLanguage::class,FormEntity::class,FormQuestion::class,FormQuestionGroup::class,FormQuestionOptions::class, ProjectEntity::class,ProjectsPhase::class,ProjectPhaseQuestionEntity::class,DivisionEntity::class,CategoryEntity::class], version = 1)
+@Database(entities = [LanguageEntity::class,StatesEntity::class,DistrictEntity::class,TehsilEntity::class,PanchayathEntity::class,VillageEntity::class,FileTypeEntity::class,FormLanguageEntity::class,FormEntity::class,FormQuestionEntity::class,FormQuestionGroupEntity::class,FormQuestionOptionsEntity::class, ProjectEntity::class,ProjectsPhase::class,ProjectPhaseQuestionEntity::class,DivisionEntity::class,CategoryEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun languageDao(): LanguageDao
     abstract fun placesDao(): PlacesDao

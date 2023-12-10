@@ -4,19 +4,21 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.renew.survey.databinding.ItemFormLayoutBinding
 import com.renew.survey.databinding.ItemLanguageBinding
+import com.renew.survey.room.entities.FormWithLanguage
 import com.renew.survey.room.entities.LanguageEntity
 import java.util.Locale
 
-class LanguageAdapter(
-    val context:Context, private var list: List<LanguageEntity>,
+class FormTypeAdapter(
+    val context:Context, private var list: List<FormWithLanguage>,
     var clickListener: ClickListener) :
-    RecyclerView.Adapter<LanguageAdapter.ViewHolder>() {
+    RecyclerView.Adapter<FormTypeAdapter.ViewHolder>() {
 
-    class ViewHolder (val binding: ItemLanguageBinding):RecyclerView.ViewHolder(binding.root)
+    class ViewHolder (val binding: ItemFormLayoutBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemLanguageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemFormLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -28,13 +30,11 @@ class LanguageAdapter(
         with(holder){
             with(list[position]){
                 binding.text.text=this.title
-                binding.tvShort.text= this.symbol!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(
-                    Locale.getDefault()) else it.toString() }
-                binding.llLanguage.setOnClickListener { clickListener.onLanguageSelected(this) }
+                binding.llSurvey.setOnClickListener { clickListener.onFormSelected(this) }
             }
         }
     }
     interface ClickListener{
-        fun onLanguageSelected(language: LanguageEntity)
+        fun onFormSelected(form: FormWithLanguage)
     }
 }
