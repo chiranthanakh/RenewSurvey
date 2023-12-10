@@ -39,7 +39,7 @@
             android:layout_gravity="center_vertical"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Verify OTP"
+            android:text="Verification"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_18sp" />
         <TextView
@@ -54,6 +54,8 @@
             android:id="@+id/ll_number"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_42"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_20"
             app:layout_constraintStart_toStartOf="parent"
             android:orientation="horizontal">
@@ -169,6 +171,8 @@
             <Button
                 android:id="@+id/btn_verify"
                 android:text="Verify"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -183,9 +187,9 @@
                     android:id="@+id/tv_resend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:clickable="false"
+                    android:layout_centerInParent="true"
                     android:background="?selectableItemBackground"
+                    android:clickable="false"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
@@ -194,21 +198,6 @@
                     android:textColor="@color/demo_state_second"
                     android:textSize="@dimen/text_size_16sp" />
 
-                <TextView
-                    android:id="@+id/tv_change_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:background="?selectableItemBackground"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="Change Number"
-                    android:textColor="@color/black20per"
-                    android:textSize="@dimen/text_size_16sp" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -217,5 +206,16 @@
 
 
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80FFFFFF"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

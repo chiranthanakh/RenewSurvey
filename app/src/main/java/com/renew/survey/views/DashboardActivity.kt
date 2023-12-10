@@ -14,8 +14,13 @@ class DashboardActivity : BaseActivity() {
       //  setContentView(R.layout.activity_dashboard)
         binding= ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.btnSync.setOnClickListener {
+        /*binding.btnSync.setOnClickListener {
             Intent(this,LanguageActivity::class.java).apply {
+                startActivity(this)
+            }
+        }*/
+        binding.btnContinue.setOnClickListener {
+            Intent(this,FormsDetailsActivity::class.java).apply {
                 startActivity(this)
             }
         }

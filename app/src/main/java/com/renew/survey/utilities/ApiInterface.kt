@@ -69,7 +69,7 @@ interface ApiInterface {
         @Field("project_code")project_code:String,
         @Field("aadhar_card")aadhar_card:String,
         @Field("mobile")mobile:String,
-        @Field("password")password:String,
+        @Field("password")password:String?,
         @Field("full_name")full_name:String,
         @Field("username")username:String,
         @Field("address")address:String,
@@ -98,6 +98,12 @@ interface ApiInterface {
         @Header("Authorization") headers: String,
         @Field("tbl_users_id") tbl_users_id: String,
         @Field("tbl_users_id") mst_language_id: String,
+    ) : Response<JsonElement>
+    @FormUrlEncoded
+    @POST("Synchronization/sync_data_from_server")
+    suspend fun syncDataFromServer(
+        @Header("Authorization") headers: String,
+        @Field("tbl_users_id") tbl_users_id: String,
     ) : Response<JsonElement>
 
 

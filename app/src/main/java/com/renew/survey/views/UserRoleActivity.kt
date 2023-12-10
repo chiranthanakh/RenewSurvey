@@ -12,16 +12,16 @@ class UserRoleActivity : AppCompatActivity() {
         binding= ActivityUserRoleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.llAddNewWorker.setOnClickListener{
-            val intent = Intent(this@UserRoleActivity, FormsDetailsActivity::class.java)
+        binding.llSurvey.setOnClickListener{
+            val intent = Intent(this@UserRoleActivity, DashboardActivity::class.java)
             startActivity(intent)
         }
         binding.llDistrubutor.setOnClickListener{
-            val intent = Intent(this@UserRoleActivity, FormsDetailsActivity::class.java)
+            val intent = Intent(this@UserRoleActivity, DashboardActivity::class.java)
             startActivity(intent)
         }
-        binding.llAddNewWorker.setOnClickListener{
-            val intent = Intent(this@UserRoleActivity, FormsDetailsActivity::class.java)
+        binding.llMonitoring.setOnClickListener{
+            val intent = Intent(this@UserRoleActivity, DashboardActivity::class.java)
             startActivity(intent)
         }
     }

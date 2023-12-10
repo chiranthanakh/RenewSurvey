@@ -22,6 +22,7 @@ import com.renew.survey.response.DistrictModel
 import com.renew.survey.response.PanchayathModel
 import com.renew.survey.response.StateModel
 import com.renew.survey.response.TehsilModel
+import com.renew.survey.response.UserInfo
 import com.renew.survey.response.VillageModel
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.AppConstants
@@ -37,6 +38,7 @@ class SignUpDetailsActivity : BaseActivity() {
     var tehsilList= arrayListOf<TehsilModel>()
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
+    var userInfo:UserInfo?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivitySignUpDetailsBinding.inflate(layoutInflater)
@@ -44,6 +46,7 @@ class SignUpDetailsActivity : BaseActivity() {
         binding.btnSubmit.setOnClickListener {
             formValidation()
         }
+        userInfo=gson.fromJson(intent.getStringExtra("user_info"),UserInfo::class.java)
         binding.edtDob.setOnClickListener {
             val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 val calendar=Calendar.getInstance()
@@ -54,6 +57,23 @@ class SignUpDetailsActivity : BaseActivity() {
 
             }, initCalendar.get(Calendar.YEAR), initCalendar.get(Calendar.MONTH), initCalendar.get(Calendar.DAY_OF_MONTH))
             dpd.show()
+        }
+        if (userInfo!=null){
+            binding.edtFullName.setText(userInfo!!.full_name)
+            binding.edtUsername.setText(userInfo!!.username)
+            binding.edtEmail.setText(userInfo!!.email)
+            binding.edtPassword.isFocusable=false
+            binding.edtPassword.setText("123456")
+            binding.tilPassword.isPasswordVisibilityToggleEnabled=false
+            binding.edtAddress.setText(userInfo!!.address)
+            binding.edtPincode.setText(userInfo!!.pincode)
+            binding.edtDob.setText(UtilMethods.getDisplayDateFormat(userInfo!!.date_of_birth))
+            if (userInfo!!.gender=="MALE"){
+                binding.rbMale.isChecked=true
+            }else{
+                binding.rbFemale.isChecked=true
+            }
+
         }
         getState()
         spinnerSelectors()
@@ -126,9 +146,11 @@ class SignUpDetailsActivity : BaseActivity() {
             UtilMethods.showToast(this,"Please enter valid email address")
             return
         }
-        if (binding.edtPassword.text.toString().isEmpty()){
-            UtilMethods.showToast(this,"Please enter password")
-            return
+        if (userInfo==null){
+            if (binding.edtPassword.text.toString().isEmpty()){
+                UtilMethods.showToast(this,"Please enter password")
+                return
+            }
         }
         if (binding.edtAddress.text.toString().isEmpty()){
             UtilMethods.showToast(this,"Please enter full name")
@@ -180,13 +202,17 @@ class SignUpDetailsActivity : BaseActivity() {
                     gender="FEMALE"
                 }
                 var user_type="USER"
+                var password:String?=null
+                if (userInfo==null){
+                    password=binding.edtPassword.text.toString()
+                }
                 Log.e("paramsss","premsssss  ${intent.getStringExtra("project_id")}   ${intent.getStringExtra("project_id")}  ")
                 val response=register(
                     intent.getStringExtra("project_id")!!,
                     intent.getStringExtra("project")!!,
                     intent.getStringExtra("aadhar")!!,
                     intent.getStringExtra("mobile")!!,
-                    binding.edtPassword.text.toString(),
+                    password,
                     binding.edtFullName.text.toString(),
                     binding.edtUsername.text.toString(),
                     binding.edtAddress.text.toString(),
@@ -210,6 +236,8 @@ class SignUpDetailsActivity : BaseActivity() {
                     UtilMethods.showToast(this@SignUpDetailsActivity,jsonObject.getString("message"))
                     if (jsonObject.getString("success")=="1"){
                         Intent(this@SignUpDetailsActivity,ApprovalPendingActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(this)
                         }
                     }
@@ -232,6 +260,16 @@ class SignUpDetailsActivity : BaseActivity() {
                         itemList.add(0,StateModel("0","Select State"))
                         stateList=itemList
                         binding.spState.adapter=StateSpinnerAdapter(this@SignUpDetailsActivity,stateList)
+                        if (userInfo!=null){
+                            var pos=0
+                            stateList.forEachIndexed { index, stateModel ->
+                                if (stateModel.mst_state_id== userInfo!!.mst_state_id){
+                                    pos=index
+                                   return@forEachIndexed
+                                }
+                            }
+                            binding.spState.setSelection(pos)
+                        }
                     }
                 }
             }
@@ -251,6 +289,16 @@ class SignUpDetailsActivity : BaseActivity() {
                         itemList.add(0,DistrictModel("Select District",""))
                         districtList=itemList
                         binding.spDistrict.adapter=DistrictSpinnerAdapter(this@SignUpDetailsActivity,districtList)
+                        if (userInfo!=null){
+                            var pos=0
+                            districtList.forEachIndexed { index, stateModel ->
+                                if (stateModel.mst_district_id== userInfo!!.mst_district_id){
+                                    pos=index
+                                    return@forEachIndexed
+                                }
+                            }
+                            binding.spDistrict.setSelection(pos)
+                        }
                     }
                 }
             }
@@ -270,6 +318,16 @@ class SignUpDetailsActivity : BaseActivity() {
                         itemList.add(0,TehsilModel("0","Select Tehsil"))
                         tehsilList=itemList
                         binding.spTehsil.adapter=TehsilSpinnerAdapter(this@SignUpDetailsActivity,tehsilList)
+                        if (userInfo!=null){
+                            var pos=0
+                            tehsilList.forEachIndexed { index, stateModel ->
+                                if (stateModel.mst_tehsil_id== userInfo!!.mst_tehsil_id){
+                                    pos=index
+                                    return@forEachIndexed
+                                }
+                            }
+                            binding.spTehsil.setSelection(pos)
+                        }
                     }
                 }
             }
@@ -289,6 +347,16 @@ class SignUpDetailsActivity : BaseActivity() {
                         itemList.add(0,PanchayathModel("0","Select Panchayath"))
                         panchayathList=itemList
                         binding.spPanchayat.adapter=PanchayatSpinnerAdapter(this@SignUpDetailsActivity,panchayathList)
+                        if (userInfo!=null){
+                            var pos=0
+                            panchayathList.forEachIndexed { index, stateModel ->
+                                if (stateModel.mst_panchayat_id== userInfo!!.mst_panchayat_id){
+                                    pos=index
+                                    return@forEachIndexed
+                                }
+                            }
+                            binding.spPanchayat.setSelection(pos)
+                        }
                     }
                 }
             }
@@ -308,6 +376,16 @@ class SignUpDetailsActivity : BaseActivity() {
                         itemList.add(0,VillageModel("0","Select Village"))
                         villageList=itemList
                         binding.spVillage.adapter=VillageSpinnerAdapter(this@SignUpDetailsActivity,villageList)
+                        if (userInfo!=null){
+                            var pos=0
+                            villageList.forEachIndexed { index, stateModel ->
+                                if (stateModel.mst_villages_id== userInfo!!.mst_village_id){
+                                    pos=index
+                                    return@forEachIndexed
+                                }
+                            }
+                            binding.spVillage.setSelection(pos)
+                        }
                     }
                 }
             }

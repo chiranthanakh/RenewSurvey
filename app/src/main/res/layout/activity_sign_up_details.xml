@@ -257,6 +257,7 @@
 
                                 <com.google.android.material.textfield.TextInputLayout
                                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:id="@+id/til_password"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textColorHint="@color/black"
@@ -459,11 +460,9 @@
 
                                 <TextView
                                     android:id="@+id/btn_submit"
-                                    android:layout_width="150dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="50dp"
                                     android:layout_alignParentBottom="true"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_marginEnd="20dp"
                                     android:layout_marginBottom="15dp"
                                     android:background="@drawable/btn_bg"
                                     android:fontFamily="@font/openssans"
@@ -474,23 +473,7 @@
                                     android:textSize="17sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/tv_reject"
-                                    android:layout_width="150dp"
-                                    android:layout_height="50dp"
-                                    android:layout_alignParentBottom="true"
-                                    android:layout_marginStart="20dp"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_marginBottom="15dp"
-                                    android:layout_toRightOf="@+id/submit_approve"
-                                    android:background="@drawable/btn_bg"
-                                    android:fontFamily="@font/openssans"
-                                    android:gravity="center"
-                                    android:text="Cancel"
-                                    android:textAllCaps="false"
-                                    android:textColor="#fff"
-                                    android:textSize="17sp"
-                                    android:textStyle="bold" />
+
                             </LinearLayout>
 
                         </LinearLayout>

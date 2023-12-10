@@ -2,13 +2,22 @@ package com.renew.survey.views
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.renew.survey.databinding.ActivityVerifyOtpactivityBinding
+import com.renew.survey.response.ValidationModel
+import com.renew.survey.utilities.ApiInterface
+import com.renew.survey.utilities.AppConstants
 import com.renew.survey.utilities.UtilMethods
 import com.squareup.picasso.BuildConfig
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class VerifyOTPActivity : BaseActivity() {
     lateinit var binding: ActivityVerifyOtpactivityBinding
@@ -20,6 +29,16 @@ class VerifyOTPActivity : BaseActivity() {
         if (BuildConfig.DEBUG){
             binding.edtAllOtp.setText(intent.getStringExtra("otp"))
         }
+        startTimer()
+        binding.tvResend.setOnClickListener {
+            if (binding.tvResend.text.toString().equals("Resend OTP",ignoreCase = true)){
+                startTimer()
+                validationAPI()
+            }
+        }
+
+
+        binding.tvMobile.setText("Enter 4 digit OTP sent to ${intent.getStringExtra("mobile")}")
         binding.btnVerify.setOnClickListener {
             if (intent.getStringExtra("otp").equals(binding.edtAllOtp.text.toString())){
                 Intent(this,SignUpDetailsActivity::class.java).apply {
@@ -29,6 +48,7 @@ class VerifyOTPActivity : BaseActivity() {
                     putExtra("project_id",intent.getStringExtra("project_id"))
                     putExtra("coordinator_id",intent.getStringExtra("coordinator_id"))
                     putExtra("user_type",intent.getStringExtra("user_type"))
+                    putExtra("user_info",intent.getStringExtra("user_info"))
                     startActivity(this)
                 }
             }else{
@@ -164,5 +184,48 @@ class VerifyOTPActivity : BaseActivity() {
             return false
         }
         return true
+    }
+    private fun validationAPI(){
+        binding.progressLayout.visibility=View.VISIBLE
+        lifecycleScope.launch {
+            ApiInterface.getInstance()?.apply {
+                var user_type=""
+                if(intent.getBooleanExtra("user",false)){
+                    user_type="USER"
+                }else{
+                    user_type="MEMBER"
+                }
+                val response=validateProject(
+                    intent.getStringExtra("mobile")!!,
+                    intent.getStringExtra("project_code")!!,
+                    intent.getStringExtra("aadhar")!!,
+                    AppConstants.AppKey,
+                    user_type
+                )
+                binding.progressLayout.visibility=View.GONE
+                if (response.isSuccessful){
+                    val jsonObject= JSONObject(response.body().toString())
+                    if (jsonObject.getString("success")=="1"){
+                        val data=gson.fromJson(jsonObject.getString("data").toString(),
+                            ValidationModel::class.java)
+                        Log.e("response",data.toString())
+                        Toast.makeText(this@VerifyOTPActivity,data.otp, Toast.LENGTH_LONG).show()
+                    }else{
+                        UtilMethods.showToast(this@VerifyOTPActivity,jsonObject.getString("message"))
+                    }
+                }
+            }
+        }
+    }
+    fun startTimer(){
+        object : CountDownTimer(5000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.tvResend.setText("${millisUntilFinished / 1000} sec")
+            }
+
+            override fun onFinish() {
+                binding.tvResend.setText("Resend OTP")
+            }
+        }.start()
     }
 }

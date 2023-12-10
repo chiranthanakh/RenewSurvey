@@ -74,10 +74,12 @@ class SignUpActivity : BaseActivity() {
                             putExtra("mobile",binding.edtMobile.text.toString())
                             putExtra("aadhar",binding.edtAadhaarCard.text.toString())
                             putExtra("project",data.project_info.project_code)
+                            putExtra("project_code",binding.edtUniqueCode.text.toString())
                             putExtra("project_id",data.project_info.tbl_projects_id)
                             putExtra("coordinator_id",data.project_info.co_ordinator_id)
                             putExtra("user_type",user_type)
                             putExtra("otp",data.otp)
+                            putExtra("user_info",gson.toJson(data.user_info))
                             startActivity(this)
                         }
                     }else{

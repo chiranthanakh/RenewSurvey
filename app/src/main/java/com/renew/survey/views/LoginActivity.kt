@@ -64,7 +64,7 @@ class LoginActivity : BaseActivity() {
                             data.data?.userId?.let {
                                 preferenceManager.saveUserId(it)
                             }
-                            Intent(this@LoginActivity,DashboardActivity::class.java).apply {
+                            Intent(this@LoginActivity,SyncDataActivity::class.java).apply {
                                 startActivity(this)
                             }
                         }
