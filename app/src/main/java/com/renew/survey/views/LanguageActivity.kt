@@ -1,10 +1,16 @@
 package com.renew.survey.views
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
+import com.renew.survey.R
 import com.renew.survey.response.Language
 import com.renew.survey.adapter.LanguageAdapter
 import com.renew.survey.databinding.ActivityLanguageBinding
@@ -14,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
     lateinit var binding: ActivityLanguageBinding
+    private var permissionListener: PermissionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +54,51 @@ class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
 
     override fun onLanguageSelected(language: LanguageEntity) {
         preferenceManager.saveLanguage(language.mst_language_id)
+        checkPermissions()
+    }
+    fun proceed(){
         Intent(this,ProjectActivity::class.java).apply {
             startActivity(this)
+        }
+    }
+    private fun checkPermissions() {
+        permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+                proceed()
+            }
+
+            override fun onPermissionDenied(deniedPermissions: List<String>) {
+                Toast.makeText(
+                    this@LanguageActivity,
+                    "Permission Denied\n$deniedPermissions", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            TedPermission.create()
+                .setPermissionListener(permissionListener)
+                .setDeniedMessage(getString(R.string.if_you_reject_this_permission))
+                .setPermissions(
+                    Manifest.permission.READ_MEDIA_VIDEO,
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.CAMERA
+                )
+                .check()
+        } else {
+            TedPermission.create()
+                .setPermissionListener(permissionListener)
+                .setDeniedMessage(getString(R.string.if_you_reject_this_permission))
+                .setPermissions(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.CAMERA
+                )
+                .check()
         }
     }
 }

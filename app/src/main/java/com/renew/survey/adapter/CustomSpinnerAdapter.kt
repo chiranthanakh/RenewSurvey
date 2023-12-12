@@ -10,7 +10,7 @@ import com.renew.survey.R
 import com.renew.survey.databinding.SpinnerItemBinding
 import com.renew.survey.response.StateModel
 
-class StateSpinnerAdapter(val context: Context,val list: List<StateModel>) : BaseAdapter(),SpinnerAdapter{
+class CustomSpinnerAdapter(val context: Context, val list: List<String>) : BaseAdapter(),SpinnerAdapter{
     override fun getCount(): Int {
         return list.size
     }
@@ -25,8 +25,9 @@ class StateSpinnerAdapter(val context: Context,val list: List<StateModel>) : Bas
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         val binding = SpinnerItemBinding.inflate(LayoutInflater.from(p2?.context), p2, false)
-        binding.textView1.text = list[p0].state_name
+        binding.textView1.text = list[p0]
         if (p0 == 0) {
+            binding.textView1.setText("Select")
             binding.textView1.setTextColor(context.resources.getColor(R.color.hint_color))
         } else {
             binding.textView1.setTextColor(context.resources.getColor(R.color.black))

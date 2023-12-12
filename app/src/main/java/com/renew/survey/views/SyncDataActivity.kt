@@ -9,6 +9,7 @@ import com.renew.survey.databinding.ActivitySyncDataBinding
 import com.renew.survey.response.sync.SyncData
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.CategoryEntity
+import com.renew.survey.room.entities.DistrictEntity
 import com.renew.survey.room.entities.DivisionEntity
 import com.renew.survey.room.entities.FileTypeEntity
 import com.renew.survey.room.entities.FormEntity
@@ -25,8 +26,10 @@ import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
 import com.renew.survey.utilities.ApiInterface
+import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.util.Date
 
 class SyncDataActivity : BaseActivity() {
     lateinit var binding:ActivitySyncDataBinding
@@ -66,6 +69,15 @@ class SyncDataActivity : BaseActivity() {
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
                                         AppDatabase.getInstance(this@SyncDataActivity).placesDao().insertAllStates(statesEntities)
+                                    }
+                                    "mst_district"->{
+                                        val districtEntityList= arrayListOf<DistrictEntity>()
+                                        for (d in s.data){
+                                            val districtEntity=DistrictEntity(d.mst_district_id.toInt(),d.district_name,d.mst_district_id.toInt(),d.mst_country_id.toInt(),d.mst_state_id.toInt())
+                                            districtEntityList.add(districtEntity)
+                                            //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                                        }
+                                        AppDatabase.getInstance(this@SyncDataActivity).placesDao().insertAllDistricts(districtEntityList)
                                     }
                                     "mst_tehsil"->{
                                         val tehsilEntities= arrayListOf<TehsilEntity>()
@@ -197,10 +209,12 @@ class SyncDataActivity : BaseActivity() {
                             }
                             runOnUiThread(Runnable {
                                 navigateToNext()
+                                preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)
                             })
                         }
 
                     }else{
+                        Log.e("response","response code ${response.code()}")
                         hideProgress()
                     }
 

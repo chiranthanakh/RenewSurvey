@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/ll_item"
+        android:layout_gravity="center_vertical"
+        android:layout_width="120dp"
+        android:layout_height="@dimen/margin_77dp"
+        android:weightSum="1"
+        android:background="@color/demo_state_third"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_question_group_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:singleLine="false"
+            android:layout_marginTop="@dimen/dp_10"
+            android:lines="2"
+            android:minLines="2"
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:text="Personal \n Details"
+            android:maxLines="2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_12sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_horizontal"
+            android:progress="50"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="@dimen/margin_100dp"
+            android:layout_height="@dimen/margin_15_dp"
+            android:layout_marginLeft="@dimen/dp_10"/>
+        <TextView
+            android:text="10/13"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_12sp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

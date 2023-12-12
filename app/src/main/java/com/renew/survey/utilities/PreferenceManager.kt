@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.renew.survey.response.Language
+import com.renew.survey.room.entities.FormWithLanguage
 import com.renew.survey.room.entities.ProjectEntity
 
 class PreferenceManager constructor(context: Context){
@@ -59,6 +60,38 @@ class PreferenceManager constructor(context: Context){
     fun getProject(): ProjectEntity{
         return gson.fromJson(sharedPreferences.getString("project",""),ProjectEntity::class.java)
     }
+
+
+    fun saveForm(projectEntity: FormWithLanguage){
+        val editor = sharedPreferences.edit()
+        editor.putString("form",gson.toJson(projectEntity))
+        editor.apply()
+    }
+
+    fun getForm(): FormWithLanguage{
+        return gson.fromJson(sharedPreferences.getString("form",""),FormWithLanguage::class.java)
+    }
+
+    fun saveSync(date: String,sync: Boolean){
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(date,sync)
+        editor.apply()
+    }
+
+    fun getSync(date: String,): Boolean{
+        return sharedPreferences.getBoolean(date,false)
+    }
+
+    fun saveLocation(location: String){
+        val editor = sharedPreferences.edit()
+        editor.putString("location",location)
+        editor.apply()
+    }
+
+    fun getLocation(): String?{
+        return sharedPreferences.getString("location","")
+    }
+
 
 
 

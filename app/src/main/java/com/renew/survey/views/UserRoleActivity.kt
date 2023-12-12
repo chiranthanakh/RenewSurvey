@@ -42,6 +42,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
     }
 
     override fun onFormSelected(form: FormWithLanguage) {
+        preferenceManager.saveForm(form)
         Intent(this,DashboardActivity::class.java).apply {
             startActivity(this)
         }

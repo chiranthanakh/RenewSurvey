@@ -10,16 +10,31 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_auth" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <LinearLayout
+        android:id="@+id/container"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@id/ll_submit"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+    </LinearLayout>
+
+    <!--<LinearLayout
         android:id="@+id/ll_details"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/green2"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:weightSum="3">
 
-        <LinearLayout
+
+        &lt;!&ndash;<LinearLayout
             android:layout_gravity="center_vertical"
             android:layout_width="120dp"
             android:layout_height="match_parent"
@@ -105,12 +120,12 @@
                 android:layout_height="@dimen/margin_15_dp"
                 android:layout_marginLeft="@dimen/dp_10"/>
 
-        </LinearLayout>
+        </LinearLayout>&ndash;&gt;
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
-    <LinearLayout
+  <!--  <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -367,24 +382,35 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavShift"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_gravity="bottom"
-        android:background="@color/demo_state_foreground_color"
-        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
-        app:itemIconSize="30dp"
-        app:itemIconTint="@color/white"
-        app:itemRippleColor="@color/demo_state_second"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/menu_items">
+ <LinearLayout
+     android:id="@+id/ll_submit"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     app:layout_constraintBottom_toBottomOf="parent"
+     android:background="@color/lightGray"
+     android:paddingTop="@dimen/dp_5"
+     android:paddingBottom="@dimen/dp_5">
+     <Button
+         android:id="@+id/btn_save_draft"
+         android:text="Save as draft"
+         android:layout_weight="1"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="@dimen/margin_15_dp"
+         android:layout_marginEnd="@dimen/dp_5"/>
+     <Button
+         android:id="@+id/btn_continue"
+         android:text="Save as draft"
+         android:layout_weight="1"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="@dimen/dp_5"
+         android:layout_marginEnd="@dimen/margin_15_dp"/>
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+ </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

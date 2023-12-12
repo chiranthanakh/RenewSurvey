@@ -10,6 +10,11 @@ object UtilMethods {
     private val dateFormatter=SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
     private val dateFormatterServer=SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
+    fun getFormattedDate(date: Date,format:String):String{
+        val dateFormatter=SimpleDateFormat(format, Locale.ENGLISH)
+        return dateFormatter.format(date)
+    }
+
     fun getFormattedDate(date: Date):String{
         return dateFormatter.format(date)
     }
