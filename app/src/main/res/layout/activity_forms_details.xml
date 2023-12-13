@@ -398,13 +398,14 @@
          android:id="@+id/btn_save_draft"
          android:text="Save as draft"
          android:layout_weight="1"
+         android:visibility="gone"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:layout_marginStart="@dimen/margin_15_dp"
          android:layout_marginEnd="@dimen/dp_5"/>
      <Button
          android:id="@+id/btn_continue"
-         android:text="Save as draft"
+         android:text="Save"
          android:layout_weight="1"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"

@@ -64,7 +64,8 @@
             android:id="@+id/multiselect"
             android:background="@drawable/spinner_background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/margin_15_dp"
             android:layout_marginStart="@dimen/margin_15_dp"/>
     </LinearLayout>
@@ -123,18 +124,76 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_15_dp"
             android:layout_marginStart="@dimen/margin_15_dp"/>
-        <TextView
-            android:id="@+id/tv_file"
-            android:text="Attach file"
-            android:drawablePadding="@dimen/dp_10"
-            android:drawableStart="@drawable/ic_file_attach"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:background="@drawable/spinner_background"
+            android:layout_marginEnd="@dimen/margin_15_dp"
+            android:layout_marginStart="@dimen/margin_15_dp"
+            android:background="@drawable/spinner_background">
+            <ImageView
+                android:id="@+id/file_image"
+                android:src="@drawable/ic_file_attach"
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                android:layout_marginStart="@dimen/dp_5"/>
+            <TextView
+                android:id="@+id/tv_file"
+                android:layout_marginStart="@dimen/dp_5"
+                android:text="Attach file"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txt_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_15_dp"
             android:layout_marginStart="@dimen/margin_15_dp"/>
+        <LinearLayout
+            android:id="@+id/ll_checkbox_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginEnd="@dimen/margin_15_dp"
+            android:layout_marginStart="@dimen/margin_15_dp">
+
+        </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txt_rating_lable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_15_dp"
+            android:layout_marginStart="@dimen/margin_15_dp"/>
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:text="Attach file"
+            android:drawablePadding="@dimen/dp_10"
+            android:drawableStart="@drawable/ic_file_attach"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_15_dp"
+            android:layout_marginStart="@dimen/margin_15_dp"/>
+    </LinearLayout>
+
 
 
 </LinearLayout>

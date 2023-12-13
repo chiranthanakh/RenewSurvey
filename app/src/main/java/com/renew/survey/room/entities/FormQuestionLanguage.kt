@@ -22,6 +22,8 @@ data class FormQuestionLanguage(
     val tbl_form_questions_id: Int,
     val title: String,
     @Ignore
+    var answer:String?,
+    @Ignore
     var options: List<Options>
 ) {
     constructor(
@@ -55,6 +57,7 @@ data class FormQuestionLanguage(
         question_type,
         tbl_form_questions_id,
         title,
+        "",
         listOf()
     )
 }
