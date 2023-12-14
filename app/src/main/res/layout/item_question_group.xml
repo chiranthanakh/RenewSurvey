@@ -26,7 +26,7 @@
             android:text="Personal \n Details"
             android:maxLines="2"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_12sp"
+            android:textSize="@dimen/text_size_14sp"
             android:textStyle="bold" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -35,12 +35,14 @@
             android:layout_marginTop="@dimen/dp_5"
             android:layout_marginBottom="@dimen/dp_5"
             android:layout_width="@dimen/margin_100dp"
+            android:visibility="gone"
             android:layout_height="@dimen/margin_15_dp"
             android:layout_marginLeft="@dimen/dp_10"/>
         <TextView
-            android:text="10/13"
+            android:text="(Under Development)"
             android:gravity="center"
-            android:textSize="@dimen/text_size_12sp"
+            android:textSize="10sp"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:layout_marginBottom="@dimen/dp_5"
             android:layout_width="match_parent"
