@@ -64,6 +64,7 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/tv_project"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -154,10 +155,11 @@
                                 android:gravity="center"
                                 android:textStyle="bold" />
                             <TextView
+                                android:id="@+id/tv_total_survey"
                                 android:layout_marginTop="20dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="50"
+                                android:text="0"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="@color/demo_state_foreground_color"
@@ -195,17 +197,18 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Pending For Submit"
+                                android:text="Draft\n"
                                 android:textColor="@color/demo_state_foreground_color"
                                 android:textSize="20sp"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textStyle="bold" />
                             <TextView
+                                android:id="@+id/tv_draft_survey"
                                 android:layout_marginTop="20dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="50"
+                                android:text="0"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="@color/demo_state_foreground_color"
@@ -251,17 +254,18 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Today's\n Survey"
+                                android:text="Pending\n Survey"
                                 android:textColor="@color/demo_state_foreground_color"
                                 android:textSize="20sp"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textStyle="bold" />
                             <TextView
+                                android:id="@+id/tv_pending_survey"
                                 android:layout_marginTop="20dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="50"
+                                android:text="0"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="@color/demo_state_foreground_color"
@@ -299,17 +303,18 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Pending to\n Sync"
+                                android:text="Sync \nDone"
                                 android:textColor="@color/demo_state_foreground_color"
                                 android:textSize="20sp"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textStyle="bold" />
                             <TextView
+                                android:id="@+id/tv_sync_done"
                                 android:layout_marginTop="20dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="50"
+                                android:text="0"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:textColor="@color/demo_state_foreground_color"
@@ -355,5 +360,16 @@
         app:menu="@menu/menu_items">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+    <RelativeLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80FFFFFF"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -77,7 +77,7 @@ class QuestionsAdapter(
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtEditTextLable.text = this.title
+                        binding.txtEditTextLable.text = "${position+1}. ${this.title}"
                         binding.edittext.addTextChangedListener(object :TextWatcher{
                             override fun beforeTextChanged(
                                 p0: CharSequence?,
@@ -151,21 +151,26 @@ class QuestionsAdapter(
                                         binding.edittext.setText(preferenceManager.getLocation())
                                         this.answer=preferenceManager.getLocation()
                                     }
-                                    "EMAIL"->{
-
-                                    }
                                 }
                             }
                         }else{
-                            binding.edittext.filters= arrayOf(InputFilter.LengthFilter(this.max_length.toInt()))
                             binding.edittext.isFocusable=true
                             binding.edittext.isFocusableInTouchMode=true
                             binding.edittext.isEnabled=true
                         }
-                        if (this.question_type=="NUMBER"){
-                            binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
-                        }else{
-                            binding.edittext.inputType=InputType.TYPE_CLASS_TEXT
+                        when(question_type){
+                            "NUMBER"->{
+                                binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
+                            }
+                            "TEXT"->{
+                                binding.edittext.inputType=InputType.TYPE_CLASS_TEXT
+                            }
+                            "EMAIL"->{
+                                binding.edittext.inputType=InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
+                            }
+                            else->{
+                                binding.edittext.inputType=InputType.TYPE_CLASS_TEXT
+                            }
                         }
                     }
                     "SINGLE_SELECT"->{
@@ -177,7 +182,7 @@ class QuestionsAdapter(
                         binding.llRange.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtSpLable.text = this.title
+                        binding.txtSpLable.text = "${position+1}. ${this.title}"
                         if (this.answer!=null){
                             /*this.options.forEachIndexed { index, options ->
                                 if (options.title==answer){
@@ -209,7 +214,7 @@ class QuestionsAdapter(
                         binding.llFile.visibility = View.GONE
                         binding.llCheckbox.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtMultiselect.text = this.title
+                        binding.txtMultiselect.text = "${position+1}. ${this.title}"
                         binding.multiselect.setText(this.answer)
                         val options= arrayListOf<MultiSelectItem>()
                         for (o in this.options){
@@ -252,7 +257,7 @@ class QuestionsAdapter(
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtRadio.text = this.title
+                        binding.txtRadio.text = "${position+1}. ${this.title}"
                         binding.rgRadio.removeAllViews()
                         for(option in this.options){
                             val radioButton=RadioButton(context)
@@ -277,7 +282,7 @@ class QuestionsAdapter(
                         binding.llRange.visibility = View.VISIBLE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtRange.text = this.title
+                        binding.txtRange.text = "${position+1}. ${this.title}"
                         if (answer!=""){
                             val vals=this.answer!!.split(",")
                             val values= arrayListOf<Float>()
@@ -313,7 +318,7 @@ class QuestionsAdapter(
                         binding.llRange.visibility = View.GONE
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.VISIBLE
-                        binding.txtFileLable.text = this.title
+                        binding.txtFileLable.text = "${position+1}. ${this.title}"
                         binding.llRating.visibility = View.GONE
                         if (this.question_type=="FILE"){
                             binding.tvFile.setText("Attach file")
@@ -338,7 +343,8 @@ class QuestionsAdapter(
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
                         binding.llCheckbox.visibility = View.VISIBLE
-                        binding.txtCheckbox.setText(this.title)
+                        binding.txtCheckbox.setText("${position+1}. ${this.title}")
+                        binding.llCheckboxAdd.removeAllViews()
                         for (ops in this.options){
                             val checkBox=CheckBox(context)
                             checkBox.text=ops.title
@@ -351,6 +357,7 @@ class QuestionsAdapter(
                                     }
                                 }
                             })
+                            binding.llCheckboxAdd.addView(checkBox)
                         }
                     }
                     "RATING"->{
@@ -364,7 +371,7 @@ class QuestionsAdapter(
                         binding.llRating.visibility = View.VISIBLE
                         binding.ratingBar.numStars=this.max_length.toInt()
                         binding.ratingBar.stepSize=this.min_length.toFloat()
-                        binding.txtRatingLable.text = this.title
+                        binding.txtRatingLable.text = "${position+1}. ${this.title}"
                         if(this.answer!=""){
                             binding.ratingBar.rating=this.answer!!.toFloat()
                         }

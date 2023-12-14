@@ -1,10 +1,12 @@
 package com.renew.survey.utilities
 
 import com.google.gson.JsonElement
+import com.renew.survey.room.entities.AnswerEntity
 import okhttp3.Interceptor.*
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -105,6 +107,13 @@ interface ApiInterface {
         @Header("Authorization") headers: String,
         @Field("tbl_users_id") tbl_users_id: String,
     ) : Response<JsonElement>
+
+    @POST("ProjectMaster/sync_survey")
+    suspend fun syncSubmitForms(
+        @Header("Authorization") headers: String,
+        @Body data: List<AnswerEntity>,
+    ) : Response<JsonElement>
+
 
 
     companion object {

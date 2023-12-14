@@ -1,6 +1,8 @@
 package com.renew.survey.views.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,15 +21,17 @@ import com.renew.survey.response.StateModel
 import com.renew.survey.response.TehsilModel
 import com.renew.survey.response.VillageModel
 import com.renew.survey.room.AppDatabase
+import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DistrictEntity
 import com.renew.survey.room.entities.PanchayathEntity
+import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
 import kotlinx.coroutines.launch
 
 
-class CommonQuestionFragment : Fragment() {
+class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersEntity) : Fragment() {
     lateinit var binding:FragmentCommonQuestionBinding
     var stateList= arrayListOf<StateModel>();
     var districtList= arrayListOf<DistrictModel>()
@@ -42,6 +46,181 @@ class CommonQuestionFragment : Fragment() {
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
         getStateData()
         spinnerSelectors()
+        binding.edtBeneficiaryName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.banficary_name=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.rbMale.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.gender=compoundButton.text.toString()
+            }
+        }
+        binding.rbFemale.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.gender=compoundButton.text.toString()
+            }
+        }
+        binding.rbOther.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.gender=compoundButton.text.toString()
+            }
+        }
+        binding.edtFamilySize.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.family_size=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.is_lpg_using=compoundButton.text.toString()
+            }
+        }
+        binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.is_lpg_using=compoundButton.text.toString()
+            }
+        }
+        binding.edtNoCylinderYear.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.no_of_cylinder_per_year=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.rbCowDungYes.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.is_cow_dung=compoundButton.text.toString()
+            }
+        }
+        binding.rbCowDungNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.is_cow_dung=compoundButton.text.toString()
+            }
+        }
+        binding.edtNoCowDungPerDay.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.no_of_cow_dung_per_day=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.rbOwn.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.house_type=compoundButton.text.toString()
+            }
+        }
+        binding.rbRented.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.house_type=compoundButton.text.toString()
+            }
+        }
+        binding.edtAnnualFamilyIncome.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.annual_family_income=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.rbCleanYes.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.willing_to_contribute_clean_cooking=compoundButton.text.toString()
+            }
+        }
+        binding.rbCleanNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.willing_to_contribute_clean_cooking=compoundButton.text.toString()
+            }
+        }
+        binding.edtWoodUsed.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.wood_use_per_day_in_kg=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.rbElectricityYes.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.electricity_connection_available=compoundButton.text.toString()
+            }
+        }
+        binding.rbElectricityNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.electricity_connection_available=compoundButton.text.toString()
+            }
+        }
+
+        binding.edtCattleOwn.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.no_of_cattles_own=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.edtMobile.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.mobile_number=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.edtAadhaarCard.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.aadhar_card=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
 
         return binding.root
     }
@@ -87,6 +266,7 @@ class CommonQuestionFragment : Fragment() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 if (p2>0){
                     getDistrict(stateList[p2].mst_state_id.toInt())
+                    commonAnswersEntity.mst_state_id=stateList[p2].mst_state_id
                 }
             }
 
@@ -99,6 +279,7 @@ class CommonQuestionFragment : Fragment() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 if (p2>0){
                     getTehsil(districtList[p2].mst_district_id.toInt())
+                    commonAnswersEntity.mst_district_id=districtList[p2].mst_district_id
                 }
             }
 
@@ -111,6 +292,7 @@ class CommonQuestionFragment : Fragment() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 if (p2>0){
                     getPanchayath(tehsilList[p2].mst_tehsil_id.toInt())
+                    commonAnswersEntity.mst_tehsil_id=tehsilList[p2].mst_tehsil_id
                 }
             }
 
@@ -123,6 +305,19 @@ class CommonQuestionFragment : Fragment() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 if (p2>0){
                     getVillage(panchayathList[p2].mst_panchayat_id.toInt())
+                    commonAnswersEntity.mst_panchayat_id=panchayathList[p2].mst_panchayat_id
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+        }
+        binding.spVillage.onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                if (p2>0){
+                    commonAnswersEntity.mst_village_id=villageList[p2].mst_villages_id
                 }
             }
 

@@ -5,12 +5,12 @@
     <string name="Project">Project<font color='#EA0C27'>*</font></string>
     <string name="name">Name of the Employee<font color='#EA0C27'>*</font></string>
     <string name="dob">Date of Birth (DD-MM-YYYY)<font color='#EA0C27'>*</font></string>
-    <string name="gender">Gender<font color='#EA0C27'>*</font></string>
+    <string name="gender">7. Gender</string>
     <string name="phone">Worker Phone Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_contact">Emergency Contact Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
     <string name="address">Address<font color='#EA0C27'>*</font></string>
-    <string name="state">State<font color='#EA0C27'>*</font></string>
+    <string name="state">2. State</string>
     <string name="locatioon">District<font color='#EA0C27'>*</font></string>
     <string name="skill_type">Skill Type<font color='#EA0C27'>*</font></string>
     <string name="skill_set">Skill Set<font color='#EA0C27'>*</font></string>
@@ -23,7 +23,7 @@
 
     <string name="driving">Driving licence no<font color='#EA0C27'>*</font></string>
     <string name="induction_state">Induction Status<font color='#EA0C27'>*</font></string>
-    <string name="aadhar">Aadhaar Card<font color='#EA0C27'>*</font></string>
+    <string name="aadhar">20. Aadhaar Card</string>
     <string name="medical_states">Medical test status<font color='#EA0C27'>*</font></string>
     <string name="report">Medical Report is Ok<font color='#EA0C27'>*</font></string>
 
@@ -34,21 +34,27 @@
     <string name="medical_cert">Upload Medical Certificate<font color='#EA0C27'>*</font></string>
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
-    <string name="beneficiary_name">Beneficiary Name</string>
-    <string name="family_size">Family size</string>
-    <string name="lpg_using">LPG using</string>
+    <string name="beneficiary_name">1. Beneficiary Name</string>
+    <string name="family_size">8. Family size</string>
+    <string name="lpg_using">9. LPG using</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="no_of_cylinder_per_year">No of cylinder per year</string>
-    <string name="no_of_cow_dung_per_day">No Of Cow Dung Per Day</string>
-    <string name="cow_dung_cake_using">Cow dung cake using?</string>
-    <string name="annual_family_income">Annual Family Income</string>
-    <string name="house_type">House type</string>
-    <string name="willing_to_contribute_to_clean_cooking_device">Willing to contribute to clean cooking device?</string>
-    <string name="wood_used_per_day_in_kg">Wood Used Per Day In KG</string>
-    <string name="electricity_connection_available">Electricity connection available</string>
-    <string name="no_of_cattle_own">No of cattle own</string>
-    <string name="mobile_number">Mobile number</string>
+    <string name="no_of_cylinder_per_year">10. No of cylinder per year</string>
+    <string name="no_of_cow_dung_per_day">12. No Of Cow Dung Per Day</string>
+    <string name="cow_dung_cake_using">11. Cow dung cake using?</string>
+    <string name="annual_family_income">14. Annual Family Income</string>
+    <string name="house_type">13. House type</string>
+    <string name="willing_to_contribute_to_clean_cooking_device">15. Willing to contribute to clean cooking device?</string>
+    <string name="wood_used_per_day_in_kg">16. Wood Used Per Day In KG</string>
+    <string name="electricity_connection_available">17. Electricity connection available</string>
+    <string name="no_of_cattle_own">18. No of cattle own</string>
+    <string name="mobile_number">19. Mobile number</string>
+    <string name="district">3. District</string>
+    <string name="tehsil">4. Tehsil</string>
+    <string name="panchayath">5. Panchayath</string>
+    <string name="village">6. Village</string>
+    <string name="own">Own</string>
+    <string name="rented">Rented</string>
     <string-array name="state">
         <item>Select State</item>
     </string-array>

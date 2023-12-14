@@ -15,17 +15,26 @@
             android:paddingStart="@dimen/margin_15_dp"
             android:paddingEnd="@dimen/margin_15_dp"
             android:orientation="vertical">
+            <TextView
+                android:text="@string/beneficiary_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
             <EditText
                 android:id="@+id/edt_beneficiary_name"
-                android:hint="@string/beneficiary_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
+                android:background="@drawable/spinner_background"
+                />
+            <TextView
+                android:text="@string/state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_15_dp"
                 android:background="@drawable/spinner_background">
                 <Spinner
                     android:id="@+id/sp_state"
@@ -34,10 +43,14 @@
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
+            <TextView
+                android:text="@string/district"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_15_dp"
                 android:background="@drawable/spinner_background">
                 <Spinner
                     android:id="@+id/sp_district"
@@ -46,10 +59,14 @@
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
+            <TextView
+                android:text="@string/tehsil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_15_dp"
                 android:background="@drawable/spinner_background">
                 <Spinner
                     android:id="@+id/sp_tehsil"
@@ -58,6 +75,11 @@
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
+            <TextView
+                android:text="@string/panchayath"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,6 +92,11 @@
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
+            <TextView
+                android:text="@string/village"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,10 +137,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+            <TextView
+                android:text="@string/family_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
             <EditText
                 android:id="@+id/edt_family_size"
                 android:inputType="number"
-                android:hint="@string/family_size"
+                android:maxLength="2"
+                android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"/>
@@ -139,10 +172,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+            <TextView
+                android:text="@string/no_of_cylinder_per_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
             <EditText
                 android:id="@+id/edt_no_cylinder_year"
                 android:inputType="number"
-                android:hint="@string/no_of_cylinder_per_year"
+                android:maxLength="2"
+                android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"/>
@@ -168,13 +207,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+            <TextView
+                android:text="@string/no_of_cow_dung_per_day"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <EditText
                 android:id="@+id/edt_no_cow_dung_per_day"
                 android:inputType="number"
-                android:hint="@string/no_of_cow_dung_per_day"
+                android:maxLength="3"
+                android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"/>
+                android:layout_height="wrap_content" />
             <TextView
                 android:text="@string/house_type"
                 android:layout_marginTop="@dimen/dp_10"
@@ -186,24 +230,29 @@
                 android:orientation="horizontal">
                 <RadioButton
                     android:id="@+id/rb_own"
-                    android:text="@string/yes"
+                    android:text="@string/own"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <RadioButton
                     android:id="@+id/rb_rented"
-                    android:text="@string/no"
+                    android:text="@string/rented"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+            <TextView
+                android:text="@string/annual_family_income"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <EditText
                 android:id="@+id/edt_annual_family_income"
                 android:inputType="number"
-                android:hint="@string/annual_family_income"
+                android:maxLength="9"
+                android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"/>
+                android:layout_height="wrap_content" />
             <TextView
                 android:text="@string/willing_to_contribute_to_clean_cooking_device"
                 android:layout_marginTop="@dimen/dp_10"
@@ -226,13 +275,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+            <TextView
+                android:text="@string/wood_used_per_day_in_kg"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <EditText
                 android:id="@+id/edt_wood_used"
                 android:inputType="number"
-                android:hint="@string/wood_used_per_day_in_kg"
+                android:maxLength="6"
+                android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"/>
+                android:layout_height="wrap_content" />
             <TextView
                 android:text="@string/electricity_connection_available"
                 android:layout_marginTop="@dimen/dp_10"
@@ -255,30 +309,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+            <TextView
+                android:text="@string/no_of_cattle_own"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <EditText
                 android:id="@+id/edt_cattle_own"
                 android:inputType="number"
-                android:hint="@string/no_of_cattle_own"
+                android:maxLength="6"
+                android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"/>
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/mobile_number"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <EditText
                 android:id="@+id/edt_mobile"
                 android:inputType="number"
-                android:hint="@string/mobile_number"
+                android:background="@drawable/spinner_background"
                 android:maxLength="10"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"/>
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/aadhar"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <EditText
                 android:id="@+id/edt_aadhaar_card"
                 android:inputType="number"
-                android:hint="@string/aadhar"
+                android:background="@drawable/spinner_background"
                 android:maxLength="12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_marginBottom="@dimen/dp_10"/>
+                android:layout_marginBottom="@dimen/margin_100dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

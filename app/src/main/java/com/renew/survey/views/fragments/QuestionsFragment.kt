@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.renew.survey.adapter.QuestionsAdapter
 import com.renew.survey.databinding.FragmentQuestionsBinding
 import com.renew.survey.room.AppDatabase
@@ -58,7 +60,7 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
             }
             //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
-                if (formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
+                if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
                     val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(formQuestionLanguage.tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
                         options.add(0,Options("Select"))
@@ -66,8 +68,8 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
                     questionGroupList[fragPos].questions[index].options=options
                 }
             }
-            /*val json=Gson().toJson(questionList)
-            Log.e("Options","data=$json")*/
+            val json= Gson().toJson(questionGroupList[fragPos])
+            Log.e("Options","data=$json")
             questionsAdapter.setData(questionGroupList[fragPos].questions)
         }
 

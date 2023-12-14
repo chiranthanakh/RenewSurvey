@@ -1,12 +1,14 @@
 package com.renew.survey.room.dao
 
-import android.adservices.adid.AdId
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.renew.survey.room.entities.AnswerEntity
 import com.renew.survey.room.entities.CategoryEntity
+import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DivisionEntity
+import com.renew.survey.room.entities.DynamicAnswersEntity
 import com.renew.survey.room.entities.FileTypeEntity
 import com.renew.survey.room.entities.FormEntity
 import com.renew.survey.room.entities.FormLanguageEntity
@@ -23,6 +25,15 @@ import com.renew.survey.room.entities.QuestionGroupWithLanguage
 
 @Dao
 interface FormsDao {
+
+    @Query("SELECT COUNT(id) FROM AnswerEntity")
+    suspend fun getTotalSurvey(): Int
+
+    @Query("SELECT COUNT(id) FROM AnswerEntity where sync=0")
+    suspend fun getTotalPendingSurvey(): Int
+
+    @Query("SELECT COUNT(id) FROM AnswerEntity where sync=1")
+    suspend fun getTotalDoneSurvey(): Int
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllForms(formList: List<FormEntity>)
 
@@ -36,7 +47,7 @@ interface FormsDao {
     @Query("SELECT l.title,q.* from FormQuestionEntity as q inner join FormLanguageEntity as l on q.id=l.module_id and l.module='tbl_form_questions' where l.mst_language_id=:language and q.mst_question_group_id=:group order by q.order_by")
     suspend fun getAllFormsQuestions(language: Int,group:Int):List<FormQuestionLanguage>
 
-    @Query("SELECT title,mqg.* FROM ProjectPhaseQuestionEntity pq " +
+    @Query("SELECT title,tbl_project_phase_id,version,mqg.* FROM ProjectPhaseQuestionEntity pq " +
             "LEFT JOIN FormQuestionGroupEntity mqg ON mqg.mst_question_group_id = pq.mst_question_group_id " +
             "LEFT JOIN FormLanguageEntity mfl ON mfl.module_id = mqg.mst_question_group_id AND mfl.module = 'mst_question_group' " +
             "WHERE mfl.mst_language_id = :language AND pq.tbl_projects_id =:project AND " +
@@ -63,7 +74,7 @@ interface FormsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllProjects(formList: List<ProjectEntity>)
 
-    @Query("Select * from ProjectEntity")
+    @Query("Select * from ProjectEntity order by tbl_projects_id")
     suspend fun getAllProjects(): List<ProjectEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -75,5 +86,26 @@ interface FormsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllCategories(formList: List<CategoryEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAnswer(ans:AnswerEntity):Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCommonAnswer(ans:CommonAnswersEntity):Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDynamicAnswer(ans:DynamicAnswersEntity):Long
+
+    @Query("Select * from AnswerEntity where sync=0")
+    suspend fun getAllUnsyncedAnswers(): List<AnswerEntity>
+
+
+    @Query("Select * from CommonAnswersEntity where answer_id=:ansId limit 1")
+    suspend fun getCommonAnswers(ansId:Int): CommonAnswersEntity
+
+    @Query("Select * from DynamicAnswersEntity where answer_id=:answer_id")
+    suspend fun getDynamicAns(answer_id:Int): List<DynamicAnswersEntity>
+
+    @Query("Update AnswerEntity set sync=1 where id=:ans_id")
+    suspend fun updateSync(ans_id:Int)
 
 }

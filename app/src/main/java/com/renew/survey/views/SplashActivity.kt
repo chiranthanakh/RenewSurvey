@@ -18,6 +18,10 @@ class SplashActivity:BaseActivity() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { true }
         setContentView(binding.root)
+    }
+
+    override fun onResume() {
+        super.onResume()
         lifecycleScope.launch {
             delay(2000)
             if (preferenceManager.getToken()!=""){
