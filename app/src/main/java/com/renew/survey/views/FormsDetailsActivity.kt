@@ -86,18 +86,18 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             questionGroupList.add(0,QuestionGroupWithLanguage(0,0,"Basic Information",0,0,true,
                 listOf()
             ))
-            for (q in questionGroupList){
-                if (q.mst_question_group_id==0){
-                    val fragment=CommonQuestionFragment()
-                    listOfFragment.add(fragment)
-                    supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
-                }else{
-                    val fragment=QuestionsFragment(q.mst_question_group_id,questionGroupList)
-                    listOfFragment.add(fragment)
-                    supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
-                }
-
+            questionGroupList.forEachIndexed { index, questionGroupWithLanguage ->
+                    if (questionGroupWithLanguage.mst_question_group_id==0){
+                        val fragment=CommonQuestionFragment()
+                        listOfFragment.add(fragment)
+                        supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
+                    }else{
+                        val fragment=QuestionsFragment(questionGroupWithLanguage.mst_question_group_id,index,questionGroupList)
+                        listOfFragment.add(fragment)
+                        supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
+                    }
             }
+
 
             binding.recyclerView.adapter=QuestionGroupAdapter(this@FormsDetailsActivity,questionGroupList,this@FormsDetailsActivity)
             loadFragment(0)
@@ -128,13 +128,13 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         supportFragmentManager.beginTransaction().replace(R.id.container, listOfFragment[0]).commit();
     }
     private fun loadQuestionFragment(group:Int){
-        for(q in questionGroupList){
+        /*for(q in questionGroupList){
             if (q.mst_question_group_id==group){
 
             }else{
                 supportFragmentManager.beginTransaction().replace(R.id.container, QuestionsFragment(group,questionGroupList)).commit()
             }
-        }
+        }*/
 
     }
     fun turnOnLocation(){

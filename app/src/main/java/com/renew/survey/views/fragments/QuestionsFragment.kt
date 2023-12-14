@@ -22,7 +22,7 @@ import com.renew.survey.utilities.FileUtils
 import com.renew.survey.utilities.PreferenceManager
 import kotlinx.coroutines.launch
 
-class QuestionsFragment constructor(val group: Int, var questionGroupList: List<QuestionGroupWithLanguage>
+class QuestionsFragment constructor(val group: Int,val fragPos:Int, var questionGroupList: List<QuestionGroupWithLanguage>
 ) : Fragment() ,QuestionsAdapter.ClickListener{
 
     lateinit var binding:FragmentQuestionsBinding
@@ -47,28 +47,28 @@ class QuestionsFragment constructor(val group: Int, var questionGroupList: List<
         prefsManager=PreferenceManager(requireContext())
         getQuestions()
         binding.recyclerView.layoutManager=LinearLayoutManager(requireContext())
-        questionsAdapter= QuestionsAdapter(requireContext(),questionGroupList[group].questions,this)
+        questionsAdapter= QuestionsAdapter(requireContext(),questionGroupList[fragPos].questions,this)
         binding.recyclerView.adapter=questionsAdapter
         return binding.root
     }
     fun getQuestions(){
         lifecycleScope.launch {
-            if (questionGroupList[group].questions.isEmpty()){
-                questionGroupList[group].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
+            if (questionGroupList[fragPos].questions.isEmpty()){
+                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
             }
             //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
-            questionGroupList[group].questions.forEachIndexed { index, formQuestionLanguage ->
+            questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
                 if (formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
                     val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(formQuestionLanguage.tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
                         options.add(0,Options("Select"))
                     }
-                    questionGroupList[group].questions[index].options=options
+                    questionGroupList[fragPos].questions[index].options=options
                 }
             }
             /*val json=Gson().toJson(questionList)
             Log.e("Options","data=$json")*/
-            questionsAdapter.setData(questionGroupList[group].questions)
+            questionsAdapter.setData(questionGroupList[fragPos].questions)
         }
 
     }
@@ -84,7 +84,7 @@ class QuestionsFragment constructor(val group: Int, var questionGroupList: List<
                         requireContext(),
                         imageUri1
                     )
-                    questionGroupList[group].questions[position].answer=path
+                    questionGroupList[fragPos].questions[position].answer=path
                     questionsAdapter.notifyItemChanged(position)
                 }
             }
@@ -92,7 +92,7 @@ class QuestionsFragment constructor(val group: Int, var questionGroupList: List<
                 if (data != null) {
                     val uri = data.data
                     filePath = FileUtils.getPathFromUri(context, uri)
-                    questionGroupList[group].questions[position].answer=filePath
+                    questionGroupList[fragPos].questions[position].answer=filePath
                     questionsAdapter.notifyItemChanged(position)
                 }
             }
@@ -102,7 +102,7 @@ class QuestionsFragment constructor(val group: Int, var questionGroupList: List<
 
     override fun onFileSelect(question: FormQuestionLanguage, pos: Int, type:String, capture:String) {
         position=pos
-        openCamera()
+        //openCamera()
         if (capture=="CAPTURE"){
             openCamera()
         }else{
