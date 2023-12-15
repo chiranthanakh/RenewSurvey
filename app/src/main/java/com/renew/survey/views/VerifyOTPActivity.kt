@@ -218,7 +218,7 @@ class VerifyOTPActivity : BaseActivity() {
         }
     }
     fun startTimer(){
-        object : CountDownTimer(5000, 1000) {
+        object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 binding.tvResend.setText("${millisUntilFinished / 1000} sec")
             }

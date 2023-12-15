@@ -20,6 +20,7 @@ import com.renew.survey.room.entities.FormWithLanguage
 import com.renew.survey.room.entities.Options
 import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
+import com.renew.survey.room.entities.ProjectWithLanguage
 import com.renew.survey.room.entities.ProjectsPhase
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
 
@@ -76,6 +77,11 @@ interface FormsDao {
 
     @Query("Select * from ProjectEntity order by tbl_projects_id")
     suspend fun getAllProjects(): List<ProjectEntity>
+
+    @Query("Select title,p.* from ProjectEntity as p  inner join FormLanguageEntity as l on p.tbl_projects_id=l.module_id where l.module='tbl_projects' and mst_language_id=1 order by tbl_projects_id")
+    suspend fun getAllProjectsWithLanguage(): List<ProjectWithLanguage>
+
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllProjectPhaseQuestionEntities(formList: List<ProjectPhaseQuestionEntity>)

@@ -20,6 +20,7 @@
         <!-- Set the splash screen background, animated icon, and animation
         duration. -->
         <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowIsTranslucent">true</item>
 
         <!-- Use windowSplashScreenAnimatedIcon to add a drawable or an animated
              drawable. One of these is required. -->

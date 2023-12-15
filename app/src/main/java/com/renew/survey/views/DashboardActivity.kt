@@ -19,7 +19,7 @@ class DashboardActivity : BaseActivity() {
       //  setContentView(R.layout.activity_dashboard)
         binding= ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey()
             val pendingCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalPendingSurvey()
             val doneCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalDoneSurvey()
@@ -28,7 +28,7 @@ class DashboardActivity : BaseActivity() {
             binding.tvPendingSurvey.text = "$pendingCount"
             binding.tvSyncDone.text = "$doneCount"
             //binding.tvTotalSurvey.text = "${AppDatabase.getInstance(this).formDao().getTotalSurvey()}"
-        }
+        }*/
         binding.tvProject.text=preferenceManager.getProject().project_code
         binding.btnSync.setOnClickListener {
             lifecycleScope.launch {

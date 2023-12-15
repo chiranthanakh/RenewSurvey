@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
     lateinit var binding: ActivityLanguageBinding
-    private var permissionListener: PermissionListener? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,51 +54,12 @@ class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
 
     override fun onLanguageSelected(language: LanguageEntity) {
         preferenceManager.saveLanguage(language.mst_language_id)
-        checkPermissions()
+        proceed()
     }
     fun proceed(){
         Intent(this,ProjectActivity::class.java).apply {
             startActivity(this)
         }
     }
-    private fun checkPermissions() {
-        permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-                proceed()
-            }
 
-            override fun onPermissionDenied(deniedPermissions: List<String>) {
-                Toast.makeText(
-                    this@LanguageActivity,
-                    "Permission Denied\n$deniedPermissions", Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            TedPermission.create()
-                .setPermissionListener(permissionListener)
-                .setDeniedMessage(getString(R.string.if_you_reject_this_permission))
-                .setPermissions(
-                    Manifest.permission.READ_MEDIA_VIDEO,
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                    Manifest.permission.POST_NOTIFICATIONS,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.CAMERA
-                )
-                .check()
-        } else {
-            TedPermission.create()
-                .setPermissionListener(permissionListener)
-                .setDeniedMessage(getString(R.string.if_you_reject_this_permission))
-                .setPermissions(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.CAMERA
-                )
-                .check()
-        }
-    }
 }

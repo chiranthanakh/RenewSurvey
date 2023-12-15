@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.renew.survey.databinding.ItemProjectSelectBinding
 import com.renew.survey.response.Project
 import com.renew.survey.room.entities.ProjectEntity
+import com.renew.survey.room.entities.ProjectWithLanguage
 
-class ProjectAdapter(val context:Context, private var list: List<ProjectEntity>, var clickListener: ClickListener) :
+class ProjectAdapter(val context:Context, private var list: List<ProjectWithLanguage>, var clickListener: ClickListener) :
     RecyclerView.Adapter<ProjectAdapter.ViewHolder>() {
 
     class ViewHolder (val binding: ItemProjectSelectBinding):RecyclerView.ViewHolder(binding.root)
@@ -25,12 +26,12 @@ class ProjectAdapter(val context:Context, private var list: List<ProjectEntity>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             with(list[position]){
-                binding.tvProject.text=this.project_code
+                binding.tvProject.text="${this.project_code} - ${this.title}"
                 binding.llProject1.setOnClickListener { clickListener.onProjectSelect(this)}
             }
         }
     }
     interface ClickListener{
-        fun onProjectSelect(project: ProjectEntity)
+        fun onProjectSelect(project: ProjectWithLanguage)
     }
 }

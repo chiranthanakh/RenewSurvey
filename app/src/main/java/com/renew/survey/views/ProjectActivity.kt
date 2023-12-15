@@ -10,6 +10,7 @@ import com.renew.survey.databinding.ActivityProjectBinding
 import com.renew.survey.response.Project
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.ProjectEntity
+import com.renew.survey.room.entities.ProjectWithLanguage
 import kotlinx.coroutines.launch
 
 class ProjectActivity : BaseActivity() ,ProjectAdapter.ClickListener{
@@ -30,7 +31,7 @@ class ProjectActivity : BaseActivity() ,ProjectAdapter.ClickListener{
     }
     fun getProjectData(){
         lifecycleScope.launch {
-            val projects=AppDatabase.getInstance(this@ProjectActivity).formDao().getAllProjects()
+            val projects=AppDatabase.getInstance(this@ProjectActivity).formDao().getAllProjectsWithLanguage()
             binding.recyclerView.adapter=ProjectAdapter(this@ProjectActivity,projects,this@ProjectActivity)
             /*ApiInterface.getInstance()?.apply {
                 val response= getProjects(preferenceManager.getToken()!!,preferenceManager.getUserId()!!,preferenceManager.getLanguage()!!)
@@ -50,7 +51,7 @@ class ProjectActivity : BaseActivity() ,ProjectAdapter.ClickListener{
         }
     }
 
-    override fun onProjectSelect(project: ProjectEntity) {
+    override fun onProjectSelect(project: ProjectWithLanguage) {
         preferenceManager.saveProject(project)
         Intent(this,UserRoleActivity::class.java).apply {
             startActivity(this)

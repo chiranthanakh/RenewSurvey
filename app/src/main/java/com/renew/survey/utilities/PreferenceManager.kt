@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.renew.survey.response.Language
 import com.renew.survey.room.entities.FormWithLanguage
 import com.renew.survey.room.entities.ProjectEntity
+import com.renew.survey.room.entities.ProjectWithLanguage
 
 class PreferenceManager constructor(context: Context){
     private val USER_ID="user_id"
@@ -51,14 +52,14 @@ class PreferenceManager constructor(context: Context){
         return  sharedPreferences.getInt("language",0)
     }
 
-    fun saveProject(projectEntity: ProjectEntity){
+    fun saveProject(projectEntity: ProjectWithLanguage){
         val editor = sharedPreferences.edit()
         editor.putString("project",gson.toJson(projectEntity))
         editor.apply()
     }
 
-    fun getProject(): ProjectEntity{
-        return gson.fromJson(sharedPreferences.getString("project",""),ProjectEntity::class.java)
+    fun getProject(): ProjectWithLanguage{
+        return gson.fromJson(sharedPreferences.getString("project",""),ProjectWithLanguage::class.java)
     }
 
 
