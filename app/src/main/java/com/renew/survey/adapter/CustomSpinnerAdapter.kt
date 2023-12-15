@@ -27,7 +27,6 @@ class CustomSpinnerAdapter(val context: Context, val list: List<String>) : BaseA
         val binding = SpinnerItemBinding.inflate(LayoutInflater.from(p2?.context), p2, false)
         binding.textView1.text = list[p0]
         if (p0 == 0) {
-            binding.textView1.setText("Select")
             binding.textView1.setTextColor(context.resources.getColor(R.color.hint_color))
         } else {
             binding.textView1.setTextColor(context.resources.getColor(R.color.black))

@@ -321,10 +321,10 @@ class QuestionsAdapter(
                         binding.txtFileLable.text = "${position+1}. ${this.title}"
                         binding.llRating.visibility = View.GONE
                         if (this.question_type=="FILE"){
-                            binding.tvFile.setText("Attach file")
+                            binding.tvFile.setText(context.getString(R.string.attach_file))
                             binding.fileImage.setImageResource(R.drawable.ic_file_attach)
                         }else if(this.question_type=="CAPTURE"){
-                            binding.tvFile.setText("Capture Image")
+                            binding.tvFile.setText(context.getString(R.string.capture_image))
                             binding.fileImage.setImageResource(R.drawable.ic_camera)
                         }
                         if (this.answer!=""){

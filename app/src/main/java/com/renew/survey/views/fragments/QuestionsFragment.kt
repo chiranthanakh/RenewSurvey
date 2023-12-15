@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.renew.survey.R
 import com.renew.survey.adapter.QuestionsAdapter
 import com.renew.survey.databinding.FragmentQuestionsBinding
 import com.renew.survey.room.AppDatabase
@@ -63,7 +64,7 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
                 if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
                     val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(formQuestionLanguage.tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
-                        options.add(0,Options("Select"))
+                        options.add(0,Options(getString(R.string.select)))
                     }
                     questionGroupList[fragPos].questions[index].options=options
                 }

@@ -1,22 +1,19 @@
 package com.renew.survey.views
 
-import android.Manifest
+import android.app.Activity
 import android.content.Intent
-import android.os.Build
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
-import com.renew.survey.R
-import com.renew.survey.response.Language
 import com.renew.survey.adapter.LanguageAdapter
 import com.renew.survey.databinding.ActivityLanguageBinding
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.LanguageEntity
 import kotlinx.coroutines.launch
+import java.util.Locale
+
 
 class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
     lateinit var binding: ActivityLanguageBinding
@@ -54,12 +51,21 @@ class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
 
     override fun onLanguageSelected(language: LanguageEntity) {
         preferenceManager.saveLanguage(language.mst_language_id)
+        setLocale(this,language.symbol)
         proceed()
     }
     fun proceed(){
         Intent(this,ProjectActivity::class.java).apply {
             startActivity(this)
         }
+    }
+    fun setLocale(activity: Activity, languageCode: String?) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val resources: Resources = activity.resources
+        val config: Configuration = resources.getConfiguration()
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.getDisplayMetrics())
     }
 
 }

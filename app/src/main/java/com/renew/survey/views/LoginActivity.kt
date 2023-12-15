@@ -66,6 +66,7 @@ class LoginActivity : BaseActivity() {
                             }
                             Intent(this@LoginActivity,SyncDataActivity::class.java).apply {
                                 startActivity(this)
+                                finish()
                             }
                         }
                     }else{

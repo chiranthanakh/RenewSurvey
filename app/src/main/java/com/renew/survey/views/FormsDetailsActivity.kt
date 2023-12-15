@@ -116,7 +116,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         lifecycleScope.launch {
             questionGroupList=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getAllFormsQuestionGroup(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,preferenceManager.getForm().tbl_forms_id) as ArrayList<QuestionGroupWithLanguage>
             Log.e("roomData","data=$questionGroupList")
-            questionGroupList.add(0,QuestionGroupWithLanguage(0,0,"1",0,"Basic Information",12,0,true,
+            questionGroupList.add(0,QuestionGroupWithLanguage(0,0,"1",0,getString(R.string.basic_info),12,0,true,
                 listOf()
             ))
             questionGroupList.forEachIndexed { index, questionGroupWithLanguage ->
