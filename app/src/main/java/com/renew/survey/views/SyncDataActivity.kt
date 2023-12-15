@@ -228,6 +228,7 @@ class SyncDataActivity : BaseActivity() {
     fun navigateToNext(){
         Intent(this,LanguageActivity::class.java).apply {
             startActivity(this)
+            finish()
         }
     }
     fun showProgress(){
