@@ -41,20 +41,27 @@ class VerifyOTPActivity : BaseActivity() {
         binding.tvMobile.setText("Enter 4 digit OTP sent to ${intent.getStringExtra("mobile")}")
         binding.btnVerify.setOnClickListener {
             if (intent.getStringExtra("otp").equals(binding.edtAllOtp.text.toString())){
-                Intent(this,SignUpDetailsActivity::class.java).apply {
-                    putExtra("mobile",intent.getStringExtra("mobile"))
-                    putExtra("aadhar",intent.getStringExtra("aadhar"))
-                    putExtra("project",intent.getStringExtra("project"))
-                    putExtra("project_id",intent.getStringExtra("project_id"))
-                    putExtra("coordinator_id",intent.getStringExtra("coordinator_id"))
-                    putExtra("user_type",intent.getStringExtra("user_type"))
-                    putExtra("user_info",intent.getStringExtra("user_info"))
-                    startActivity(this)
+                if (intent.getBooleanExtra("forgotPassword",false)) {
+                    Intent(this,ResetPasswordActivity::class.java).apply {
+                        putExtra("mobile",intent.getStringExtra("mobile"))
+                        putExtra("project_id",intent.getStringExtra("project_id"))
+                        startActivity(this)
+                    }
+                } else {
+                    Intent(this,SignUpDetailsActivity::class.java).apply {
+                        putExtra("mobile",intent.getStringExtra("mobile"))
+                        putExtra("aadhar",intent.getStringExtra("aadhar"))
+                        putExtra("project",intent.getStringExtra("project"))
+                        putExtra("project_id",intent.getStringExtra("project_id"))
+                        putExtra("coordinator_id",intent.getStringExtra("coordinator_id"))
+                        putExtra("user_type",intent.getStringExtra("user_type"))
+                        putExtra("user_info",intent.getStringExtra("user_info"))
+                        startActivity(this)
+                    }
                 }
             }else{
                 UtilMethods.showToast(this,"Please enter correct OTP")
             }
-
         }
     }
 

@@ -149,7 +149,7 @@
                                 android:background="@color/demo_state_second" />
 
                             <ImageView
-                                android:id="@+id/iv_nav_image"
+                                android:id="@+id/iv_profile_image"
                                 android:layout_width="wrap_content"
                                 android:layout_height="100dp"
                                 android:layout_gravity="center"

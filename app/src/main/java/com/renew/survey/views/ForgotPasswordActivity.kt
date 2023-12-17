@@ -3,20 +3,66 @@ package com.renew.survey.views
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.renew.survey.R
 import com.renew.survey.databinding.ActivityForgotPasswordBinding
+import com.renew.survey.response.ValidationModel
+import com.renew.survey.utilities.ApiInterface
+import com.renew.survey.utilities.AppConstants
+import com.renew.survey.utilities.UtilMethods
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 
-class ForgotPasswordActivity : AppCompatActivity() {
+class ForgotPasswordActivity : BaseActivity() {
     lateinit var binding:ActivityForgotPasswordBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.tvSubmitDetails.setOnClickListener {
-            Intent(this,VerifyOTPActivity::class.java).apply {
-                putExtra("forgotPassword",true)
-                startActivity(this)
+            validationAPI()
+        }
+    }
+
+    private fun validationAPI(){
+        binding.progressLayout.visibility= View.VISIBLE
+        lifecycleScope.launch {
+            ApiInterface.getInstance()?.apply {
+                val response=validateUser(
+                    binding.edtMobile.text.toString(),
+                    AppConstants.AppKey
+                )
+                binding.progressLayout.visibility= View.GONE
+                if (response.isSuccessful){
+                    val jsonObject= JSONObject(response.body().toString())
+                    if (jsonObject.getString("success")=="1"){
+                        val data=gson.fromJson(jsonObject.getString("data").toString(),
+                            ValidationModel::class.java)
+                        Log.e("response",data.toString())
+                        Toast.makeText(this@ForgotPasswordActivity,data.otp, Toast.LENGTH_LONG).show()
+                        Intent(this@ForgotPasswordActivity, VerifyOTPActivity::class.java).apply {
+                            putExtra("forgotPassword",true)
+                            putExtra("mobile",binding.edtMobile.text.toString())
+                            putExtra("project_id",data.project_info.tbl_projects_id)
+                            putExtra("otp",data.otp)
+                            startActivity(this)
+                        }
+                    }else{
+                        Intent(this@ForgotPasswordActivity, VerifyOTPActivity::class.java).apply {
+                            putExtra("forgotPassword",true)
+                            putExtra("mobile",binding.edtMobile.text.toString())
+                            putExtra("project_id",8)//data.project_info.tbl_projects_id)
+                            putExtra("otp","3421")//data.otp)
+                            startActivity(this)
+                        }
+                        UtilMethods.showToast(this@ForgotPasswordActivity,jsonObject.getString("message"))
+                    }
+                }
             }
         }
     }
+
 }

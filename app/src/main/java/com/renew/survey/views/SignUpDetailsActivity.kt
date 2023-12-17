@@ -1,17 +1,27 @@
 package com.renew.survey.views
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.icu.util.Calendar
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toFile
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.reflect.TypeToken
+import com.gun0912.tedpermission.provider.TedPermissionProvider.context
+import com.renew.survey.R
 import com.renew.survey.adapter.DistrictSpinnerAdapter
 import com.renew.survey.adapter.PanchayatSpinnerAdapter
 import com.renew.survey.adapter.StateSpinnerAdapter
@@ -26,9 +36,15 @@ import com.renew.survey.response.UserInfo
 import com.renew.survey.response.VillageModel
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.AppConstants
+import com.renew.survey.utilities.FileUtils
 import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
+import java.io.File
 
 class SignUpDetailsActivity : BaseActivity() {
     lateinit var binding: ActivitySignUpDetailsBinding
@@ -39,6 +55,14 @@ class SignUpDetailsActivity : BaseActivity() {
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
     var userInfo:UserInfo?=null
+    var imageUri: Uri? = null
+    val PICKFILE_REQUEST_CODE=43
+    val FROM_CAMERA=49
+    var imageUri1: Uri? = null
+    var filePath = ""
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivitySignUpDetailsBinding.inflate(layoutInflater)
@@ -77,7 +101,12 @@ class SignUpDetailsActivity : BaseActivity() {
         }
         getState()
         spinnerSelectors()
+
+        binding.ivProfileImage.setOnClickListener {
+            showImagePickerDialog(this)
+        }
     }
+
     fun spinnerSelectors(){
         binding.spState.onItemSelectedListener=object :OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
@@ -190,59 +219,83 @@ class SignUpDetailsActivity : BaseActivity() {
         }
         signUpApi()
     }
-    fun signUpApi(){
-        binding.progressLayout.visibility=View.VISIBLE
+    fun signUpApi() {
+        binding.progressLayout.visibility = View.VISIBLE
         lifecycleScope.launch {
             ApiInterface.getInstance()?.apply {
-                val fcmToken=preferenceManager.getFCMToken()
-                var gender="MALE"
-                if (binding.rbMale.isChecked){
-                    gender="MALE"
-                }else if (binding.rbFemale.isChecked){
-                    gender="FEMALE"
+                val fcmToken = preferenceManager.getFCMToken()
+                var gender = "MALE"
+                if (binding.rbMale.isChecked) {
+                    gender = "MALE"
+                } else if (binding.rbFemale.isChecked) {
+                    gender = "FEMALE"
                 }
-                var user_type="USER"
-                var password:String?=null
-                if (userInfo==null){
-                    password=binding.edtPassword.text.toString()
+                var user_type = "USER"
+                var password: String? = null
+                if (userInfo == null) {
+                    password = binding.edtPassword.text.toString()
                 }
-                Log.e("paramsss","premsssss  ${intent.getStringExtra("project_id")}   ${intent.getStringExtra("project_id")}  ")
-                val response=register(
-                    intent.getStringExtra("project_id")!!,
-                    intent.getStringExtra("project")!!,
-                    intent.getStringExtra("aadhar")!!,
-                    intent.getStringExtra("mobile")!!,
-                    password,
-                    binding.edtFullName.text.toString(),
-                    binding.edtUsername.text.toString(),
-                    binding.edtAddress.text.toString(),
-                    stateList[binding.spState.selectedItemPosition].mst_state_id,
-                    villageList[binding.spVillage.selectedItemPosition].mst_villages_id,
-                    districtList[binding.spDistrict.selectedItemPosition].mst_district_id,
-                    tehsilList[binding.spTehsil.selectedItemPosition].mst_tehsil_id,
-                    panchayathList[binding.spPanchayat.selectedItemPosition].mst_panchayat_id,
-                    binding.edtPincode.text.toString(),
-                    binding.edtEmail.text.toString(),
-                    AppConstants.AppKey,AppConstants.DeviceType,
-                    Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID),fcmToken!!,gender,
-                    binding.edtDob.text.toString(),
-                    intent.getStringExtra("coordinator_id")!!,
-                    intent.getStringExtra("user_type")!!,
-                )
-                binding.progressLayout.visibility=View.GONE
-                if(response.isSuccessful){
-                    val jsonObject=JSONObject(response.body().toString())
-                    Log.e("response",jsonObject.toString())
-                    UtilMethods.showToast(this@SignUpDetailsActivity,jsonObject.getString("message"))
-                    if (jsonObject.getString("success")=="1"){
-                        Intent(this@SignUpDetailsActivity,ApprovalPendingActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(this)
+
+                if (imageUri1 == null) {
+                    UtilMethods.showToast(this@SignUpDetailsActivity, "Please Select Profile Image")
+                } else {
+                    val file = File(FileUtils.getPathFromUri(context, imageUri1))
+                    val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    val profilePhotoPart =
+                        MultipartBody.Part.createFormData("profile_photo", file.name, requestFile)
+                    Log.e(
+                        "paramsss",
+                        "premsssss  ${intent.getStringExtra("project_id")}   ${
+                            intent.getStringExtra("project_id")
+                        }  "
+                    )
+                    val response = register(
+                        intent.getStringExtra("project_id")!!,
+                        intent.getStringExtra("project")!!,
+                        intent.getStringExtra("aadhar")!!,
+                        intent.getStringExtra("mobile")!!,
+                        password,
+                        binding.edtFullName.text.toString(),
+                        binding.edtUsername.text.toString(),
+                        binding.edtAddress.text.toString(),
+                        stateList[binding.spState.selectedItemPosition].mst_state_id,
+                        villageList[binding.spVillage.selectedItemPosition].mst_villages_id,
+                        districtList[binding.spDistrict.selectedItemPosition].mst_district_id,
+                        tehsilList[binding.spTehsil.selectedItemPosition].mst_tehsil_id,
+                        panchayathList[binding.spPanchayat.selectedItemPosition].mst_panchayat_id,
+                        binding.edtPincode.text.toString(),
+                        binding.edtEmail.text.toString(),
+                        AppConstants.AppKey,
+                        AppConstants.DeviceType,
+                        Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID),
+                        fcmToken!!,
+                        gender,
+                        binding.edtDob.text.toString(),
+                        intent.getStringExtra("coordinator_id")!!,
+                        intent.getStringExtra("user_type")!!,
+                        profilePhotoPart,
+                    )
+
+                    binding.progressLayout.visibility = View.GONE
+                    if (response.isSuccessful) {
+                        val jsonObject = JSONObject(response.body().toString())
+                        Log.e("response", jsonObject.toString())
+                        UtilMethods.showToast(
+                            this@SignUpDetailsActivity,
+                            jsonObject.getString("message")
+                        )
+                        if (jsonObject.getString("success") == "1") {
+                            Intent(
+                                this@SignUpDetailsActivity,
+                                ApprovalPendingActivity::class.java
+                            ).apply {
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(this)
+                            }
                         }
                     }
                 }
-
             }
         }
     }
@@ -393,5 +446,63 @@ class SignUpDetailsActivity : BaseActivity() {
     }
     fun isEmailValid(email:String): Boolean {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    fun showImagePickerDialog(activity: Activity) {
+        val builder = AlertDialog.Builder(activity)
+        val inflater = LayoutInflater.from(activity)
+        val dialogView: View = inflater.inflate(R.layout.option_dialog, null)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+        dialogView.findViewById<View>(R.id.btnGallery).setOnClickListener {
+            openGallery()
+            alertDialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCamera).setOnClickListener {
+            openCamera()
+            alertDialog.dismiss()
+        }
+        alertDialog.show()
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            FROM_CAMERA -> {
+                if (resultCode == AppCompatActivity.RESULT_OK) {
+                    val path = FileUtils.getRealPathFromURI(
+                        this,
+                        imageUri1
+                    )
+                    binding.ivProfileImage.setImageURI(imageUri1)
+                }
+            }
+
+            PICKFILE_REQUEST_CODE -> {
+                if (data != null) {
+                    val uri = data.data
+                    imageUri1 = data.data
+                    filePath = FileUtils.getPathFromUri(this, uri)
+                    binding.ivProfileImage.setImageURI(uri)
+                }
+            }
+        }
+    }
+
+    fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICKFILE_REQUEST_CODE)
+    }
+
+    fun openCamera() {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, "New Picture")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera")
+
+        imageUri1 = getContentResolver().insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri1)
+        startActivityForResult(intent, FROM_CAMERA)
     }
 }

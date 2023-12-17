@@ -53,7 +53,7 @@ class SignUpActivity : BaseActivity() {
                 var user_type=""
                 if(intent.getBooleanExtra("user",false)){
                     user_type="USER"
-                }else{
+                } else {
                     user_type="MEMBER"
                 }
                 val response=validateProject(

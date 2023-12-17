@@ -38,6 +38,7 @@
             android:visibility="gone"
             android:layout_height="@dimen/margin_15_dp"
             android:layout_marginLeft="@dimen/dp_10"/>
+
         <TextView
             android:text="(Under Development)"
             android:gravity="center"

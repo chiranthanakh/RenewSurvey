@@ -3,6 +3,9 @@ package com.renew.survey.utilities
 import com.google.gson.JsonElement
 import com.renew.survey.room.entities.AnswerEntity
 import okhttp3.Interceptor.*
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,7 +14,9 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 
 interface ApiInterface {
@@ -34,10 +39,27 @@ interface ApiInterface {
     ) : Response<JsonElement>
 
     @FormUrlEncoded
+    @POST("Auth/verify_user")
+    suspend fun validateUser(
+        @Field("mobile")mobile:String,
+        @Field("app_key")appKey:String,
+    ) : Response<JsonElement>
+
+    @FormUrlEncoded
+    @POST("Auth/reset_password")
+    suspend fun resetPassword(
+        @Field("mobile")mobile:String,
+        @Field("tbl_users_id")tbl_users_id:String,
+        @Field("new_password")new_password:String,
+        @Field("confirm_password")confirm_password:String,
+        ) : Response<JsonElement>
+
+    @FormUrlEncoded
     @POST("Common/get_states")
     suspend fun getStates(
         @Field("app_key")appKey:String,
     ) : Response<JsonElement>
+
     @FormUrlEncoded
     @POST("Common/get_districts")
     suspend fun getDistricts(
@@ -63,33 +85,33 @@ interface ApiInterface {
         @Field("app_key")appKey:String,
     ) : Response<JsonElement>
 
-
-    @FormUrlEncoded
+    @Multipart
     @POST("Auth/register")
     suspend fun register(
-        @Field("tbl_projects_id")tbl_projects_id:String,
-        @Field("project_code")project_code:String,
-        @Field("aadhar_card")aadhar_card:String,
-        @Field("mobile")mobile:String,
-        @Field("password")password:String?,
-        @Field("full_name")full_name:String,
-        @Field("username")username:String,
-        @Field("address")address:String,
-        @Field("mst_state_id")mst_state_id:String,
-        @Field("mst_village_id")mst_village_id:String,
-        @Field("mst_district_id")mst_district_id:String,
-        @Field("mst_tehsil_id")mst_tehsil_id:String,
-        @Field("mst_panchayat_id")mst_panchayat_id:String,
-        @Field("pincode")pincode:String,
-        @Field("email")email:String,
-        @Field("app_key")app_key:String,
-        @Field("device_type")device_type:String,
-        @Field("device_id")device_id:String,
-        @Field("fcm_token")fcm_token:String,
-        @Field("gender")gender:String,
-        @Field("date_of_birth")date_of_birth:String,
-        @Field("co_ordinator_id")co_ordinator_id:String,
-        @Field("user_type")user_type:String,
+        @Part("tbl_projects_id")tbl_projects_id:String,
+        @Part("project_code")project_code:String,
+        @Part("aadhar_card")aadhar_card:String,
+        @Part("mobile")mobile:String,
+        @Part("password")password:String?,
+        @Part("full_name")full_name:String,
+        @Part("username")username:String,
+        @Part("address")address:String,
+        @Part("mst_state_id")mst_state_id:String,
+        @Part("mst_village_id")mst_village_id:String,
+        @Part("mst_district_id")mst_district_id:String,
+        @Part("mst_tehsil_id")mst_tehsil_id:String,
+        @Part("mst_panchayat_id")mst_panchayat_id:String,
+        @Part("pincode")pincode:String,
+        @Part("email")email:String,
+        @Part("app_key")app_key:String,
+        @Part("device_type")device_type:String,
+        @Part("device_id")device_id:String,
+        @Part("fcm_token")fcm_token:String,
+        @Part("gender")gender:String,
+        @Part("date_of_birth")date_of_birth:String,
+        @Part("co_ordinator_id")co_ordinator_id:String,
+        @Part("user_type")user_type:String,
+        @Part profilePhoto: MultipartBody.Part
     ) : Response<JsonElement>
 
     @GET("Common/get_languages")
@@ -119,6 +141,14 @@ interface ApiInterface {
     companion object {
         var retrofitService: ApiInterface?=null
         fun getInstance() : ApiInterface? {
+
+            val loggingInterceptor = HttpLoggingInterceptor()
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+            val client = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build()
+
             if (retrofitService == null) {
                /* val gson = GsonBuilder()
                     .setLenient()
@@ -126,6 +156,7 @@ interface ApiInterface {
                 val retrofit = Retrofit.Builder()
                     .baseUrl("https://renewsms.proteam.co.in/api/v1/")
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
                     .build()
                 retrofitService = retrofit.create(ApiInterface::class.java)
             }
