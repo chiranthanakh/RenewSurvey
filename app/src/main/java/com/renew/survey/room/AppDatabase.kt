@@ -8,6 +8,7 @@ import com.renew.survey.room.dao.FormsDao
 import com.renew.survey.room.dao.LanguageDao
 import com.renew.survey.room.dao.PlacesDao
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DistrictEntity
@@ -32,7 +33,7 @@ import com.renew.survey.room.entities.VillageEntity
     VillageEntity::class,FileTypeEntity::class,FormLanguageEntity::class,FormEntity::class,FormQuestionEntity::class,
     FormQuestionGroupEntity::class,FormQuestionOptionsEntity::class, ProjectEntity::class,ProjectsPhase::class,
     ProjectPhaseQuestionEntity::class,DivisionEntity::class,CategoryEntity::class, AnswerEntity::class,
-    CommonAnswersEntity::class,DynamicAnswersEntity::class], version = 1)
+    CommonAnswersEntity::class,DynamicAnswersEntity::class,AssignedSurveyEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun languageDao(): LanguageDao
     abstract fun placesDao(): PlacesDao

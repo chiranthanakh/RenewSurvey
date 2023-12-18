@@ -44,6 +44,10 @@ class SignUpActivity : BaseActivity() {
             UtilMethods.showToast(this,"Please enter aadhar number")
             return
         }
+        if (binding.edtAadhaarCard.text.toString().length!=12){
+            UtilMethods.showToast(this,"Please enter valid aadhar number")
+            return
+        }
         validationAPI()
     }
     private fun validationAPI(){
@@ -74,6 +78,8 @@ class SignUpActivity : BaseActivity() {
                             putExtra("mobile",binding.edtMobile.text.toString())
                             putExtra("aadhar",binding.edtAadhaarCard.text.toString())
                             putExtra("project",data.project_info.project_code)
+                            putExtra("state_name",data.project_info.state_name)
+                            putExtra("project_name",data.project_info.title)
                             putExtra("project_code",binding.edtUniqueCode.text.toString())
                             putExtra("project_id",data.project_info.tbl_projects_id)
                             putExtra("coordinator_id",data.project_info.co_ordinator_id)

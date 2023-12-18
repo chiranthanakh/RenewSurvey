@@ -53,6 +53,8 @@ class VerifyOTPActivity : BaseActivity() {
                         putExtra("aadhar",intent.getStringExtra("aadhar"))
                         putExtra("project",intent.getStringExtra("project"))
                         putExtra("project_id",intent.getStringExtra("project_id"))
+                        putExtra("state_name",intent.getStringExtra("state_name"))
+                        putExtra("project_name",intent.getStringExtra("project_name"))
                         putExtra("coordinator_id",intent.getStringExtra("coordinator_id"))
                         putExtra("user_type",intent.getStringExtra("user_type"))
                         putExtra("user_info",intent.getStringExtra("user_info"))

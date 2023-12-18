@@ -21,6 +21,7 @@ import com.renew.survey.adapter.QuestionGroupAdapter
 import com.renew.survey.databinding.ActivityFormsDetailsBinding
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DynamicAnswersEntity
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
@@ -38,12 +39,19 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var locationRequest: LocationRequest? = null
     private var locationCallback: LocationCallback? = null
-    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","",0)
+    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityFormsDetailsBinding.inflate(layoutInflater)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContentView(binding.root)
+        if (intent.hasExtra("assigned")){
+            val a=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
+            commonAnswersEntity= CommonAnswersEntity(
+                null,a.aadhar_card,a.annual_family_income,a.banficary_name,a.electricity_connection_available,a.family_size,a.gender,a.house_type,a.is_cow_dung,
+                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),null
+            )
+        }
         getAllQuestionGroup()
         binding.recyclerView.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         binding.btnContinue.setOnClickListener {
@@ -64,7 +72,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
                 val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[0].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
                     Date(),"dd:MM:yyyy:HH:mm:ss")}"
-                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),"",questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[0].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[0].version,0)
+                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[0].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[0].version,0)
                 val ansId=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertAnswer(ans)
                 commonAnswersEntity.answer_id=ansId.toInt()
                 val commonAnsId=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertCommonAnswer(commonAnswersEntity)
@@ -116,6 +124,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         lifecycleScope.launch {
             questionGroupList=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getAllFormsQuestionGroup(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,preferenceManager.getForm().tbl_forms_id) as ArrayList<QuestionGroupWithLanguage>
             Log.e("roomData","data=$questionGroupList")
+
             questionGroupList.add(0,QuestionGroupWithLanguage(0,0,"1",0,getString(R.string.basic_info),12,0,true,
                 listOf()
             ))

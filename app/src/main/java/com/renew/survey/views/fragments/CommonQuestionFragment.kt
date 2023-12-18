@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.lifecycleScope
+import com.renew.survey.R
 import com.renew.survey.adapter.DistrictSpinnerAdapter
 import com.renew.survey.adapter.PanchayatSpinnerAdapter
 import com.renew.survey.adapter.StateSpinnerAdapter
@@ -29,6 +30,7 @@ import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersEntity) : Fragment() {
@@ -44,6 +46,53 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         savedInstanceState: Bundle?
     ): View {
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
+        if (commonAnswersEntity.banficary_name!=""){
+            binding.edtBeneficiaryName.setText(commonAnswersEntity.banficary_name)
+            binding.edtMobile.setText(commonAnswersEntity.mobile_number)
+            binding.edtCattleOwn.setText(commonAnswersEntity.no_of_cattles_own)
+            binding.edtAadhaarCard.setText(commonAnswersEntity.aadhar_card)
+            binding.edtWoodUsed.setText(commonAnswersEntity.wood_use_per_day_in_kg)
+            binding.edtNoCylinderYear.setText(commonAnswersEntity.no_of_cylinder_per_year)
+            binding.edtAnnualFamilyIncome.setText(commonAnswersEntity.annual_family_income)
+            binding.edtNoCowDungPerDay.setText(commonAnswersEntity.no_of_cow_dung_per_day)
+            binding.edtFamilySize.setText(commonAnswersEntity.family_size)
+            when(commonAnswersEntity.gender){
+                getString(R.string.male).uppercase(Locale.ROOT) ->{
+                    binding.rbMale.isChecked=true
+                }
+                getString(R.string.female).uppercase(Locale.ROOT)->{
+                    binding.rbFemale.isChecked=true
+                }
+                getString(R.string.other).uppercase(Locale.ROOT)->{
+                    binding.rbOther.isChecked=true
+                }
+            }
+            if (commonAnswersEntity.is_lpg_using==getString(R.string.yes).uppercase(Locale.ROOT)){
+                binding.rbLpgYes.isChecked=true
+            }else{
+                binding.rbLpgNo.isChecked=true
+            }
+            if (commonAnswersEntity.is_cow_dung==getString(R.string.yes).uppercase(Locale.ROOT)){
+                binding.rbCowDungYes.isChecked=true
+            }else{
+                binding.rbCowDungNo.isChecked=true
+            }
+            if (commonAnswersEntity.house_type==getString(R.string.own).uppercase(Locale.ROOT)){
+                binding.rbOwn.isChecked=true
+            }else{
+                binding.rbRented.isChecked=true
+            }
+            if (commonAnswersEntity.willing_to_contribute_clean_cooking==getString(R.string.yes).uppercase(Locale.ROOT)){
+                binding.rbCleanYes.isChecked=true
+            }else{
+                binding.rbCleanNo.isChecked=true
+            }
+            if (commonAnswersEntity.electricity_connection_available==getString(R.string.yes).uppercase(Locale.ROOT)){
+                binding.rbElectricityYes.isChecked=true
+            }else{
+                binding.rbElectricityNo.isChecked=true
+            }
+        }
         getStateData()
         spinnerSelectors()
         binding.edtBeneficiaryName.addTextChangedListener(object : TextWatcher {
@@ -229,6 +278,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             stateList=AppDatabase.getInstance(requireContext()).placesDao().getAllStates().transformState() as ArrayList<StateModel>
             stateList.add(0,StateModel("","Select State"))
             binding.spState.adapter=StateSpinnerAdapter(requireContext(),stateList)
+            if (commonAnswersEntity.banficary_name!=""){
+                stateList.forEachIndexed { index, stateModel ->
+                    if (stateModel.mst_state_id==commonAnswersEntity.mst_state_id){
+                        binding.spState.setSelection(index)
+                        return@forEachIndexed
+                    }
+                }
+            }
         }
     }
     fun getDistrict(state: Int){
@@ -236,6 +293,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             districtList=AppDatabase.getInstance(requireContext()).placesDao().getAllDistricts(state).transformDistrict() as ArrayList<DistrictModel>
             districtList.add(0, DistrictModel("Select District",""))
             binding.spDistrict.adapter=DistrictSpinnerAdapter(requireContext(),districtList)
+            if (commonAnswersEntity.banficary_name!=""){
+                districtList.forEachIndexed { index, districtModel ->
+                    if (districtModel.mst_district_id==commonAnswersEntity.mst_district_id){
+                        binding.spDistrict.setSelection(index)
+                        return@forEachIndexed
+                    }
+                }
+            }
         }
     }
     fun getTehsil(state: Int){
@@ -243,6 +308,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             tehsilList=AppDatabase.getInstance(requireContext()).placesDao().getAllTehsils(state).transformTehsil() as ArrayList<TehsilModel>
             tehsilList.add(0,TehsilModel("","Select Tehsil"))
             binding.spTehsil.adapter=TehsilSpinnerAdapter(requireContext(),tehsilList)
+            if (commonAnswersEntity.banficary_name!=""){
+                tehsilList.forEachIndexed { index, tehsilModel ->
+                    if (tehsilModel.mst_tehsil_id==commonAnswersEntity.mst_tehsil_id){
+                        binding.spTehsil.setSelection(index)
+                        return@forEachIndexed
+                    }
+                }
+            }
         }
     }
     fun getPanchayath(state: Int){
@@ -250,6 +323,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             panchayathList=AppDatabase.getInstance(requireContext()).placesDao().getAllPanchayath(state).transformPanchayath() as ArrayList<PanchayathModel>
             panchayathList.add(0, PanchayathModel("","Select Panchayath"))
             binding.spPanchayat.adapter=PanchayatSpinnerAdapter(requireContext(),panchayathList)
+            if (commonAnswersEntity.banficary_name!=""){
+                panchayathList.forEachIndexed { index, panchayathModel ->
+                    if (panchayathModel.mst_panchayat_id==commonAnswersEntity.mst_panchayat_id){
+                        binding.spPanchayat.setSelection(index)
+                        return@forEachIndexed
+                    }
+                }
+            }
         }
     }
     fun getVillage(state: Int){
@@ -257,6 +338,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             villageList=AppDatabase.getInstance(requireContext()).placesDao().getAllVillages(state).transformVillage() as ArrayList<VillageModel>
             villageList.add(0,VillageModel("","Select State"))
             binding.spVillage.adapter=VillageSpinnerAdapter(requireContext(),villageList)
+            villageList.forEachIndexed { index, villageModel ->
+                if (villageModel.mst_villages_id==commonAnswersEntity.mst_village_id){
+                    binding.spVillage.setSelection(index)
+                    return@forEachIndexed
+                }
+            }
         }
     }
 

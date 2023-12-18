@@ -5,6 +5,7 @@ import com.renew.survey.room.entities.AnswerEntity
 import okhttp3.Interceptor.*
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -88,29 +89,29 @@ interface ApiInterface {
     @Multipart
     @POST("Auth/register")
     suspend fun register(
-        @Part("tbl_projects_id")tbl_projects_id:String,
-        @Part("project_code")project_code:String,
-        @Part("aadhar_card")aadhar_card:String,
-        @Part("mobile")mobile:String,
-        @Part("password")password:String?,
-        @Part("full_name")full_name:String,
-        @Part("username")username:String,
-        @Part("address")address:String,
-        @Part("mst_state_id")mst_state_id:String,
-        @Part("mst_village_id")mst_village_id:String,
-        @Part("mst_district_id")mst_district_id:String,
-        @Part("mst_tehsil_id")mst_tehsil_id:String,
-        @Part("mst_panchayat_id")mst_panchayat_id:String,
-        @Part("pincode")pincode:String,
-        @Part("email")email:String,
-        @Part("app_key")app_key:String,
-        @Part("device_type")device_type:String,
-        @Part("device_id")device_id:String,
-        @Part("fcm_token")fcm_token:String,
-        @Part("gender")gender:String,
-        @Part("date_of_birth")date_of_birth:String,
-        @Part("co_ordinator_id")co_ordinator_id:String,
-        @Part("user_type")user_type:String,
+        @Part("tbl_projects_id")tbl_projects_id:RequestBody,
+        @Part("project_code")project_code: RequestBody,
+        @Part("aadhar_card")aadhar_card:RequestBody,
+        @Part("mobile")mobile:RequestBody,
+        @Part("password")password:RequestBody?,
+        @Part("full_name")full_name:RequestBody,
+        @Part("username")username:RequestBody,
+        @Part("address")address:RequestBody,
+        @Part("mst_state_id")mst_state_id:RequestBody,
+        @Part("mst_village_id")mst_village_id:RequestBody,
+        @Part("mst_district_id")mst_district_id:RequestBody,
+        @Part("mst_tehsil_id")mst_tehsil_id:RequestBody,
+        @Part("mst_panchayat_id")mst_panchayat_id:RequestBody,
+        @Part("pincode")pincode:RequestBody,
+        @Part("email")email:RequestBody,
+        @Part("app_key")app_key:RequestBody,
+        @Part("device_type")device_type:RequestBody,
+        @Part("device_id")device_id:RequestBody,
+        @Part("fcm_token")fcm_token:RequestBody,
+        @Part("gender")gender:RequestBody,
+        @Part("date_of_birth")date_of_birth:RequestBody,
+        @Part("co_ordinator_id")co_ordinator_id:RequestBody,
+        @Part("user_type")user_type:RequestBody,
         @Part profilePhoto: MultipartBody.Part
     ) : Response<JsonElement>
 

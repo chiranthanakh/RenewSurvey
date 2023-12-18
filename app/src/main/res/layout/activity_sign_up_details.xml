@@ -27,6 +27,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_registration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -98,6 +99,7 @@
 
 
                                     <TextView
+                                        android:id="@+id/project_name"
                                         android:layout_weight="1"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -123,13 +125,14 @@
                                         android:layout_marginTop="10dp"
                                         android:layout_marginBottom="10dp"
                                         android:fontFamily="@font/opensans_bold"
-                                        android:text="Project: "
+                                        android:text="State: "
                                         android:textColor="@color/black"
                                         android:textStyle="bold"
                                         android:textSize="16sp" />
 
 
                                     <TextView
+                                        android:id="@+id/state"
                                         android:layout_weight="1"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -446,11 +449,6 @@
                                     android:layout_height="wrap_content"/>
                             </RadioGroup>
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.8dp"
-                                android:layout_marginTop="10dp"
-                                android:background="@color/demo_state_second" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"

@@ -82,6 +82,9 @@ class SignUpDetailsActivity : BaseActivity() {
             }, initCalendar.get(Calendar.YEAR), initCalendar.get(Calendar.MONTH), initCalendar.get(Calendar.DAY_OF_MONTH))
             dpd.show()
         }
+        binding.state.text= intent.getStringExtra("state_name")!!
+        binding.tvRegistration.text= "Registration (${intent.getStringExtra("project")!!})"
+        binding.projectName.text= "${intent.getStringExtra("project_name")!!}"
         if (userInfo!=null){
             binding.edtFullName.setText(userInfo!!.full_name)
             binding.edtUsername.setText(userInfo!!.username)
@@ -217,6 +220,10 @@ class SignUpDetailsActivity : BaseActivity() {
             UtilMethods.showToast(this,"Please select village")
             return
         }
+        if (filePath==""){
+            UtilMethods.showToast(this,"Please select profile image")
+            return
+        }
         signUpApi()
     }
     fun signUpApi() {
@@ -236,43 +243,39 @@ class SignUpDetailsActivity : BaseActivity() {
                     password = binding.edtPassword.text.toString()
                 }
 
-                if (imageUri1 == null) {
-                    UtilMethods.showToast(this@SignUpDetailsActivity, "Please Select Profile Image")
-                } else {
                     val file = File(FileUtils.getPathFromUri(context, imageUri1))
-                    val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
-                    val profilePhotoPart =
-                        MultipartBody.Part.createFormData("profile_photo", file.name, requestFile)
+                    val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    val profilePhotoPart = MultipartBody.Part.createFormData("profile_photo", file.name, requestFile)
                     Log.e(
                         "paramsss",
                         "premsssss  ${intent.getStringExtra("project_id")}   ${
-                            intent.getStringExtra("project_id")
+                            intent.getStringExtra("project")
                         }  "
                     )
                     val response = register(
-                        intent.getStringExtra("project_id")!!,
-                        intent.getStringExtra("project")!!,
-                        intent.getStringExtra("aadhar")!!,
-                        intent.getStringExtra("mobile")!!,
-                        password,
-                        binding.edtFullName.text.toString(),
-                        binding.edtUsername.text.toString(),
-                        binding.edtAddress.text.toString(),
-                        stateList[binding.spState.selectedItemPosition].mst_state_id,
-                        villageList[binding.spVillage.selectedItemPosition].mst_villages_id,
-                        districtList[binding.spDistrict.selectedItemPosition].mst_district_id,
-                        tehsilList[binding.spTehsil.selectedItemPosition].mst_tehsil_id,
-                        panchayathList[binding.spPanchayat.selectedItemPosition].mst_panchayat_id,
-                        binding.edtPincode.text.toString(),
-                        binding.edtEmail.text.toString(),
-                        AppConstants.AppKey,
-                        AppConstants.DeviceType,
-                        Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID),
-                        fcmToken!!,
-                        gender,
-                        binding.edtDob.text.toString(),
-                        intent.getStringExtra("coordinator_id")!!,
-                        intent.getStringExtra("user_type")!!,
+                        RequestBody.create(MultipartBody.FORM, intent.getStringExtra("project_id")!!),
+                        RequestBody.create(MultipartBody.FORM,intent.getStringExtra("project")!!),
+                        RequestBody.create(MultipartBody.FORM, intent.getStringExtra("aadhar")!!),
+                        RequestBody.create(MultipartBody.FORM, intent.getStringExtra("mobile")!!),
+                        RequestBody.create(MultipartBody.FORM, password!!),
+                        RequestBody.create(MultipartBody.FORM, binding.edtFullName.text.toString()),
+                        RequestBody.create(MultipartBody.FORM, binding.edtUsername.text.toString()),
+                        RequestBody.create(MultipartBody.FORM, binding.edtAddress.text.toString()),
+                        RequestBody.create(MultipartBody.FORM, stateList[binding.spState.selectedItemPosition].mst_state_id),
+                        RequestBody.create(MultipartBody.FORM, villageList[binding.spVillage.selectedItemPosition].mst_villages_id),
+                        RequestBody.create(MultipartBody.FORM, districtList[binding.spDistrict.selectedItemPosition].mst_district_id),
+                        RequestBody.create(MultipartBody.FORM, tehsilList[binding.spTehsil.selectedItemPosition].mst_tehsil_id,),
+                        RequestBody.create(MultipartBody.FORM, panchayathList[binding.spPanchayat.selectedItemPosition].mst_panchayat_id,),
+                        RequestBody.create(MultipartBody.FORM, binding.edtPincode.text.toString(),),
+                        RequestBody.create(MultipartBody.FORM,  binding.edtEmail.text.toString(),),
+                        RequestBody.create(MultipartBody.FORM, AppConstants.AppKey,),
+                        RequestBody.create(MultipartBody.FORM, AppConstants.DeviceType,),
+                        RequestBody.create(MultipartBody.FORM, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID),),
+                        RequestBody.create(MultipartBody.FORM, fcmToken!!),
+                        RequestBody.create(MultipartBody.FORM, gender),
+                        RequestBody.create(MultipartBody.FORM, binding.edtDob.text.toString()),
+                        RequestBody.create(MultipartBody.FORM, intent.getStringExtra("coordinator_id")!!,),
+                        RequestBody.create(MultipartBody.FORM, intent.getStringExtra("user_type")!!,),
                         profilePhotoPart,
                     )
 
@@ -295,7 +298,7 @@ class SignUpDetailsActivity : BaseActivity() {
                             }
                         }
                     }
-                }
+
             }
         }
     }
@@ -470,7 +473,7 @@ class SignUpDetailsActivity : BaseActivity() {
         when (requestCode) {
             FROM_CAMERA -> {
                 if (resultCode == AppCompatActivity.RESULT_OK) {
-                    val path = FileUtils.getRealPathFromURI(
+                    filePath = FileUtils.getRealPathFromURI(
                         this,
                         imageUri1
                     )

@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.renew.survey.databinding.ActivitySyncDataBinding
 import com.renew.survey.response.sync.SyncData
 import com.renew.survey.room.AppDatabase
+import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.DistrictEntity
 import com.renew.survey.room.entities.DivisionEntity
@@ -207,6 +208,16 @@ class SyncDataActivity : BaseActivity() {
                                     }
                                 }
                             }
+                            val assignedSurveyList= arrayListOf<AssignedSurveyEntity>()
+                            for (d in data.assigned_survey){
+                                var panchayathId=0
+                                if (d.mst_panchayat_id!=null){
+                                    panchayathId=d.mst_panchayat_id.toInt()
+                                }
+                                val assigned=AssignedSurveyEntity(null,0,d.aadhar_card,d.annual_family_income,d.app_unique_code,d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cow_dung_per_day,d.no_of_cylinder_per_year,d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,d.wood_use_per_day_in_kg)
+                                assignedSurveyList.add(assigned)
+                            }
+                            AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllAssignedSurvey(assignedSurveyList)
                             runOnUiThread(Runnable {
                                 navigateToNext()
                                 preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)

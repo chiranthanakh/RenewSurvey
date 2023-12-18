@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class CommonAnswersEntity(
     @PrimaryKey(autoGenerate = true)
-    var id:Int,
+    var id:Int?,
     var aadhar_card: String,
     var annual_family_income: String,
     var banficary_name: String,
@@ -29,5 +29,7 @@ data class CommonAnswersEntity(
     var no_of_cylinder_per_year: String,
     var willing_to_contribute_clean_cooking: String,
     var wood_use_per_day_in_kg: String,
-    var answer_id:Int,
+    var parent_survey_id: String,
+    var tbl_project_survey_common_data_id: String,
+    var answer_id:Int?,
 )

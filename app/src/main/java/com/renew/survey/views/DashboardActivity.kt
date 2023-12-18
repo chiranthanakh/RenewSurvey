@@ -3,9 +3,12 @@ package com.renew.survey.views
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import com.renew.survey.databinding.ActivityDashboardBinding
+import com.renew.survey.databinding.NaviagationLayoutBinding
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.UtilMethods
@@ -14,11 +17,31 @@ import org.json.JSONObject
 
 class DashboardActivity : BaseActivity() {
     lateinit var binding: ActivityDashboardBinding
+    lateinit var bindingNav: NaviagationLayoutBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
       //  setContentView(R.layout.activity_dashboard)
         binding= ActivityDashboardBinding.inflate(layoutInflater)
+        bindingNav=binding.navLayout
         setContentView(binding.root)
+        Log.e("ksdkhs","user ${preferenceManager.getUserId()}")
+        binding.menuDrawer.setOnClickListener {
+            if (binding.myDrawerLayout.isDrawerOpen(GravityCompat.START)){
+                binding.myDrawerLayout.closeDrawer(GravityCompat.START)
+            }else{
+                binding.myDrawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
+
+        bindingNav.llLogout.setOnClickListener {
+            preferenceManager.clear()
+            AppDatabase.getInstance(this).clearAllTables()
+            Intent(this,LoginActivity::class.java).apply {
+                flags=Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(this)
+                finish()
+            }
+        }
         /*lifecycleScope.launch {
             val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey()
             val pendingCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalPendingSurvey()
@@ -29,20 +52,26 @@ class DashboardActivity : BaseActivity() {
             binding.tvSyncDone.text = "$doneCount"
             //binding.tvTotalSurvey.text = "${AppDatabase.getInstance(this).formDao().getTotalSurvey()}"
         }*/
-        binding.tvProject.text=preferenceManager.getProject().project_code
+        binding.surveyType.text = preferenceManager.getForm().title
+        binding.project.text=preferenceManager.getProject().project_code
         binding.btnSync.setOnClickListener {
             lifecycleScope.launch {
-                binding.progressLayout.visibility=View.VISIBLE
+
                 val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswers()
                 for (a in answers){
                     val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
                     val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id)
                     a.dynamicAnswersList=dynamicAns
                     a.commonAnswersEntity=commonAns
+                    if (a.tbl_forms_id=="2"){
+                        a.parent_survey_id=commonAns.parent_survey_id
+                        a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+                    }
                 }
-                /*val jsonData=gson.toJson(answers)
-                Log.e("data",jsonData)*/
+                val jsonData=gson.toJson(answers)
+                Log.e("data",jsonData)
                 if(answers.size>0){
+                    binding.progressLayout.visibility=View.VISIBLE
                     ApiInterface.getInstance()?.apply {
                         val response=syncSubmitForms(preferenceManager.getToken()!!,answers)
                         binding.progressLayout.visibility=View.GONE
@@ -63,9 +92,23 @@ class DashboardActivity : BaseActivity() {
             }
         }
         binding.btnContinue.setOnClickListener {
-            Intent(this,FormsDetailsActivity::class.java).apply {
-                startActivity(this)
+            if (preferenceManager.getForm().tbl_forms_id==1){
+                Intent(this,DashboardActivity::class.java).apply {
+                    startActivity(this)
+                }
+            }else if (preferenceManager.getForm().tbl_forms_id==2){
+                Intent(this,SurveySelectActivity::class.java).apply {
+                    startActivity(this)
+                }
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (binding.myDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            binding.myDrawerLayout.closeDrawer(GravityCompat.START)
+        }else{
+            super.onBackPressed()
         }
     }
 }

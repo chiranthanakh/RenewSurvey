@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DivisionEntity
@@ -73,6 +74,9 @@ interface FormsDao {
     suspend fun insertAllProjectPhase(formList: List<ProjectsPhase>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllAssignedSurvey(formList: List<AssignedSurveyEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllProjects(formList: List<ProjectEntity>)
 
     @Query("Select * from ProjectEntity order by tbl_projects_id")
@@ -113,5 +117,8 @@ interface FormsDao {
 
     @Query("Update AnswerEntity set sync=1 where id=:ans_id")
     suspend fun updateSync(ans_id:Int)
+
+    @Query("Select * from AssignedSurveyEntity")
+    suspend fun getAllAssignedSurvey(): List<AssignedSurveyEntity>
 
 }
