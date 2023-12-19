@@ -40,4 +40,8 @@
         <item name="android:textColorHint">@color/black20per</item>
         <item name="android:background">@drawable/otp_hallow_back</item>
     </style>
+    <style name="circleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

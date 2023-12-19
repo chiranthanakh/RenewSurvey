@@ -56,6 +56,17 @@ interface ApiInterface {
         ) : Response<JsonElement>
 
     @FormUrlEncoded
+    @POST("Auth/reset_password")
+    suspend fun changePassword(
+        @Field("mobile")mobile:String,
+        @Field("tbl_users_id")tbl_users_id:String,
+        @Field("old_password")old_password:String,
+        @Field("new_password")new_password:String,
+        @Field("confirm_password")confirm_password:String,
+        @Header("Authorization") headers: String,
+    ) : Response<JsonElement>
+
+    @FormUrlEncoded
     @POST("Common/get_states")
     suspend fun getStates(
         @Field("app_key")appKey:String,

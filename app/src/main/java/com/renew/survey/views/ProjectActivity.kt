@@ -31,7 +31,7 @@ class ProjectActivity : BaseActivity() ,ProjectAdapter.ClickListener{
     }
     fun getProjectData(){
         lifecycleScope.launch {
-            val projects=AppDatabase.getInstance(this@ProjectActivity).formDao().getAllProjectsWithLanguage()
+            val projects=AppDatabase.getInstance(this@ProjectActivity).formDao().getAllProjectsWithLanguage(preferenceManager.getLanguage())
             binding.recyclerView.adapter=ProjectAdapter(this@ProjectActivity,projects,this@ProjectActivity)
             /*ApiInterface.getInstance()?.apply {
                 val response= getProjects(preferenceManager.getToken()!!,preferenceManager.getUserId()!!,preferenceManager.getLanguage()!!)

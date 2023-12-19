@@ -46,8 +46,12 @@ interface FormsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllFormsQuestions(formQuestions: List<FormQuestionEntity>)
 
-    @Query("SELECT l.title,q.* from FormQuestionEntity as q inner join FormLanguageEntity as l on q.id=l.module_id and l.module='tbl_form_questions' where l.mst_language_id=:language and q.mst_question_group_id=:group order by q.order_by")
-    suspend fun getAllFormsQuestions(language: Int,group:Int):List<FormQuestionLanguage>
+    @Query("SELECT l.title,q.* from \n" +
+            "ProjectPhaseQuestionEntity as p inner join\n" +
+            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id\n" +
+            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
+            "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId order by q.order_by")
+    suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int):List<FormQuestionLanguage>
 
     @Query("SELECT title,tbl_project_phase_id,version,mqg.* FROM ProjectPhaseQuestionEntity pq " +
             "LEFT JOIN FormQuestionGroupEntity mqg ON mqg.mst_question_group_id = pq.mst_question_group_id " +
@@ -82,8 +86,8 @@ interface FormsDao {
     @Query("Select * from ProjectEntity order by tbl_projects_id")
     suspend fun getAllProjects(): List<ProjectEntity>
 
-    @Query("Select title,p.* from ProjectEntity as p  inner join FormLanguageEntity as l on p.tbl_projects_id=l.module_id where l.module='tbl_projects' and mst_language_id=1 order by tbl_projects_id")
-    suspend fun getAllProjectsWithLanguage(): List<ProjectWithLanguage>
+    @Query("Select title,p.* from ProjectEntity as p  inner join FormLanguageEntity as l on p.tbl_projects_id=l.module_id where l.module='tbl_projects' and mst_language_id=:language order by tbl_projects_id")
+    suspend fun getAllProjectsWithLanguage(language:Int): List<ProjectWithLanguage>
 
 
 
@@ -118,7 +122,7 @@ interface FormsDao {
     @Query("Update AnswerEntity set sync=1 where id=:ans_id")
     suspend fun updateSync(ans_id:Int)
 
-    @Query("Select * from AssignedSurveyEntity")
+    @Query("Select * from AssignedSurveyEntity where status=0")
     suspend fun getAllAssignedSurvey(): List<AssignedSurveyEntity>
 
 }

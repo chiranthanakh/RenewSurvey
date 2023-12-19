@@ -2,6 +2,7 @@ package com.renew.survey.views
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +11,7 @@ import com.renew.survey.response.LoginResponse
 import com.renew.survey.databinding.ActivityLoginBinding
 import com.renew.survey.databinding.DialogRegisterAsUserTeamBinding
 import com.renew.survey.utilities.ApiInterface
+import com.renew.survey.utilities.AppConstants
 import com.squareup.picasso.BuildConfig
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -51,19 +53,21 @@ class LoginActivity : BaseActivity() {
         binding.progressLayout.visibility= View.VISIBLE
         lifecycleScope.launch {
             ApiInterface.getInstance()?.apply {
-                val response=login(binding.etUserName.text.toString().trim(),binding.etPassword.text.toString(),"12345")
+                val response=login(binding.etUserName.text.toString().trim(),binding.etPassword.text.toString(),AppConstants.AppKey)
                 binding.progressLayout.visibility= View.GONE
                 if (response.isSuccessful){
                     val jsonObject=JSONObject(response.body().toString())
+                    Log.e("response",jsonObject.toString())
                     if (jsonObject.getString("success")=="1"){
                         val data=gson.fromJson(jsonObject.toString(), LoginResponse::class.java)
                         if (data!=null){
-                            data.data?.accessToken?.let {
+                            data.data?.access_token?.let {
                                 preferenceManager.saveToken(it)
                             }
-                            data.data?.userId?.let {
+                            data.data?.tbl_users_id?.let {
                                 preferenceManager.saveUserId(it)
                             }
+                            preferenceManager.saveUserData(data.data!!)
                             Intent(this@LoginActivity,SyncDataActivity::class.java).apply {
                                 startActivity(this)
                                 finish()

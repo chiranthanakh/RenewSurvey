@@ -57,7 +57,7 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
     fun getQuestions(){
         lifecycleScope.launch {
             if (questionGroupList[fragPos].questions.isEmpty()){
-                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
+                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id)
             }
             //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->

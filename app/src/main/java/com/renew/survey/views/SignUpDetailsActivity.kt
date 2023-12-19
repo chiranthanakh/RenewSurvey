@@ -106,7 +106,7 @@ class SignUpDetailsActivity : BaseActivity() {
         spinnerSelectors()
 
         binding.ivProfileImage.setOnClickListener {
-            showImagePickerDialog(this)
+            openCamera()
         }
     }
 

@@ -3,9 +3,8 @@ package com.renew.survey.utilities
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.renew.survey.response.Language
+import com.renew.survey.response.UserData
 import com.renew.survey.room.entities.FormWithLanguage
-import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectWithLanguage
 
 class PreferenceManager constructor(context: Context){
@@ -101,5 +100,17 @@ class PreferenceManager constructor(context: Context){
         editor.clear()
         editor.apply()
     }
+
+
+    fun saveUserData(user: UserData){
+        val editor = sharedPreferences.edit()
+        editor.putString("userData",gson.toJson(user))
+        editor.apply()
+    }
+
+    fun getUserdata(): UserData{
+        return gson.fromJson(sharedPreferences.getString("userData",""),UserData::class.java)
+    }
+
 
 }

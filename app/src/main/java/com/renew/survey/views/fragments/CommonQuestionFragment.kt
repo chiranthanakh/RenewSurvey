@@ -3,11 +3,11 @@ package com.renew.survey.views.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.renew.survey.R
 import com.renew.survey.adapter.DistrictSpinnerAdapter
@@ -25,7 +25,6 @@ import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DistrictEntity
 import com.renew.survey.room.entities.PanchayathEntity
-import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
@@ -40,6 +39,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     var tehsilList= arrayListOf<TehsilModel>()
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
+    var disableViews=false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +47,9 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     ): View {
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
         if (commonAnswersEntity.banficary_name!=""){
+            disableViews=true
+        }
+        if (disableViews){
             binding.edtBeneficiaryName.setText(commonAnswersEntity.banficary_name)
             binding.edtMobile.setText(commonAnswersEntity.mobile_number)
             binding.edtCattleOwn.setText(commonAnswersEntity.no_of_cattles_own)
@@ -92,6 +95,24 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }else{
                 binding.rbElectricityNo.isChecked=true
             }
+            binding.rbMale.isEnabled=false
+            binding.rbFemale.isEnabled=false
+            binding.rbOther.isEnabled=false
+            binding.rbLpgYes.isEnabled=false
+            binding.rbLpgNo.isEnabled=false
+            binding.rbCowDungYes.isEnabled=false
+            binding.rbCowDungNo.isEnabled=false
+            binding.rbRented.isEnabled=false
+            binding.rbOwn.isEnabled=false
+            binding.rbCleanYes.isEnabled=false
+            binding.rbCleanNo.isEnabled=false
+            binding.rbElectricityYes.isEnabled=false
+            binding.rbElectricityNo.isEnabled=false
+            for (i in 0 until binding.llLayout.getChildCount()) {
+                val child: View = binding.llLayout.getChildAt(i)
+                child.isEnabled = false
+            }
+
         }
         getStateData()
         spinnerSelectors()
@@ -278,13 +299,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             stateList=AppDatabase.getInstance(requireContext()).placesDao().getAllStates().transformState() as ArrayList<StateModel>
             stateList.add(0,StateModel("","Select State"))
             binding.spState.adapter=StateSpinnerAdapter(requireContext(),stateList)
-            if (commonAnswersEntity.banficary_name!=""){
+            if (disableViews){
                 stateList.forEachIndexed { index, stateModel ->
                     if (stateModel.mst_state_id==commonAnswersEntity.mst_state_id){
                         binding.spState.setSelection(index)
                         return@forEachIndexed
                     }
                 }
+                binding.spState.isEnabled=false
             }
         }
     }
@@ -293,13 +315,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             districtList=AppDatabase.getInstance(requireContext()).placesDao().getAllDistricts(state).transformDistrict() as ArrayList<DistrictModel>
             districtList.add(0, DistrictModel("Select District",""))
             binding.spDistrict.adapter=DistrictSpinnerAdapter(requireContext(),districtList)
-            if (commonAnswersEntity.banficary_name!=""){
+            if (disableViews){
                 districtList.forEachIndexed { index, districtModel ->
                     if (districtModel.mst_district_id==commonAnswersEntity.mst_district_id){
                         binding.spDistrict.setSelection(index)
                         return@forEachIndexed
                     }
                 }
+                binding.spDistrict.isEnabled=false
             }
         }
     }
@@ -308,13 +331,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             tehsilList=AppDatabase.getInstance(requireContext()).placesDao().getAllTehsils(state).transformTehsil() as ArrayList<TehsilModel>
             tehsilList.add(0,TehsilModel("","Select Tehsil"))
             binding.spTehsil.adapter=TehsilSpinnerAdapter(requireContext(),tehsilList)
-            if (commonAnswersEntity.banficary_name!=""){
+            if (disableViews){
                 tehsilList.forEachIndexed { index, tehsilModel ->
                     if (tehsilModel.mst_tehsil_id==commonAnswersEntity.mst_tehsil_id){
                         binding.spTehsil.setSelection(index)
                         return@forEachIndexed
                     }
                 }
+                binding.spTehsil.isEnabled=false
             }
         }
     }
@@ -323,13 +347,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             panchayathList=AppDatabase.getInstance(requireContext()).placesDao().getAllPanchayath(state).transformPanchayath() as ArrayList<PanchayathModel>
             panchayathList.add(0, PanchayathModel("","Select Panchayath"))
             binding.spPanchayat.adapter=PanchayatSpinnerAdapter(requireContext(),panchayathList)
-            if (commonAnswersEntity.banficary_name!=""){
+            if (disableViews){
                 panchayathList.forEachIndexed { index, panchayathModel ->
                     if (panchayathModel.mst_panchayat_id==commonAnswersEntity.mst_panchayat_id){
                         binding.spPanchayat.setSelection(index)
                         return@forEachIndexed
                     }
                 }
+                binding.spPanchayat.isEnabled=false
             }
         }
     }
@@ -338,12 +363,16 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             villageList=AppDatabase.getInstance(requireContext()).placesDao().getAllVillages(state).transformVillage() as ArrayList<VillageModel>
             villageList.add(0,VillageModel("","Select State"))
             binding.spVillage.adapter=VillageSpinnerAdapter(requireContext(),villageList)
-            villageList.forEachIndexed { index, villageModel ->
-                if (villageModel.mst_villages_id==commonAnswersEntity.mst_village_id){
-                    binding.spVillage.setSelection(index)
-                    return@forEachIndexed
+            if (disableViews){
+                villageList.forEachIndexed { index, villageModel ->
+                    if (villageModel.mst_villages_id==commonAnswersEntity.mst_village_id){
+                        binding.spVillage.setSelection(index)
+                        return@forEachIndexed
+                    }
+                    binding.spVillage.isEnabled=false
                 }
             }
+
         }
     }
 

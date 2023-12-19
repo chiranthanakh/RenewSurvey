@@ -7,11 +7,13 @@ import android.view.Gravity
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.renew.survey.databinding.ActivityDashboardBinding
 import com.renew.survey.databinding.NaviagationLayoutBinding
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.UtilMethods
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -32,15 +34,24 @@ class DashboardActivity : BaseActivity() {
                 binding.myDrawerLayout.openDrawer(GravityCompat.START)
             }
         }
+        Log.e("userdata",gson.toJson(preferenceManager.getUserdata()))
+        bindingNav.name.setText(preferenceManager.getUserdata().full_name)
+        bindingNav.mobile.setText(preferenceManager.getUserdata().mobile)
+        bindingNav.email.setText(preferenceManager.getUserdata().email)
+        Glide.with(this).load(preferenceManager.getUserdata().profile_photo).into(bindingNav.ivProfile)
+
+        bindingNav.llChangePassword.setOnClickListener {
+            Intent(this,ChangePasswordActivity::class.java).apply {
+                startActivity(this)
+            }
+        }
 
         bindingNav.llLogout.setOnClickListener {
             preferenceManager.clear()
-            AppDatabase.getInstance(this).clearAllTables()
-            Intent(this,LoginActivity::class.java).apply {
-                flags=Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(this)
-                finish()
+            lifecycleScope.launch {
+                logout()
             }
+
         }
         /*lifecycleScope.launch {
             val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey()
@@ -92,12 +103,12 @@ class DashboardActivity : BaseActivity() {
             }
         }
         binding.btnContinue.setOnClickListener {
-            if (preferenceManager.getForm().tbl_forms_id==1){
-                Intent(this,DashboardActivity::class.java).apply {
+            if (preferenceManager.getForm().tbl_forms_id!=1){
+                Intent(this,SurveySelectActivity::class.java).apply {
                     startActivity(this)
                 }
-            }else if (preferenceManager.getForm().tbl_forms_id==2){
-                Intent(this,SurveySelectActivity::class.java).apply {
+            }else {
+                Intent(this,FormsDetailsActivity::class.java).apply {
                     startActivity(this)
                 }
             }
@@ -109,6 +120,16 @@ class DashboardActivity : BaseActivity() {
             binding.myDrawerLayout.closeDrawer(GravityCompat.START)
         }else{
             super.onBackPressed()
+        }
+    }
+    fun logout(){
+        lifecycleScope.launch (Dispatchers.IO){
+            AppDatabase.getInstance(this@DashboardActivity).clearAllTables()
+        }
+        Intent(this,LoginActivity::class.java).apply {
+            flags=Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            finishAffinity()
+            startActivity(this)
         }
     }
 }

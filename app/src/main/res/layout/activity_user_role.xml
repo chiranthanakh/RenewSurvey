@@ -97,7 +97,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/proxima_nova_bold"
-                android:text="User Role"
+                android:text="Forms"
                 android:textColor="@color/white"
                 android:textSize="28sp" />
         </LinearLayout>
