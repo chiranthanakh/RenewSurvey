@@ -23,7 +23,7 @@
         <Button
             android:id="@+id/btn_user"
             android:layout_weight="1"
-            android:text="User"
+            android:text="Beneficiary User"
             android:layout_marginEnd="@dimen/dp_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -31,7 +31,7 @@
             android:id="@+id/btn_member"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/dp_5"
-            android:text="Member"
+            android:text="Team member"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

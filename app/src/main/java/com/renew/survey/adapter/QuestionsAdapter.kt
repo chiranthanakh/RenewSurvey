@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.text.Editable
-import android.text.InputFilter
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
@@ -28,7 +27,6 @@ import com.renew.survey.databinding.ItemQuestionLayoutBinding
 import com.renew.survey.request.MultiSelectItem
 import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.Options
-import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
 import java.util.Calendar

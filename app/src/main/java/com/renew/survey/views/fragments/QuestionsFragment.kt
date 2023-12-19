@@ -1,15 +1,26 @@
 package com.renew.survey.views.fragments
 
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +34,14 @@ import com.renew.survey.room.entities.Options
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.utilities.FileUtils
 import com.renew.survey.utilities.PreferenceManager
+import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.Date
+import kotlin.math.roundToInt
+
 
 class QuestionsFragment constructor(val group: Int,val fragPos:Int, var questionGroupList: List<QuestionGroupWithLanguage>
 ) : Fragment() ,QuestionsAdapter.ClickListener{
@@ -83,11 +101,12 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
         when(requestCode){
             FROM_CAMERA->{
                 if (resultCode == AppCompatActivity.RESULT_OK) {
-                    val path = FileUtils.getRealPathFromURI(
-                        requireContext(),
-                        imageUri1
-                    )
-                    questionGroupList[fragPos].questions[position].answer=path
+                    val path = FileUtils.getRealPathFromURI(requireContext(), imageUri1)
+                    val bmOptions = BitmapFactory.Options()
+                    val bitmap = BitmapFactory.decodeFile(path, bmOptions)
+                    val bmTimeStamp=drawTextToBitmap(bitmap,48,UtilMethods.getFormattedDate(Date(),"dd-MM-yyyy HH:mm:ss"))
+                    val newPath=saveImageToExternal(bmTimeStamp,requireContext())
+                    questionGroupList[fragPos].questions[position].answer=newPath!!.path
                     questionsAdapter.notifyItemChanged(position)
                 }
             }
@@ -151,6 +170,60 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri1)
         startActivityForResult(intent, FROM_CAMERA)
     }
+
+    private fun drawTextToBitmap(bitmap: Bitmap, textSize: Int = 78, text: String): Bitmap {
+        val mutableBitmap: Bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(mutableBitmap)
+
+        // new antialised Paint - empty constructor does also work
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.RED
+
+        // text size in pixels
+        val scale = requireContext().resources.displayMetrics.density
+        paint.textSize = (textSize * scale).roundToInt().toFloat()
+
+        //custom fonts or a default font
+        val fontFace = ResourcesCompat.getFont(requireContext(), R.font.opensans_bold)
+        paint.typeface = Typeface.create(fontFace, Typeface.NORMAL)
+
+
+        // draw text to the Canvas center
+        val bounds = Rect()
+        //draw the text
+        paint.getTextBounds(text, 0, text.length, bounds)
+        val height: Float = paint.measureText("yY")
+
+        //x and y defines the position of the text, starting in the top left corner
+        canvas.drawText(text, 20F, height+15F, paint)
+        return mutableBitmap
+    }
+
+    @Throws(IOException::class)
+    fun saveImageToExternal(bm: Bitmap, context: Context?): Uri? {
+        // Create Path to save Image
+        val directory =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                .toString() + "/renewSurvey"
+        val path = File(directory) // Creates app specific folder
+        if (!path.exists()) {
+            if (!path.mkdirs()) {
+                Toast.makeText(context, "Unable to create directory", Toast.LENGTH_SHORT).show()
+            }
+        }
+        val imageFile = File(path,  UtilMethods.getFormattedDate(Date(),"yyyyMMddHHmmssSSS") + ".jpg") // Imagename.png
+        val out = FileOutputStream(imageFile)
+        return try {
+            // bm = Bitmap.createScaledBitmap(bm, 600, 400, false);
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, out) // Compress Image
+            out.flush()
+            out.close()
+            Uri.fromFile(imageFile)
+        } catch (e: Exception) {
+            throw IOException()
+        }
+    }
+
 
 
 }
