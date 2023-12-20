@@ -21,7 +21,6 @@ data class FormQuestionLanguage(
     val question_type: String,
     val tbl_form_questions_id: Int,
     val title: String,
-    @Ignore
     var answer:String?,
     @Ignore
     var options: List<Options>
@@ -41,6 +40,7 @@ data class FormQuestionLanguage(
         question_type: String,
         tbl_form_questions_id: Int,
         title: String,
+        answer: String?
     )
             : this(
         id,
@@ -57,7 +57,7 @@ data class FormQuestionLanguage(
         question_type,
         tbl_form_questions_id,
         title,
-        "",
+        answer,
         listOf()
     )
 }

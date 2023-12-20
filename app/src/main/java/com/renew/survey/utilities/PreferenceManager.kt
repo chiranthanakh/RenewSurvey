@@ -51,6 +51,16 @@ class PreferenceManager constructor(context: Context){
         return  sharedPreferences.getInt("language",0)
     }
 
+    fun saveDraft(language: Int){
+        val editor = sharedPreferences.edit()
+        editor.putInt("draft",language)
+        editor.apply()
+    }
+
+    fun getDraft(): Int{
+        return  sharedPreferences.getInt("draft",0)
+    }
+
     fun saveProject(projectEntity: ProjectWithLanguage){
         val editor = sharedPreferences.edit()
         editor.putString("project",gson.toJson(projectEntity))

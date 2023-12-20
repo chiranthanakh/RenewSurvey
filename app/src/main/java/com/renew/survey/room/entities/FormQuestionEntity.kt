@@ -18,5 +18,6 @@ data class FormQuestionEntity(
     val order_by: Int,
     val question_type: String,
     val tbl_form_questions_id: Int,
-    val tbl_forms_id: Int
+    val tbl_forms_id: Int,
+    val answer:String=""
 )

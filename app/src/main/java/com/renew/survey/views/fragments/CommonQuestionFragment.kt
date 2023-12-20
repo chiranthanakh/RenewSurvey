@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersEntity) : Fragment() {
+class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersEntity,val status:Int) : Fragment() {
     lateinit var binding:FragmentCommonQuestionBinding
     var stateList= arrayListOf<StateModel>();
     var districtList= arrayListOf<DistrictModel>()
@@ -46,10 +46,10 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         savedInstanceState: Bundle?
     ): View {
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
-        if (commonAnswersEntity.banficary_name!=""){
+        if (status==1){
             disableViews=true
         }
-        if (disableViews){
+        if (status==1||status==2){
             binding.edtBeneficiaryName.setText(commonAnswersEntity.banficary_name)
             binding.edtMobile.setText(commonAnswersEntity.mobile_number)
             binding.edtCattleOwn.setText(commonAnswersEntity.no_of_cattles_own)
@@ -59,7 +59,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             binding.edtAnnualFamilyIncome.setText(commonAnswersEntity.annual_family_income)
             binding.edtNoCowDungPerDay.setText(commonAnswersEntity.no_of_cow_dung_per_day)
             binding.edtFamilySize.setText(commonAnswersEntity.family_size)
-            when(commonAnswersEntity.gender){
+            when(commonAnswersEntity.gender.uppercase(Locale.ROOT)){
                 getString(R.string.male).uppercase(Locale.ROOT) ->{
                     binding.rbMale.isChecked=true
                 }
@@ -95,24 +95,25 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }else{
                 binding.rbElectricityNo.isChecked=true
             }
-            binding.rbMale.isEnabled=false
-            binding.rbFemale.isEnabled=false
-            binding.rbOther.isEnabled=false
-            binding.rbLpgYes.isEnabled=false
-            binding.rbLpgNo.isEnabled=false
-            binding.rbCowDungYes.isEnabled=false
-            binding.rbCowDungNo.isEnabled=false
-            binding.rbRented.isEnabled=false
-            binding.rbOwn.isEnabled=false
-            binding.rbCleanYes.isEnabled=false
-            binding.rbCleanNo.isEnabled=false
-            binding.rbElectricityYes.isEnabled=false
-            binding.rbElectricityNo.isEnabled=false
-            for (i in 0 until binding.llLayout.getChildCount()) {
-                val child: View = binding.llLayout.getChildAt(i)
-                child.isEnabled = false
+            if (disableViews){
+                binding.rbMale.isEnabled=false
+                binding.rbFemale.isEnabled=false
+                binding.rbOther.isEnabled=false
+                binding.rbLpgYes.isEnabled=false
+                binding.rbLpgNo.isEnabled=false
+                binding.rbCowDungYes.isEnabled=false
+                binding.rbCowDungNo.isEnabled=false
+                binding.rbRented.isEnabled=false
+                binding.rbOwn.isEnabled=false
+                binding.rbCleanYes.isEnabled=false
+                binding.rbCleanNo.isEnabled=false
+                binding.rbElectricityYes.isEnabled=false
+                binding.rbElectricityNo.isEnabled=false
+                for (i in 0 until binding.llLayout.getChildCount()) {
+                    val child: View = binding.llLayout.getChildAt(i)
+                    child.isEnabled = false
+                }
             }
-
         }
         getStateData()
         spinnerSelectors()
@@ -299,14 +300,15 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             stateList=AppDatabase.getInstance(requireContext()).placesDao().getAllStates().transformState() as ArrayList<StateModel>
             stateList.add(0,StateModel("","Select State"))
             binding.spState.adapter=StateSpinnerAdapter(requireContext(),stateList)
-            if (disableViews){
+            if (status==1||status==2){
                 stateList.forEachIndexed { index, stateModel ->
                     if (stateModel.mst_state_id==commonAnswersEntity.mst_state_id){
                         binding.spState.setSelection(index)
                         return@forEachIndexed
                     }
                 }
-                binding.spState.isEnabled=false
+                if (disableViews)
+                    binding.spState.isEnabled=false
             }
         }
     }
@@ -315,14 +317,15 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             districtList=AppDatabase.getInstance(requireContext()).placesDao().getAllDistricts(state).transformDistrict() as ArrayList<DistrictModel>
             districtList.add(0, DistrictModel("Select District",""))
             binding.spDistrict.adapter=DistrictSpinnerAdapter(requireContext(),districtList)
-            if (disableViews){
+            if (status==1||status==2){
                 districtList.forEachIndexed { index, districtModel ->
                     if (districtModel.mst_district_id==commonAnswersEntity.mst_district_id){
                         binding.spDistrict.setSelection(index)
                         return@forEachIndexed
                     }
                 }
-                binding.spDistrict.isEnabled=false
+                if (disableViews)
+                    binding.spDistrict.isEnabled=false
             }
         }
     }
@@ -331,14 +334,15 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             tehsilList=AppDatabase.getInstance(requireContext()).placesDao().getAllTehsils(state).transformTehsil() as ArrayList<TehsilModel>
             tehsilList.add(0,TehsilModel("","Select Tehsil"))
             binding.spTehsil.adapter=TehsilSpinnerAdapter(requireContext(),tehsilList)
-            if (disableViews){
+            if (status==1||status==2){
                 tehsilList.forEachIndexed { index, tehsilModel ->
                     if (tehsilModel.mst_tehsil_id==commonAnswersEntity.mst_tehsil_id){
                         binding.spTehsil.setSelection(index)
                         return@forEachIndexed
                     }
                 }
-                binding.spTehsil.isEnabled=false
+                if (disableViews)
+                    binding.spTehsil.isEnabled=false
             }
         }
     }
@@ -347,14 +351,15 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             panchayathList=AppDatabase.getInstance(requireContext()).placesDao().getAllPanchayath(state).transformPanchayath() as ArrayList<PanchayathModel>
             panchayathList.add(0, PanchayathModel("","Select Panchayath"))
             binding.spPanchayat.adapter=PanchayatSpinnerAdapter(requireContext(),panchayathList)
-            if (disableViews){
+            if (status==1||status==2){
                 panchayathList.forEachIndexed { index, panchayathModel ->
                     if (panchayathModel.mst_panchayat_id==commonAnswersEntity.mst_panchayat_id){
                         binding.spPanchayat.setSelection(index)
                         return@forEachIndexed
                     }
                 }
-                binding.spPanchayat.isEnabled=false
+                if (disableViews)
+                    binding.spPanchayat.isEnabled=false
             }
         }
     }
@@ -363,13 +368,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             villageList=AppDatabase.getInstance(requireContext()).placesDao().getAllVillages(state).transformVillage() as ArrayList<VillageModel>
             villageList.add(0,VillageModel("","Select State"))
             binding.spVillage.adapter=VillageSpinnerAdapter(requireContext(),villageList)
-            if (disableViews){
+            if (status==1||status==2){
                 villageList.forEachIndexed { index, villageModel ->
                     if (villageModel.mst_villages_id==commonAnswersEntity.mst_village_id){
                         binding.spVillage.setSelection(index)
                         return@forEachIndexed
                     }
-                    binding.spVillage.isEnabled=false
+                    if (disableViews)
+                        binding.spVillage.isEnabled=false
                 }
             }
 

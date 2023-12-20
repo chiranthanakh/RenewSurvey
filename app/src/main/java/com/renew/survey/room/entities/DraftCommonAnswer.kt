@@ -1,0 +1,28 @@
+package com.renew.survey.room.entities
+
+data class DraftCommonAnswer(
+    var id:Int?,
+    var aadhar_card: String,
+    var annual_family_income: String,
+    var banficary_name: String,
+    var electricity_connection_available: String,
+    var family_size: String,
+    var gender: String,
+    var house_type: String,
+    var is_cow_dung: String,
+    var is_lpg_using: String,
+    var mobile_number: String,
+    var mst_district_id: String,
+    var mst_state_id: String,
+    var mst_tehsil_id: String,
+    var mst_panchayat_id: String,
+    var mst_village_id: String,
+    var no_of_cattles_own: String,
+    var no_of_cow_dung_per_day: String,
+    var no_of_cylinder_per_year: String,
+    var willing_to_contribute_clean_cooking: String,
+    var wood_use_per_day_in_kg: String,
+    var parent_survey_id: String,
+    var tbl_project_survey_common_data_id: String,
+    var answer_id:Int?,
+)

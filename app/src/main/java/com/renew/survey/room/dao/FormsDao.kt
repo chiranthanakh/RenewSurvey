@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
+import com.renew.survey.room.entities.DraftCommonAnswer
 import com.renew.survey.room.entities.AnswerEntity
 import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
@@ -52,6 +54,15 @@ interface FormsDao {
             "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
             "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId order by q.order_by")
     suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int):List<FormQuestionLanguage>
+
+    @Query("SELECT l.title,d.answer,q.id,q.allowed_file_type,q.format,q.is_mandatory,q.is_special_char_allowed,q.is_validation_required,q.max_file_size,q.max_length,q.min_length,q.mst_question_group_id,q.order_by,q.question_type,q.tbl_form_questions_id,q.tbl_forms_id from \n" +
+            "ProjectPhaseQuestionEntity as p inner join\n" +
+            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id\n" +
+            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
+            "inner join DynamicAnswersEntity as d on d.tbl_form_questions_id=q.tbl_form_questions_id "+
+            "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId and d.answer_id=:answerId order by q.order_by")
+    suspend fun getAllFormsQuestionsWithDraftAnswer(language: Int,group:Int,formId:Int,answerId:Int):List<FormQuestionLanguage>
+
 
     @Query("SELECT title,tbl_project_phase_id,version,mqg.* FROM ProjectPhaseQuestionEntity pq " +
             "LEFT JOIN FormQuestionGroupEntity mqg ON mqg.mst_question_group_id = pq.mst_question_group_id " +
@@ -103,13 +114,19 @@ interface FormsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAnswer(ans:AnswerEntity):Long
 
+    @Update
+    suspend fun updateAnswer(ans:AnswerEntity)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCommonAnswer(ans:CommonAnswersEntity):Long
+
+    @Update
+    suspend fun updateCommonAnswer(ans:CommonAnswersEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDynamicAnswer(ans:DynamicAnswersEntity):Long
 
-    @Query("Select * from AnswerEntity where sync=0")
+    @Query("Select * from AnswerEntity where sync=0 and draft=0")
     suspend fun getAllUnsyncedAnswers(): List<AnswerEntity>
 
 
@@ -122,7 +139,13 @@ interface FormsDao {
     @Query("Update AnswerEntity set sync=1 where id=:ans_id")
     suspend fun updateSync(ans_id:Int)
 
-    @Query("Select * from AssignedSurveyEntity where status=0")
-    suspend fun getAllAssignedSurvey(): List<AssignedSurveyEntity>
+    @Query("Select * from AssignedSurveyEntity where status=0 and next_form_id=:formId")
+    suspend fun getAllAssignedSurvey(formId: Int): List<AssignedSurveyEntity>
+
+    @Query("Select ca.*  from AnswerEntity as a inner join CommonAnswersEntity ca on a.id=ca.answer_id where a.draft=1 and a.tbl_forms_id=:formId")
+    suspend fun getAllDraftSurvey(formId: Int): List<DraftCommonAnswer>
+
+    @Query("UPDATE DynamicAnswersEntity set answer=:answer where mst_question_group_id=:group and tbl_form_questions_id=:question and answer_id=:answer_id")
+    suspend fun updateDynamicAnswer(answer:String,group: Int,question: Int,answer_id: Int)
 
 }

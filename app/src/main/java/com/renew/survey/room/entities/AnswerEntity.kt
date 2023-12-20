@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class AnswerEntity(
     @PrimaryKey
-    val id:Int?,
+    var id:Int?,
     val app_unique_code: String,
     val mst_language_id: String,
     var parent_survey_id: String,
@@ -20,6 +20,7 @@ data class AnswerEntity(
     val tbl_users_id: String,
     val version: String,
     var sync: Int,
+    var draft: Int,
     @Ignore
     @SerializedName("common_question_answer")
     var commonAnswersEntity: CommonAnswersEntity?,
@@ -39,7 +40,8 @@ data class AnswerEntity(
         tbl_projects_id: String,
         tbl_users_id: String,
         version: String,
-        sync: Int
+        sync: Int,
+        draft: Int
     ) : this(
         id,
         app_unique_code,
@@ -53,6 +55,7 @@ data class AnswerEntity(
         tbl_users_id,
         version,
         sync,
+        draft,
         null,
         listOf()
     )

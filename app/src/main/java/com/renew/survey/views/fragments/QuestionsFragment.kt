@@ -43,30 +43,25 @@ import java.util.Date
 import kotlin.math.roundToInt
 
 
-class QuestionsFragment constructor(val group: Int,val fragPos:Int, var questionGroupList: List<QuestionGroupWithLanguage>
-) : Fragment() ,QuestionsAdapter.ClickListener{
+class QuestionsFragment constructor(val group: Int,val fragPos:Int, var questionGroupList: List<QuestionGroupWithLanguage>,
+                                    val status:Int) : Fragment() ,QuestionsAdapter.ClickListener{
 
     lateinit var binding:FragmentQuestionsBinding
     lateinit var prefsManager:PreferenceManager
     lateinit var questionsAdapter: QuestionsAdapter
 
 
-    /*companion object{
-        fun instance(group: Int): QuestionsFragment {
-            val data = Bundle()
-            data.putInt("group", group)
-            return QuestionsFragment().apply{
-                arguments = data
-            }
-        }
-    }*/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding=FragmentQuestionsBinding.inflate(inflater,container,false)
         prefsManager=PreferenceManager(requireContext())
-        getQuestions()
+        if (status==2){
+            getQuestionsWithDraftAnswer()
+        }else{
+            getQuestions()
+        }
         binding.recyclerView.layoutManager=LinearLayoutManager(requireContext())
         questionsAdapter= QuestionsAdapter(requireContext(),questionGroupList[fragPos].questions,this)
         binding.recyclerView.adapter=questionsAdapter
@@ -85,10 +80,36 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
                         options.add(0,Options(getString(R.string.select)))
                     }
                     questionGroupList[fragPos].questions[index].options=options
+
                 }
             }
             val json= Gson().toJson(questionGroupList[fragPos])
             Log.e("Options","data=$json")
+            questionsAdapter.setData(questionGroupList[fragPos].questions)
+        }
+
+    }
+    fun getQuestionsWithDraftAnswer(){
+        lifecycleScope.launch {
+            //Log.e("OptionsDraft","draftAnswer=${prefsManager.getDraft()}   language=${prefsManager.getLanguage()} formId=${prefsManager.getForm().tbl_forms_id} group=${group}")
+            if (questionGroupList[fragPos].questions.isEmpty()){
+                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestionsWithDraftAnswer(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,prefsManager.getDraft())
+            }
+            Log.e("DraftAnswer","${questionGroupList[fragPos].questions}")
+            //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
+            questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
+                if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
+                    val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(formQuestionLanguage.tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
+                    if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
+                        options.add(0,Options(getString(R.string.select)))
+                    }
+                    questionGroupList[fragPos].questions[index].options=options
+                }
+            }
+            if (fragPos==1){
+                val json= Gson().toJson(questionGroupList[fragPos])
+                Log.e("Options","data=$json")
+            }
             questionsAdapter.setData(questionGroupList[fragPos].questions)
         }
 

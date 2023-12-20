@@ -147,7 +147,7 @@
                         android:padding="5dp">
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/card_reports"
+                            android:id="@+id/card_draft"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
                             android:foreground="?android:attr/selectableItemBackground"
@@ -164,7 +164,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Pending For Submit"
+                                    android:text="Draft"
                                     android:textColor="@color/demo_state_foreground_color"
                                     android:textSize="20sp"
                                     android:layout_gravity="center"

@@ -53,6 +53,11 @@ class DashboardActivity : BaseActivity() {
             }
 
         }
+        binding.cardDraft.setOnClickListener {
+            Intent(this,DraftSelectActivity::class.java).apply {
+                startActivity(this)
+            }
+        }
         /*lifecycleScope.launch {
             val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey()
             val pendingCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalPendingSurvey()
@@ -71,7 +76,7 @@ class DashboardActivity : BaseActivity() {
                 val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswers()
                 for (a in answers){
                     val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
-                    val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id)
+                    val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
                     a.dynamicAnswersList=dynamicAns
                     a.commonAnswersEntity=commonAns
                     if (a.tbl_forms_id=="2"){

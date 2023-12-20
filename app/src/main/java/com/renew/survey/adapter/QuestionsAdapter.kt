@@ -181,6 +181,7 @@ class QuestionsAdapter(
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
                         binding.txtSpLable.text = "${position+1}. ${this.title}"
+                        binding.spinner.adapter=CustomSpinnerAdapter(context,getStringList(this.options))
                         if (this.answer!=null){
                             /*this.options.forEachIndexed { index, options ->
                                 if (options.title==answer){
@@ -189,7 +190,6 @@ class QuestionsAdapter(
                             }*/
                             binding.spinner.setSelection(getIndex(binding.spinner,this.answer!!))
                         }
-                        binding.spinner.adapter=CustomSpinnerAdapter(context,getStringList(this.options))
                         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                             override fun onNothingSelected(parent: AdapterView<*>?) {
 

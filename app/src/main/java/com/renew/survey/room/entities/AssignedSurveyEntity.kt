@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class AssignedSurveyEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id:Int?,
     val status:Int?,
     val aadhar_card: String,

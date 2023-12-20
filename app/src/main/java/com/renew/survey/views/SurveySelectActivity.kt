@@ -25,7 +25,7 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
     }
     fun getData(){
         lifecycleScope.launch {
-            val list=AppDatabase.getInstance(this@SurveySelectActivity).formDao().getAllAssignedSurvey()
+            val list=AppDatabase.getInstance(this@SurveySelectActivity).formDao().getAllAssignedSurvey(preferenceManager.getForm().tbl_forms_id)
             binding.recyclerView.adapter=AssignedSurveyAdapter(this@SurveySelectActivity,list,this@SurveySelectActivity)
         }
     }

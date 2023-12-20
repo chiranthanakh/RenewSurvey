@@ -398,7 +398,7 @@
          android:id="@+id/btn_save_draft"
          android:text="Save as draft"
          android:layout_weight="1"
-         android:visibility="gone"
+         android:visibility="visible"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:layout_marginStart="@dimen/margin_15_dp"
