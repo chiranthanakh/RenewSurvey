@@ -33,7 +33,7 @@ class ResetPasswordActivity : BaseActivity() {
             ApiInterface.getInstance()?.apply {
                 val response=resetPassword(
                     intent.getStringExtra("mobile")!!,
-                    "8",
+                    intent.getStringExtra("project_id")!!,
                     binding.edtNewPassword.text.toString(),
                     binding.edtPassword.text.toString(),
                 )
