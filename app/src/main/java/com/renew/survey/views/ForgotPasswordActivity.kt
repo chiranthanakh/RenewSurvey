@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.renew.survey.R
 import com.renew.survey.databinding.ActivityForgotPasswordBinding
+import com.renew.survey.response.ValidateUserModel
 import com.renew.survey.response.ValidationModel
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.AppConstants
@@ -40,13 +41,13 @@ class ForgotPasswordActivity : BaseActivity() {
                     val jsonObject= JSONObject(response.body().toString())
                     if (jsonObject.getString("success")=="1"){
                         val data=gson.fromJson(jsonObject.getString("data").toString(),
-                            ValidationModel::class.java)
+                            ValidateUserModel::class.java)
                         Log.e("response",data.toString())
                         Toast.makeText(this@ForgotPasswordActivity,data.otp, Toast.LENGTH_LONG).show()
                         Intent(this@ForgotPasswordActivity, VerifyOTPActivity::class.java).apply {
                             putExtra("forgotPassword",true)
                             putExtra("mobile",binding.edtMobile.text.toString())
-                            putExtra("project_id",data.project_info.tbl_projects_id)
+                            putExtra("project_id",data.tbl_users_id)
                             putExtra("otp",data.otp)
                             startActivity(this)
                         }
