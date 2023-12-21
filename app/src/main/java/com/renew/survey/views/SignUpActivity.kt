@@ -32,9 +32,11 @@ class SignUpActivity : BaseActivity() {
         }
     }
     fun formValidation(){
-        if (binding.edtUniqueCode.text.toString().isEmpty()){
-            UtilMethods.showToast(this,"Please enter project code")
-            return
+        if(!intent.getBooleanExtra("user",false)){
+            if (binding.edtUniqueCode.text.toString().isEmpty()){
+                UtilMethods.showToast(this,"Please enter project code")
+                return
+            }
         }
         if (binding.edtMobile.text.toString().isEmpty()){
             UtilMethods.showToast(this,"Please enter mobile number")

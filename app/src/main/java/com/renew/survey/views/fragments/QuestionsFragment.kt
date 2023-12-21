@@ -28,6 +28,7 @@ import com.google.gson.Gson
 import com.renew.survey.R
 import com.renew.survey.adapter.QuestionsAdapter
 import com.renew.survey.databinding.FragmentQuestionsBinding
+import com.renew.survey.helper.compressor.Compressor
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.Options
@@ -125,10 +126,15 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
                     val path = FileUtils.getRealPathFromURI(requireContext(), imageUri1)
                     val bmOptions = BitmapFactory.Options()
                     val bitmap = BitmapFactory.decodeFile(path, bmOptions)
-                    val bmTimeStamp=drawTextToBitmap(bitmap,48,UtilMethods.getFormattedDate(Date(),"dd-MM-yyyy HH:mm:ss"))
+                    val scaledBitmap=UtilMethods.getResizedBitmap(bitmap,1500,1500)
+                    val bmTimeStamp=drawTextToBitmap(scaledBitmap,18,UtilMethods.getFormattedDate(Date(),"dd-MM-yyyy HH:mm:ss"))
                     val newPath=saveImageToExternal(bmTimeStamp,requireContext())
-                    questionGroupList[fragPos].questions[position].answer=newPath!!.path
-                    questionsAdapter.notifyItemChanged(position)
+                    lifecycleScope.launch {
+                        val compressed=Compressor.compress(requireContext(),File(newPath!!.path))
+                        questionGroupList[fragPos].questions[position].answer= compressed.path
+                        questionsAdapter.notifyItemChanged(position)
+                        deleteFile(path)
+                    }
                 }
             }
             PICKFILE_REQUEST_CODE->{
@@ -243,6 +249,21 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
         } catch (e: Exception) {
             throw IOException()
         }
+    }
+    fun deleteFile(path: String){
+        try {
+            val file: File = File(path)
+            file.delete()
+            if (file.exists()) {
+                file.canonicalFile.delete()
+                if (file.exists()) {
+                    requireContext().deleteFile(file.name)
+                }
+            }
+        }catch (e:Exception){
+            e.toString()
+        }
+
     }
 
 

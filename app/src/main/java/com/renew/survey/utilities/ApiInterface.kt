@@ -1,12 +1,14 @@
 package com.renew.survey.utilities
 
 import com.google.gson.JsonElement
+import com.renew.survey.request.MediaSyncReqItem
 import com.renew.survey.room.entities.AnswerEntity
 import okhttp3.Interceptor.*
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -146,6 +148,17 @@ interface ApiInterface {
     suspend fun syncSubmitForms(
         @Header("Authorization") headers: String,
         @Body data: List<AnswerEntity>,
+    ) : Response<JsonElement>
+
+
+
+    @Multipart
+    @POST("ProjectMaster/sync_media")
+    suspend fun syncMediaFiles(
+        @Header("Authorization") headers: String,
+        @Part("post_data")tbl_projects_id:RequestBody,
+        //@Part("post_data") generalPaymentRequest:List<MediaSyncReqItem>,
+        @Part file: Array<MultipartBody.Part?>?
     ) : Response<JsonElement>
 
 
