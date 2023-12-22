@@ -26,6 +26,9 @@ import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
 import com.renew.survey.room.entities.ProjectWithLanguage
 import com.renew.survey.room.entities.ProjectsPhase
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
+import com.renew.survey.room.entities.TestEntry
+import com.renew.survey.room.entities.TestQuestionsEntry
+import com.renew.survey.room.entities.TutorialEntity
 
 @Dao
 interface FormsDao {
@@ -54,6 +57,12 @@ interface FormsDao {
             "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
             "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId order by q.order_by")
     suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int):List<FormQuestionLanguage>
+
+    @Query("SELECT mfl.title, tq.*, q.* from" +
+    " TestQuestionsEntry as tq inner join FormQuestionEntity as q on q.id = tq.tbl_test_questions_id LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_test_questions' AND mfl.module_id = tbl_test_questions_id " +
+    "WHERE tbl_tests_id = :formId AND is_active AND mst_language_id =:language")
+    suspend fun getAllTestQuestions(language: Int,formId:Int):List<FormQuestionLanguage>
+
 
     @Query("SELECT l.title,d.answer,q.id,q.allowed_file_type,q.format,q.is_mandatory,q.is_special_char_allowed,q.is_validation_required,q.max_file_size,q.max_length,q.min_length,q.mst_question_group_id,q.order_by,q.question_type,q.tbl_form_questions_id,q.tbl_forms_id from \n" +
             "ProjectPhaseQuestionEntity as p inner join\n" +
@@ -101,7 +110,6 @@ interface FormsDao {
     suspend fun getAllProjectsWithLanguage(language:Int): List<ProjectWithLanguage>
 
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllProjectPhaseQuestionEntities(formList: List<ProjectPhaseQuestionEntity>)
 
@@ -111,6 +119,14 @@ interface FormsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllCategories(formList: List<CategoryEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllTutorials(formList: List<TutorialEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllTests(formList: List<TestEntry>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllTestQuestions(formList: List<TestQuestionsEntry>)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAnswer(ans:AnswerEntity):Long
 
@@ -129,9 +145,11 @@ interface FormsDao {
     @Query("Select * from AnswerEntity where sync=0 and draft=0")
     suspend fun getAllUnsyncedAnswers(): List<AnswerEntity>
 
-
     @Query("Select * from CommonAnswersEntity where answer_id=:ansId limit 1")
     suspend fun getCommonAnswers(ansId:Int): CommonAnswersEntity
+
+    @Query("Select * from TutorialEntity where tbl_forms_id =:formId limit 1")
+    suspend fun getTrainings(formId:Int): TutorialEntity
 
     @Query("Select * from DynamicAnswersEntity where answer_id=:answer_id")
     suspend fun getDynamicAns(answer_id:Int): List<DynamicAnswersEntity>

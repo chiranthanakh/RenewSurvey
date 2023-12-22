@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -44,115 +45,207 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityFormsDetailsBinding.inflate(layoutInflater)
+        binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContentView(binding.root)
-        if (intent.hasExtra("assigned")){
-            status=1
-            val a=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
-            commonAnswersEntity= CommonAnswersEntity(
-                null,a.aadhar_card,a.annual_family_income,a.banficary_name,a.electricity_connection_available,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),null
+        if (intent.hasExtra("assigned")) {
+            status = 1
+            val a =
+                gson.fromJson(intent.getStringExtra("assigned"), AssignedSurveyEntity::class.java)
+            commonAnswersEntity = CommonAnswersEntity(null, a.aadhar_card, a.annual_family_income, a.banficary_name, a.electricity_connection_available, a.family_size, a.gender, a.house_type, a.is_cow_dung, a.is_lpg_using, a.mobile_number, a.mst_district_id.toString(), a.mst_state_id.toString(), a.mst_tehsil_id.toString(),
+                a.mst_panchayat_id.toString(), a.mst_village_id.toString(), a.no_of_cattles_own, a.no_of_cow_dung_per_day, a.no_of_cylinder_per_year, a.willing_to_contribute_clean_cooking, a.wood_use_per_day_in_kg, a.parent_survey_id, a.tbl_project_survey_common_data_id.toString(), null
             )
-        }else if (intent.hasExtra("draft")){
-            status=2
-            val a=gson.fromJson(intent.getStringExtra("draft"),DraftCommonAnswer::class.java)
-            commonAnswersEntity= CommonAnswersEntity(
-                null,a.aadhar_card,a.annual_family_income,a.banficary_name,a.electricity_connection_available,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),null
+        } else if (intent.hasExtra("draft")) {
+            status = 2
+            val a = gson.fromJson(intent.getStringExtra("draft"), DraftCommonAnswer::class.java)
+            commonAnswersEntity = CommonAnswersEntity(null, a.aadhar_card, a.annual_family_income, a.banficary_name, a.electricity_connection_available, a.family_size, a.gender, a.house_type, a.is_cow_dung, a.is_lpg_using, a.mobile_number, a.mst_district_id.toString(),
+                a.mst_state_id.toString(), a.mst_tehsil_id.toString(), a.mst_panchayat_id.toString(), a.mst_village_id.toString(), a.no_of_cattles_own, a.no_of_cow_dung_per_day, a.no_of_cylinder_per_year, a.willing_to_contribute_clean_cooking, a.wood_use_per_day_in_kg, a.parent_survey_id, a.tbl_project_survey_common_data_id.toString(), null
             )
         }
+        if (intent.getBooleanExtra("training",false)) {
+            val fragment=QuestionsFragment(0,0,questionGroupList,status,true)
+            listOfFragment.add(fragment)
+            supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
+            binding.btnSaveDraft.visibility = View.GONE
+            binding.btnContinue.setOnClickListener {
+                 var listOfFragment= arrayListOf<String>()
+                val retrievedList = preferenceManager.getTrainingState("trainingState")
+                retrievedList?.forEach{
+                    listOfFragment.add(it)
+                }
+                listOfFragment.add(intent.getStringExtra("trainingInfo")!!)
+                preferenceManager.saveTrainingState("trainingState",listOfFragment)
+            }
+        } else {
         getAllQuestionGroup()
-        binding.recyclerView.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        binding.btnSaveDraft.visibility = View.VISIBLE
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.btnSaveDraft.setOnClickListener {
             lifecycleScope.launch {
-                val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[0].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
-                    Date(),"dd:MM:yyyy:HH:mm:ss")}"
-                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[0].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[0].version,0,1)
-                var ansId=0
-                if (status==2){
-                    ans.id=preferenceManager.getDraft()
-                    ansId= preferenceManager.getDraft()
+                val appUniqueCode =
+                    "${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[0].tbl_project_phase_id}_${
+                        UtilMethods.getFormattedDate(
+                            Date(), "dd:MM:yyyy:HH:mm:ss"
+                        )
+                    }"
+                val ans = AnswerEntity(
+                    null,
+                    appUniqueCode,
+                    preferenceManager.getLanguage().toString(),
+                    commonAnswersEntity.parent_survey_id,
+                    questionGroupList[1].tbl_project_phase_id.toString(),
+                    preferenceManager.getForm().tbl_forms_id.toString(),
+                    questionGroupList[0].tbl_project_phase_id.toString(),
+                    preferenceManager.getProject().id.toString(),
+                    preferenceManager.getUserId().toString(),
+                    questionGroupList[0].version,
+                    0,
+                    1
+                )
+                var ansId = 0
+                if (status == 2) {
+                    ans.id = preferenceManager.getDraft()
+                    ansId = preferenceManager.getDraft()
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAnswer(ans)
-                }else{
-                    ansId=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertAnswer(ans).toInt()
+                } else {
+                    ansId = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                        .insertAnswer(ans).toInt()
                 }
-                val cm=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getCommonAnswers(ansId)
+                val cm = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                    .getCommonAnswers(ansId)
 
-                commonAnswersEntity.answer_id=ansId.toInt()
-                if (status==2){
-                    commonAnswersEntity.id=cm.id
-                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateCommonAnswer(commonAnswersEntity)
-                }else{
-                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertCommonAnswer(commonAnswersEntity)
+                commonAnswersEntity.answer_id = ansId.toInt()
+                if (status == 2) {
+                    commonAnswersEntity.id = cm.id
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                        .updateCommonAnswer(commonAnswersEntity)
+                } else {
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                        .insertCommonAnswer(commonAnswersEntity)
                 }
 
-                for (qg in questionGroupList){
-                    for(q in qg.questions){
-                        if(status==2){
-                            Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
-                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,ansId)
-                        }else{
-                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,ansId.toInt())
-                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
+                for (qg in questionGroupList) {
+                    for (q in qg.questions) {
+                        if (status == 2) {
+                            Log.d(
+                                "UpdatingQeuery",
+                                "ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}"
+                            )
+                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                                .updateDynamicAnswer(
+                                    q.answer!!,
+                                    qg.mst_question_group_id,
+                                    q.tbl_form_questions_id!!,
+                                    ansId
+                                )
+                        } else {
+                            val dynamicAnswersEntity = DynamicAnswersEntity(
+                                null,
+                                qg.mst_question_group_id,
+                                q.answer,
+                                q.tbl_form_questions_id!!,
+                                ansId.toInt()
+                            )
+                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                                .insertDynamicAnswer(dynamicAnswersEntity)
                         }
                     }
                 }
             }
-            UtilMethods.showToast(this,"Form saved in draft")
+            UtilMethods.showToast(this, "Form saved in draft")
             finish()
         }
         binding.btnContinue.setOnClickListener {
-            if (!validateCommonQuestions()){
+            if (!validateCommonQuestions()) {
                 return@setOnClickListener
             }
-            for (qg in questionGroupList){
-                for(q in qg.questions){
-                    if (q.is_mandatory.equals("yes",ignoreCase = true)){
-                        if (q.answer.equals("")){
-                            UtilMethods.showToast(this@FormsDetailsActivity,"Please add/select ${q.title} in qustion group ${qg.title}")
+            for (qg in questionGroupList) {
+                for (q in qg.questions) {
+                    if (q.is_mandatory.equals("yes", ignoreCase = true)) {
+                        if (q.answer.equals("")) {
+                            UtilMethods.showToast(
+                                this@FormsDetailsActivity,
+                                "Please add/select ${q.title} in qustion group ${qg.title}"
+                            )
                             return@setOnClickListener
                         }
                     }
                 }
             }
             lifecycleScope.launch {
-
-                val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[0].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
-                    Date(),"dd:MM:yyyy:HH:mm:ss")}"
-                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[0].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[0].version,0,0)
-                var ansId=0
-                if (status==2){
-                    ans.id=preferenceManager.getDraft()
-                    ansId= preferenceManager.getDraft()
-                    Log.e("patedsj",gson.toJson(ans))
+                val appUniqueCode =
+                    "${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[0].tbl_project_phase_id}_${
+                        UtilMethods.getFormattedDate(
+                            Date(), "dd:MM:yyyy:HH:mm:ss"
+                        )
+                    }"
+                val ans = AnswerEntity(
+                    null,
+                    appUniqueCode,
+                    preferenceManager.getLanguage().toString(),
+                    commonAnswersEntity.parent_survey_id,
+                    questionGroupList[1].tbl_project_phase_id.toString(),
+                    preferenceManager.getForm().tbl_forms_id.toString(),
+                    questionGroupList[0].tbl_project_phase_id.toString(),
+                    preferenceManager.getProject().id.toString(),
+                    preferenceManager.getUserId().toString(),
+                    questionGroupList[0].version,
+                    0,
+                    0
+                )
+                var ansId = 0
+                if (status == 2) {
+                    ans.id = preferenceManager.getDraft()
+                    ansId = preferenceManager.getDraft()
+                    Log.e("patedsj", gson.toJson(ans))
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAnswer(ans)
-                }else{
-                    ansId=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertAnswer(ans).toInt()
+                } else {
+                    ansId = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                        .insertAnswer(ans).toInt()
                 }
-                val cm=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getCommonAnswers(ansId)
-                commonAnswersEntity.answer_id=ansId.toInt()
-                if (status==2){
-                    commonAnswersEntity.id=cm.id
-                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateCommonAnswer(commonAnswersEntity)
-                }else{
-                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertCommonAnswer(commonAnswersEntity)
+                val cm = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                    .getCommonAnswers(ansId)
+                commonAnswersEntity.answer_id = ansId.toInt()
+                if (status == 2) {
+                    commonAnswersEntity.id = cm.id
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                        .updateCommonAnswer(commonAnswersEntity)
+                } else {
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                        .insertCommonAnswer(commonAnswersEntity)
                 }
 
-                commonAnswersEntity.answer_id=ansId.toInt()
-                for (qg in questionGroupList){
-                    for(q in qg.questions){
-                        if(status==2){
-                            Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
-                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,ansId)
-                        }else{
-                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,ansId.toInt())
-                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
+                commonAnswersEntity.answer_id = ansId.toInt()
+                for (qg in questionGroupList) {
+                    for (q in qg.questions) {
+                        if (status == 2) {
+                            Log.d(
+                                "UpdatingQeuery",
+                                "ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}"
+                            )
+                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                                .updateDynamicAnswer(
+                                    q.answer!!,
+                                    qg.mst_question_group_id,
+                                    q.tbl_form_questions_id!!,
+                                    ansId
+                                )
+                        } else {
+                            val dynamicAnswersEntity = DynamicAnswersEntity(
+                                null,
+                                qg.mst_question_group_id,
+                                q.answer,
+                                q.tbl_form_questions_id!!,
+                                ansId.toInt()
+                            )
+                            AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                                .insertDynamicAnswer(dynamicAnswersEntity)
                         }
                     }
                 }
             }
-            UtilMethods.showToast(this,"Form saved successfully")
+            UtilMethods.showToast(this, "Form saved successfully")
             finish()
         }
         turnOnLocation()
@@ -173,20 +266,20 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    if (location!=null){
+                    if (location != null) {
                         preferenceManager.saveLocation("${location.latitude},${location.longitude}")
                     }
                 }
             }
         }
         fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                if (location!=null){
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
                     preferenceManager.saveLocation("${location.latitude},${location.longitude}")
                 }
             }
 
-
+       }
     }
     fun getAllQuestionGroup(){
         lifecycleScope.launch {
@@ -202,7 +295,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                         listOfFragment.add(fragment)
                         supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
                     }else{
-                        val fragment=QuestionsFragment(questionGroupWithLanguage.mst_question_group_id,index,questionGroupList,status)
+                        val fragment=QuestionsFragment(questionGroupWithLanguage.mst_question_group_id,index,questionGroupList,status,false)
                         listOfFragment.add(fragment)
                         supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
                     }

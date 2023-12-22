@@ -45,12 +45,12 @@ import kotlin.math.roundToInt
 
 
 class QuestionsFragment constructor(val group: Int,val fragPos:Int, var questionGroupList: List<QuestionGroupWithLanguage>,
-                                    val status:Int) : Fragment() ,QuestionsAdapter.ClickListener{
+                                    val status:Int, val isTraingForm:Boolean) : Fragment() ,QuestionsAdapter.ClickListener{
 
     lateinit var binding:FragmentQuestionsBinding
     lateinit var prefsManager:PreferenceManager
     lateinit var questionsAdapter: QuestionsAdapter
-
+    var questionList: List<FormQuestionLanguage>  = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,30 +58,62 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
     ): View {
         binding=FragmentQuestionsBinding.inflate(inflater,container,false)
         prefsManager=PreferenceManager(requireContext())
-        if (status==2){
-            getQuestionsWithDraftAnswer()
-        }else{
-            getQuestions()
+        if (isTraingForm) {
+            getTestQuestions()
+        } else {
+            if (status == 2) {
+                getQuestionsWithDraftAnswer()
+            } else {
+                getQuestions()
+            }
         }
         binding.recyclerView.layoutManager=LinearLayoutManager(requireContext())
-        questionsAdapter= QuestionsAdapter(requireContext(),questionGroupList[fragPos].questions,this)
+        questionsAdapter= QuestionsAdapter(requireContext(),questionList,this)
         binding.recyclerView.adapter=questionsAdapter
         return binding.root
     }
+
+    private fun getTestQuestions() {
+        lifecycleScope.launch {
+            questionList = AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
+            questionList.forEachIndexed { index, formQuestionLanguage ->
+                if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
+                    val options= formQuestionLanguage?.tbl_form_questions_id?.let {
+                        AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
+                            it,prefsManager.getLanguage())
+                    } as ArrayList
+                    if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
+                        options.add(0,Options(getString(R.string.select)))
+                    }
+                    questionList[index].options=options
+                }
+            }
+            questionsAdapter.setData(questionList)
+            // questionsAdapter.setData(AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1))
+            Log.d("TestQuestionQuairy", questionList.toString())
+        }
+       //questionsAdapter.setData(questionList)
+       Log.d("TestQuestionQuairy2", questionList.toString())
+    }
+
     fun getQuestions(){
         lifecycleScope.launch {
             if (questionGroupList[fragPos].questions.isEmpty()){
                 questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id)
+                //questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
             }
-            //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
+            val questionList=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
+            Log.d("TestQuestionQuairy", questionList.toString())
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
                 if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
-                    val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(formQuestionLanguage.tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
+                    val options= formQuestionLanguage?.tbl_form_questions_id?.let {
+                        AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
+                            it,prefsManager.getLanguage())
+                    } as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
                         options.add(0,Options(getString(R.string.select)))
                     }
                     questionGroupList[fragPos].questions[index].options=options
-
                 }
             }
             val json= Gson().toJson(questionGroupList[fragPos])
@@ -100,7 +132,8 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
             //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
                 if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
-                    val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(formQuestionLanguage.tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
+                    val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
+                        formQuestionLanguage.tbl_form_questions_id!!,prefsManager.getLanguage()) as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
                         options.add(0,Options(getString(R.string.select)))
                     }

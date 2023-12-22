@@ -38,6 +38,8 @@ class LoginActivity : BaseActivity() {
             if (binding.etUserName.text.toString() != "") {
                 if (binding.etPassword.text.toString() != "") {
                     callLoginapi()
+                   // Intent(this@LoginActivity,TrainingActivity::class.java).apply {
+                    //    startActivity(this)}
                 } else {
                     Toast.makeText(this@LoginActivity, "Enter your password", Toast.LENGTH_LONG)
                         .show()

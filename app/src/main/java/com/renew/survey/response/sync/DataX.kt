@@ -59,5 +59,13 @@ data class DataX(
     val tehsil_name: String,
     val title: String,
     val version: String,
-    val village_name: String
-)
+    val village_name: String,
+    val tbl_tutorials: Int,
+    val tutorial_file: String,
+    val tutorial_code: String,
+    val tbl_tests_id : Int,
+    val passing_marks : String,
+    val test_code : String,
+    val tbl_test_questions_id : Int,
+
+    )

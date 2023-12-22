@@ -514,6 +514,4 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             )
         }
     }
-
-
 }

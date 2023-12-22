@@ -24,6 +24,7 @@
         tools:ignore="ScopedStorage" />
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"
@@ -34,6 +35,9 @@
         android:theme="@style/Theme.Renew"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".views.TrainingActivity"
+            android:exported="false" />
         <activity
             android:name=".views.DraftSelectActivity"
             android:exported="false" />

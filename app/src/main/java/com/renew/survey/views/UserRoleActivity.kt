@@ -42,9 +42,21 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
     }
 
     override fun onFormSelected(form: FormWithLanguage) {
+        Log.d("formDetails",form.toString())
         preferenceManager.saveForm(form)
-        Intent(this,DashboardActivity::class.java).apply {
-            startActivity(this)
+        val retrievedList = preferenceManager.getTrainingState("trainingState")
+        if (retrievedList?.contains(preferenceManager.getProject().id.toString()+form.tbl_forms_id) != true) {
+            Intent(this,TrainingActivity::class.java).apply {
+                putExtra("trainingInfo",preferenceManager.getProject().id.toString()+form.tbl_forms_id)
+                startActivity(this)
+            }
+        } else {
+            lifecycleScope.launch {
+                val cm=AppDatabase.getInstance(this@UserRoleActivity).formDao().getTrainings(form.tbl_forms_id)
+            }
+            Intent(this,DashboardActivity::class.java).apply {
+                startActivity(this)
+            }
         }
     }
 }

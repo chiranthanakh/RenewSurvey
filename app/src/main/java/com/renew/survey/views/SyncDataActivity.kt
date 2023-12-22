@@ -25,6 +25,9 @@ import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
 import com.renew.survey.room.entities.ProjectsPhase
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
+import com.renew.survey.room.entities.TestEntry
+import com.renew.survey.room.entities.TestQuestionsEntry
+import com.renew.survey.room.entities.TutorialEntity
 import com.renew.survey.room.entities.VillageEntity
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.UtilMethods
@@ -205,6 +208,33 @@ class SyncDataActivity : BaseActivity() {
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
                                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllCategories(categoryEntities)
+                                    }
+                                    "tbl_tutorials"->{
+                                        val tutorialEntity= arrayListOf<TutorialEntity>()
+                                        for (d in s.data){
+                                            val tutorials=TutorialEntity(d.tbl_tutorials,d.tbl_tutorials,d.tbl_forms_id.toInt(),d.tutorial_file,d.tutorial_code,d.last_update,d.is_delete,d.is_active,d.create_date,d.created_by)
+                                            tutorialEntity.add(tutorials)
+                                            //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                                        }
+                                        AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllTutorials(tutorialEntity)
+                                    }
+                                    "tbl_tests"->{
+                                        val testEntry= arrayListOf<TestEntry>()
+                                        for (d in s.data){
+                                            val tests=TestEntry(d.tbl_tests_id,d.tbl_tests_id,d.tbl_forms_id.toInt(),d.created_by,d.test_code,d.passing_marks,d.create_date,d.is_active,d.is_delete,d.last_update)
+                                            testEntry.add(tests)
+                                            //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                                        }
+                                        AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllTests(testEntry)
+                                    }
+                                    "tbl_test_questions"->{
+                                        val testQuestionEntity= arrayListOf<TestQuestionsEntry>()
+                                        for (d in s.data){
+                                            val testQuestion=TestQuestionsEntry(d.tbl_test_questions_id,d.tbl_test_questions_id,d.tbl_tests_id.toInt(),d.tbl_forms_id.toInt(),d.created_by,d.question_type,d.is_mandatory,d.order_by,d.is_validation_required,d.is_special_char_allowed,d.min_length,d.max_length,d.format,d.create_date,d.is_active,d.is_delete,d.last_update)
+                                            testQuestionEntity.add(testQuestion)
+                                            //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                                        }
+                                        AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllTestQuestions(testQuestionEntity)
                                     }
                                 }
                             }

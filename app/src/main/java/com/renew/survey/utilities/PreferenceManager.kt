@@ -2,6 +2,7 @@ package com.renew.survey.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.renew.survey.response.UserData
 import com.renew.survey.room.entities.FormWithLanguage
@@ -49,6 +50,21 @@ class PreferenceManager constructor(context: Context){
 
     fun getLanguage(): Int{
         return  sharedPreferences.getInt("language",0)
+    }
+
+    fun saveTrainingState(key: String, value: List<String>) {
+        val editor = sharedPreferences.edit()
+        val gson = Gson()
+        val json = gson.toJson(value)
+        editor.putString(key, json)
+        editor.apply()
+    }
+
+    fun getTrainingState(key: String): List<String>? {
+        val json = sharedPreferences.getString(key, null)
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(json, type)
     }
 
     fun saveDraft(language: Int){
@@ -102,7 +118,15 @@ class PreferenceManager constructor(context: Context){
         return sharedPreferences.getString("location","")
     }
 
+    fun saveTraining(training: String, formid: String){
+        val editor = sharedPreferences.edit()
+        editor.putString("training",training)
+        editor.apply()
+    }
 
+    fun getTraining(): String?{
+        return sharedPreferences.getString("training","")
+    }
 
 
     fun clear() {
