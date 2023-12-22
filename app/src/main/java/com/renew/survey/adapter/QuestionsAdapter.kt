@@ -4,9 +4,15 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
+import android.icu.lang.UProperty.INT_START
 import android.text.Editable
 import android.text.InputType
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +25,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.text.bold
+import androidx.core.text.color
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.RangeSlider
@@ -75,7 +83,7 @@ class QuestionsAdapter(
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtEditTextLable.text = "${position+1}. ${this.title}"
+                        binding.txtEditTextLable.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.edittext.addTextChangedListener(object :TextWatcher{
                             override fun beforeTextChanged(
                                 p0: CharSequence?,
@@ -180,7 +188,7 @@ class QuestionsAdapter(
                         binding.llRange.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtSpLable.text = "${position+1}. ${this.title}"
+                        binding.txtSpLable.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.spinner.adapter=CustomSpinnerAdapter(context,getStringList(this.options))
                         if (this.answer!=null){
                             /*this.options.forEachIndexed { index, options ->
@@ -212,7 +220,7 @@ class QuestionsAdapter(
                         binding.llFile.visibility = View.GONE
                         binding.llCheckbox.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtMultiselect.text = "${position+1}. ${this.title}"
+                        binding.txtMultiselect.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.multiselect.setText(this.answer)
                         val options= arrayListOf<MultiSelectItem>()
                         for (o in this.options){
@@ -255,7 +263,7 @@ class QuestionsAdapter(
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtRadio.text = "${position+1}. ${this.title}"
+                        binding.txtRadio.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.rgRadio.removeAllViews()
                         for(option in this.options){
                             val radioButton=RadioButton(context)
@@ -280,7 +288,7 @@ class QuestionsAdapter(
                         binding.llRange.visibility = View.VISIBLE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtRange.text = "${position+1}. ${this.title}"
+                        binding.txtRange.text = getHintText(this.title,position+1,this.is_mandatory)
                         if (answer!=""){
                             val vals=this.answer!!.split(",")
                             val values= arrayListOf<Float>()
@@ -316,7 +324,7 @@ class QuestionsAdapter(
                         binding.llRange.visibility = View.GONE
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.VISIBLE
-                        binding.txtFileLable.text = "${position+1}. ${this.title}"
+                        binding.txtFileLable.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.llRating.visibility = View.GONE
                         if (this.question_type=="FILE"){
                             binding.tvFile.setText(context.getString(R.string.attach_file))
@@ -341,7 +349,7 @@ class QuestionsAdapter(
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
                         binding.llCheckbox.visibility = View.VISIBLE
-                        binding.txtCheckbox.setText("${position+1}. ${this.title}")
+                        binding.txtCheckbox.setText(getHintText(this.title,position+1,this.is_mandatory))
                         binding.llCheckboxAdd.removeAllViews()
                         for (ops in this.options){
                             val checkBox=CheckBox(context)
@@ -369,7 +377,7 @@ class QuestionsAdapter(
                         binding.llRating.visibility = View.VISIBLE
                         binding.ratingBar.numStars=this.max_length.toInt()
                         binding.ratingBar.stepSize=this.min_length.toFloat()
-                        binding.txtRatingLable.text = "${position+1}. ${this.title}"
+                        binding.txtRatingLable.text = getHintText(this.title,position+1,this.is_mandatory)
                         if(this.answer!=""){
                             binding.ratingBar.rating=this.answer!!.toFloat()
                         }
@@ -420,5 +428,19 @@ class QuestionsAdapter(
         }
 
         return existingItems.joinToString(",")
+    }
+    fun getHintText(text:String, num:Int,mandatory:String):SpannableStringBuilder{
+        return if (mandatory=="YES"){
+            Log.e("HintText","mandatory   $mandatory")
+            SpannableStringBuilder()
+                .bold { append("$num. ") }
+                .append(text)
+                .color(Color.RED) { append("*") }
+        }else{
+            Log.e("HintText","mandatory   $mandatory")
+            SpannableStringBuilder()
+                .bold { append("$num. ") }
+                .append(text)
+        }
     }
 }

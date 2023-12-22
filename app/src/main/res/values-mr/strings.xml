@@ -5,12 +5,12 @@
     <string name="Project">Project<font color='#EA0C27'>*</font></string>
     <string name="name">Name of the Employee<font color='#EA0C27'>*</font></string>
     <string name="dob">Date of Birth (DD-MM-YYYY)<font color='#EA0C27'>*</font></string>
-    <string name="gender">7. लिंग</string>
+    <string name="gender">7. लिंग<font color='#EA0C27'>*</font></string>
     <string name="phone">Worker Phone Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_contact">Emergency Contact Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
     <string name="address">Address<font color='#EA0C27'>*</font></string>
-    <string name="state">2. राज्याचे नाव</string>
+    <string name="state">2. राज्याचे नाव<font color='#EA0C27'>*</font></string>
     <string name="locatioon">District<font color='#EA0C27'>*</font></string>
     <string name="skill_type">Skill Type<font color='#EA0C27'>*</font></string>
     <string name="skill_set">Skill Set<font color='#EA0C27'>*</font></string>
@@ -23,7 +23,7 @@
 
     <string name="driving">Driving licence no<font color='#EA0C27'>*</font></string>
     <string name="induction_state">Induction Status<font color='#EA0C27'>*</font></string>
-    <string name="aadhar">20. आधार कार्ड</string>
+    <string name="aadhar">20. आधार कार्ड<font color='#EA0C27'>*</font></string>
     <string name="medical_states">Medical test status<font color='#EA0C27'>*</font></string>
     <string name="report">Medical Report is Ok<font color='#EA0C27'>*</font></string>
 
@@ -34,25 +34,25 @@
     <string name="medical_cert">Upload Medical Certificate<font color='#EA0C27'>*</font></string>
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
-    <string name="beneficiary_name">1. लाभार्थीचे नाव</string>
-    <string name="family_size">8. एकूण कुटुंब सदस्य</string>
-    <string name="lpg_using">9. तुम्ही LPG वापरता का?</string>
+    <string name="beneficiary_name">1. लाभार्थीचे नाव<font color='#EA0C27'>*</font></string>
+    <string name="family_size">8. एकूण कुटुंब सदस्य<font color='#EA0C27'>*</font></string>
+    <string name="lpg_using">9. तुम्ही LPG वापरता का?<font color='#EA0C27'>*</font></string>
     <string name="yes">होय</string>
     <string name="no">नाही</string>
-    <string name="no_of_cylinder_per_year">10. दर वर्षी सिलेंडरची संख्या</string>
-    <string name="no_of_cow_dung_per_day">12. दररोज शेणाची संख्या</string>
-    <string name="cow_dung_cake_using">11. गायीचे शेण वापरताय?</string>
+    <string name="no_of_cylinder_per_year">10. दर वर्षी सिलेंडरची संख्या<font color='#EA0C27'>*</font></string>
+    <string name="no_of_cow_dung_per_day">12. दररोज शेणाची संख्या<font color='#EA0C27'>*</font></string>
+    <string name="cow_dung_cake_using">11. गायीचे शेण वापरताय?<font color='#EA0C27'>*</font></string>
     <string name="annual_family_income">14. वार्षिक कौटुंबिक उत्पन्न</string>
-    <string name="house_type">13. घराचा प्रकार</string>
-    <string name="willing_to_contribute_to_clean_cooking_device">15. स्वच्छ स्वयंपाक उपकरणासाठी योगदान देण्यास इच्छुक आहात?</string>
-    <string name="wood_used_per_day_in_kg">16. केजीमध्ये प्रतिदिन वापरण्यात येणारे लाकूड</string>
-    <string name="electricity_connection_available">17. वीज जोडणी उपलब्ध</string>
-    <string name="no_of_cattle_own">18. स्वत:च्या गुरांची संख्या</string>
-    <string name="mobile_number">19. मोबाइल नंबर</string>
-    <string name="district">3. जिल्ह्याचे नाव</string>
-    <string name="tehsil">4. तहसील नाव</string>
-    <string name="panchayath">5. पंचायत नाव</string>
-    <string name="village">6. गावाचे नाव</string>
+    <string name="house_type">13. घराचा प्रकार<font color='#EA0C27'>*</font></string>
+    <string name="willing_to_contribute_to_clean_cooking_device">15. स्वच्छ स्वयंपाक उपकरणासाठी योगदान देण्यास इच्छुक आहात?<font color='#EA0C27'>*</font></string>
+    <string name="wood_used_per_day_in_kg">16. केजीमध्ये प्रतिदिन वापरण्यात येणारे लाकूड<font color='#EA0C27'>*</font></string>
+    <string name="electricity_connection_available">17. वीज जोडणी उपलब्ध<font color='#EA0C27'>*</font></string>
+    <string name="no_of_cattle_own">18. स्वत:च्या गुरांची संख्या<font color='#EA0C27'>*</font></string>
+    <string name="mobile_number">19. मोबाइल नंबर<font color='#EA0C27'>*</font></string>
+    <string name="district">3. जिल्ह्याचे नाव<font color='#EA0C27'>*</font></string>
+    <string name="tehsil">4. तहसील नाव<font color='#EA0C27'>*</font></string>
+    <string name="panchayath">5. पंचायत नाव<font color='#EA0C27'>*</font></string>
+    <string name="village">6. गावाचे नाव<font color='#EA0C27'>*</font></string>
     <string name="own">स्वतःचे</string>
     <string name="rented">भाड्याने घेतले</string>
     <string-array name="state">

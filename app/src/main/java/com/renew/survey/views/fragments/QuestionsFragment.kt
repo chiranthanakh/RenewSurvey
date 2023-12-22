@@ -58,7 +58,7 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
     ): View {
         binding=FragmentQuestionsBinding.inflate(inflater,container,false)
         prefsManager=PreferenceManager(requireContext())
-        if (status==2){
+        if (status==4||status==5||status==6){
             getQuestionsWithDraftAnswer()
         }else{
             getQuestions()

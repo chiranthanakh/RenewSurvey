@@ -3,6 +3,7 @@ package com.renew.survey.views.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,10 +47,11 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         savedInstanceState: Bundle?
     ): View {
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
-        if (status==1){
+        Log.e("status","$status")
+        if (status==2||status==3||status==5||status==6){
             disableViews=true
         }
-        if (status==1||status==2){
+        if (status>0){
             binding.edtBeneficiaryName.setText(commonAnswersEntity.banficary_name)
             binding.edtMobile.setText(commonAnswersEntity.mobile_number)
             binding.edtCattleOwn.setText(commonAnswersEntity.no_of_cattles_own)
@@ -300,7 +302,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             stateList=AppDatabase.getInstance(requireContext()).placesDao().getAllStates().transformState() as ArrayList<StateModel>
             stateList.add(0,StateModel("","Select State"))
             binding.spState.adapter=StateSpinnerAdapter(requireContext(),stateList)
-            if (status==1||status==2){
+            if (status>0){
                 stateList.forEachIndexed { index, stateModel ->
                     if (stateModel.mst_state_id==commonAnswersEntity.mst_state_id){
                         binding.spState.setSelection(index)
@@ -317,7 +319,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             districtList=AppDatabase.getInstance(requireContext()).placesDao().getAllDistricts(state).transformDistrict() as ArrayList<DistrictModel>
             districtList.add(0, DistrictModel("Select District",""))
             binding.spDistrict.adapter=DistrictSpinnerAdapter(requireContext(),districtList)
-            if (status==1||status==2){
+            if (status>0){
                 districtList.forEachIndexed { index, districtModel ->
                     if (districtModel.mst_district_id==commonAnswersEntity.mst_district_id){
                         binding.spDistrict.setSelection(index)
@@ -334,7 +336,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             tehsilList=AppDatabase.getInstance(requireContext()).placesDao().getAllTehsils(state).transformTehsil() as ArrayList<TehsilModel>
             tehsilList.add(0,TehsilModel("","Select Tehsil"))
             binding.spTehsil.adapter=TehsilSpinnerAdapter(requireContext(),tehsilList)
-            if (status==1||status==2){
+            if (status>0){
                 tehsilList.forEachIndexed { index, tehsilModel ->
                     if (tehsilModel.mst_tehsil_id==commonAnswersEntity.mst_tehsil_id){
                         binding.spTehsil.setSelection(index)
@@ -351,7 +353,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             panchayathList=AppDatabase.getInstance(requireContext()).placesDao().getAllPanchayath(state).transformPanchayath() as ArrayList<PanchayathModel>
             panchayathList.add(0, PanchayathModel("","Select Panchayath"))
             binding.spPanchayat.adapter=PanchayatSpinnerAdapter(requireContext(),panchayathList)
-            if (status==1||status==2){
+            if (status>0){
                 panchayathList.forEachIndexed { index, panchayathModel ->
                     if (panchayathModel.mst_panchayat_id==commonAnswersEntity.mst_panchayat_id){
                         binding.spPanchayat.setSelection(index)
@@ -368,7 +370,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             villageList=AppDatabase.getInstance(requireContext()).placesDao().getAllVillages(state).transformVillage() as ArrayList<VillageModel>
             villageList.add(0,VillageModel("","Select State"))
             binding.spVillage.adapter=VillageSpinnerAdapter(requireContext(),villageList)
-            if (status==1||status==2){
+            if (status>0){
                 villageList.forEachIndexed { index, villageModel ->
                     if (villageModel.mst_villages_id==commonAnswersEntity.mst_village_id){
                         binding.spVillage.setSelection(index)

@@ -25,4 +25,5 @@ data class DraftCommonAnswer(
     var parent_survey_id: String,
     var tbl_project_survey_common_data_id: String,
     var answer_id:Int?,
+    var tbl_forms_id:Int?,
 )

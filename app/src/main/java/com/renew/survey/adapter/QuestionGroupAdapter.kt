@@ -13,9 +13,8 @@ import java.util.Locale
 
 class QuestionGroupAdapter(
     val context:Context, private var list: List<QuestionGroupWithLanguage>,
-    var clickListener: ClickListener) :
+    var clickListener: ClickListener,var previousSelected:Int) :
     RecyclerView.Adapter<QuestionGroupAdapter.ViewHolder>() {
-    var previousSelected=0;
 
     class ViewHolder (val binding: ItemQuestionGroupBinding):RecyclerView.ViewHolder(binding.root)
 

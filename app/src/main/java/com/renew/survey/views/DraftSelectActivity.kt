@@ -1,16 +1,12 @@
 package com.renew.survey.views
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.renew.survey.R
-import com.renew.survey.adapter.AssignedSurveyAdapter
 import com.renew.survey.adapter.DraftSurveyAdapter
 import com.renew.survey.databinding.ActivityDraftSelectBinding
 import com.renew.survey.room.AppDatabase
-import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.DraftCommonAnswer
 import kotlinx.coroutines.launch
 

@@ -61,20 +61,16 @@ class DashboardActivity : BaseActivity() {
 
         }
         binding.cardDraft.setOnClickListener {
-            Intent(this,DraftSelectActivity::class.java).apply {
-                startActivity(this)
+            if (draftCount==0){
+                UtilMethods.showToast(this,"No draft survey found")
+            }else{
+                Intent(this,DraftSelectActivity::class.java).apply {
+                    startActivity(this)
+                }
             }
-        }
-        /*lifecycleScope.launch {
-            val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey()
-            val pendingCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalPendingSurvey()
-            val doneCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalDoneSurvey()
 
-            binding.tvTotalSurvey.text = "$totalCount"
-            binding.tvPendingSurvey.text = "$pendingCount"
-            binding.tvSyncDone.text = "$doneCount"
-            //binding.tvTotalSurvey.text = "${AppDatabase.getInstance(this).formDao().getTotalSurvey()}"
-        }*/
+        }
+
         binding.surveyType.text = preferenceManager.getForm().title
         binding.project.text=preferenceManager.getProject().project_code
         binding.btnSync.setOnClickListener {
@@ -106,6 +102,7 @@ class DashboardActivity : BaseActivity() {
                                 for (ans in answers){
                                     AppDatabase.getInstance(this@DashboardActivity).formDao().updateSync(ans.id!!)
                                 }
+                                getCounts()
                             }
                         }
                     }
@@ -191,6 +188,26 @@ class DashboardActivity : BaseActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getCounts()
+    }
+    var draftCount=0
+    fun getCounts(){
+        lifecycleScope.launch {
+            val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey(preferenceManager.getForm().tbl_forms_id)
+            val pendingCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalPendingSurvey(preferenceManager.getForm().tbl_forms_id)
+            val doneCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalDoneSurvey(preferenceManager.getForm().tbl_forms_id)
+            draftCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getDraftSurvey(preferenceManager.getForm().tbl_forms_id)
+
+            binding.tvTotalSurvey.text = "$totalCount"
+            binding.tvPendingSurvey.text = "$pendingCount"
+            binding.tvSyncDone.text = "$doneCount"
+            binding.tvDraftCount.text = "$draftCount"
+            //binding.tvTotalSurvey.text = "${AppDatabase.getInstance(this).formDao().getTotalSurvey()}"
         }
     }
 }
