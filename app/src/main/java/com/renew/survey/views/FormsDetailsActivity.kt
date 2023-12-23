@@ -1,11 +1,15 @@
 package com.renew.survey.views
 
 import android.Manifest
+import android.app.Dialog
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -75,14 +79,12 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             listOfFragment.add(fragment)
             supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
             binding.btnSaveDraft.visibility = View.GONE
+            binding.btnNext.visibility = View.GONE
+            binding.btnPrevious.visibility = View.GONE
+            binding.btnContinue.visibility = View.VISIBLE
+
             binding.btnContinue.setOnClickListener {
-                 var listOfFragment= arrayListOf<String>()
-                val retrievedList = preferenceManager.getTrainingState("trainingState")
-                retrievedList?.forEach{
-                    listOfFragment.add(it)
-                }
-                listOfFragment.add(intent.getStringExtra("trainingInfo")!!)
-                preferenceManager.saveTrainingState("trainingState",listOfFragment)
+                Showsuccess()
             }
         } else {
         getAllQuestionGroup()
@@ -112,7 +114,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                 if (status>3){
                     commonAnswersEntity.id=cm.id
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateCommonAnswer(commonAnswersEntity)
-                }else{
+                } else {
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertCommonAnswer(commonAnswersEntity)
                 }
 
@@ -294,6 +296,30 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         }catch (e:Exception){
             e.printStackTrace()
         }
+    }
+
+    fun Showsuccess() {
+        val dialogView = Dialog(this)
+        dialogView.setContentView(R.layout.dialog_success)
+        dialogView.setCancelable(false)
+        val submit: TextView = dialogView.findViewById(R.id.btn_submit)
+        var listOfFragment= arrayListOf<String>()
+        val retrievedList = preferenceManager.getTrainingState("trainingState")
+        retrievedList?.forEach{
+            listOfFragment.add(it)
+        }
+        listOfFragment.add(intent.getStringExtra("trainingInfo")!!)
+        preferenceManager.saveTrainingState("trainingState",listOfFragment)
+
+        submit.setOnClickListener {
+            val intent = Intent(this@FormsDetailsActivity, FormsDetailsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+            dialogView.dismiss()
+        }
+
+        dialogView.show()
     }
     fun validateCommonQuestions():Boolean{
         if (commonAnswersEntity.banficary_name==""){
