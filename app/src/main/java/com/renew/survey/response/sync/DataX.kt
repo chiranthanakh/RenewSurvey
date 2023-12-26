@@ -67,5 +67,5 @@ data class DataX(
     val passing_marks : String,
     val test_code : String,
     val tbl_test_questions_id : Int,
-
+    val answer: String
     )

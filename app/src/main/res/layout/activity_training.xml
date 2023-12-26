@@ -85,7 +85,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/proxima_nova_bold"
-                android:text="Trayning Module"
+                android:text="Training Module"
                 android:textColor="@color/white"
                 android:textSize="28sp" />
         </LinearLayout>
@@ -127,6 +127,7 @@
                         android:layout_marginBottom="@dimen/margin_10dp"
                         android:layout_height="wrap_content">
                         <RelativeLayout
+                            android:id="@+id/pdfView"
                             android:layout_width="90dp"
                             android:layout_height="90dp"
                             android:layout_marginStart="@dimen/dp_20"
@@ -197,7 +198,7 @@
                 android:fontFamily="@font/proxima_nova_bold"
                 android:text="Total Questions : "/>
             <TextView
-                android:id="@+id/test_answers"
+                android:id="@+id/test_passing_marks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/test_question"
@@ -211,7 +212,7 @@
                 android:id="@+id/start_test"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/test_answers"
+                android:layout_below="@id/test_passing_marks"
                 android:textSize="@dimen/dp_20"
                 android:layout_marginTop="150dp"
                 android:layout_marginLeft="130dp"

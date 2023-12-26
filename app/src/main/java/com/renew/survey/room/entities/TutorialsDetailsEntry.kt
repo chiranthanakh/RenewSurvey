@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class TutorialEntity(
+data class TutorialsDetailsEntry(
     @PrimaryKey
     val id: Int? = null,
     val tbl_tutorials_id: Int,
@@ -15,5 +15,7 @@ data class TutorialEntity(
     val is_delete: String,
     val is_active: String,
     val create_date: String,
-    val created_by: String
+    val created_by: String,
+   // val title: String? = ""
 )
+

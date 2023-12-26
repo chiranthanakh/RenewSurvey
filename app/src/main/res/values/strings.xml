@@ -78,5 +78,7 @@
     <string name="attach_file">Attach file</string>
     <string name="capture_image">Capture Image</string>
     <string name="select">Select</string>
+    <string name="retry">Retry</string>
+    <string name="test_failed_n_your_obtained_marks">Test Failed, \n Your obtained Marks :</string>
 
 </resources>

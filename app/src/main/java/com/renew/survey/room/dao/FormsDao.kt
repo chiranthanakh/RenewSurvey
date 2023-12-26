@@ -26,9 +26,12 @@ import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
 import com.renew.survey.room.entities.ProjectWithLanguage
 import com.renew.survey.room.entities.ProjectsPhase
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
+import com.renew.survey.room.entities.TestDetailsEntry
 import com.renew.survey.room.entities.TestEntry
+import com.renew.survey.room.entities.TestQuestionLanguage
 import com.renew.survey.room.entities.TestQuestionsEntry
 import com.renew.survey.room.entities.TutorialEntity
+import com.renew.survey.room.entities.TutorialsDetailsEntry
 
 @Dao
 interface FormsDao {
@@ -61,11 +64,20 @@ interface FormsDao {
             "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId order by q.order_by")
     suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int):List<FormQuestionLanguage>
 
-    @Query("SELECT mfl.title, tq.*, q.* from" +
-    " TestQuestionsEntry as tq inner join FormQuestionEntity as q on q.id = tq.tbl_test_questions_id LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_test_questions' AND mfl.module_id = tbl_test_questions_id " +
-    "WHERE tbl_tests_id = :formId AND is_active AND mst_language_id =:language")
-    suspend fun getAllTestQuestions(language: Int,formId:Int):List<FormQuestionLanguage>
+    @Query("SELECT mfl.title, tq.* from" +
+            " TestQuestionsEntry as tq LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_test_questions' AND mfl.module_id = tbl_test_questions_id " +
+            "WHERE tbl_tests_id = :formId AND is_active AND mst_language_id =:language")
+    suspend fun getAllTestQuestions(language: Int,formId:Int):List<TestQuestionLanguage>
 
+    @Query("SELECT mfl.title,tt.* from" +
+            " TestEntry as tt LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_tests' AND mfl.module_id = tt.tbl_tests_id " +
+            "WHERE tt.tbl_forms_id = :formId  AND mst_language_id =:language")
+    suspend fun getTest(language: Int,formId:Int):TestDetailsEntry
+
+    @Query("SELECT tt.* from" +
+            " TutorialEntity as tt /*LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_tests' AND mfl.module_id = tt.tbl_tutorials_id */" +
+            "WHERE tt.tbl_forms_id = :formId")
+    suspend fun getTutorial(formId:Int): TutorialsDetailsEntry
 
     @Query("SELECT l.title,d.answer,q.id,q.allowed_file_type,q.format,q.is_mandatory,q.is_special_char_allowed,q.is_validation_required,q.max_file_size,q.max_length,q.min_length,q.mst_question_group_id,q.order_by,q.question_type,q.tbl_form_questions_id,q.tbl_forms_id from \n" +
             "ProjectPhaseQuestionEntity as p inner join\n" +

@@ -2,6 +2,7 @@ package com.renew.survey.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.renew.survey.response.UserData
@@ -52,6 +53,16 @@ class PreferenceManager constructor(context: Context){
         return  sharedPreferences.getInt("language",0)
     }
 
+    fun savePassingMarks(marks: Int){
+        val editor = sharedPreferences.edit()
+        editor.putInt("passingMarks",marks)
+        editor.apply()
+    }
+
+    fun getPassingMarks(): Int{
+        return  sharedPreferences.getInt("passingMarks",0)
+    }
+
     fun saveTrainingState(key: String, value: List<String>) {
         val editor = sharedPreferences.edit()
         val gson = Gson()
@@ -66,6 +77,45 @@ class PreferenceManager constructor(context: Context){
         val type = object : TypeToken<List<String>>() {}.type
         return gson.fromJson(json, type)
     }
+
+    fun saveUrl(key: String, value: ArrayList<String>) {
+        val editor = sharedPreferences.edit()
+        val gson = Gson()
+        val json = gson.toJson(value)
+        editor.putString(key, json)
+        editor.apply()
+    }
+
+    fun getUrl(key: String): ArrayList<String>? {
+        val json = sharedPreferences.getString(key, null)
+        val gson = Gson()
+        val type = object : TypeToken<ArrayList<String>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
+    // Save a list of URIs to SharedPreferences
+    fun saveUriList(uriList: ArrayList<Uri>) {
+        val uriSet = HashSet(uriList.map { it.toString() })
+        sharedPreferences.edit().putStringSet("uri_list", uriSet).apply()
+    }
+
+    fun loadUriList(): ArrayList<Uri> {
+        val uriSet = sharedPreferences.getStringSet("uri_list", HashSet()) ?: HashSet()
+        return uriSet.map { Uri.parse(it) } as ArrayList<Uri>
+    }
+
+     /*fun saveUriList(uriList: ArrayList<Uri>) {
+        val editor = sharedPreferences.edit()
+        val uriSet = HashSet(uriList)
+        editor.putStringSet("uri_list", uriSet)
+        editor.apply()
+    }
+
+     fun loadUriList(): ArrayList<String> {
+        val loadedUriSet = sharedPreferences.getStringSet("uri_list", HashSet<String>()) ?: HashSet()
+        return ArrayList(loadedUriSet)
+    }*/
+
 
     fun saveDraft(language: Int){
         val editor = sharedPreferences.edit()

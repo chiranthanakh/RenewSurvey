@@ -1,9 +1,17 @@
 package com.renew.survey.views
 
+import android.annotation.SuppressLint
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.renew.survey.databinding.ActivitySyncDataBinding
 import com.renew.survey.response.sync.SyncData
@@ -33,10 +41,16 @@ import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.File
 import java.util.Date
 
 class SyncDataActivity : BaseActivity() {
     lateinit var binding:ActivitySyncDataBinding
+    private var downloadManager: DownloadManager? = null
+    private var downloadReference: Long = 0
+    val trainingList = arrayListOf<Uri>()
+    //var str = List<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivitySyncDataBinding.inflate(layoutInflater)
@@ -230,7 +244,7 @@ class SyncDataActivity : BaseActivity() {
                                     "tbl_test_questions"->{
                                         val testQuestionEntity= arrayListOf<TestQuestionsEntry>()
                                         for (d in s.data){
-                                            val testQuestion=TestQuestionsEntry(d.tbl_test_questions_id,d.tbl_test_questions_id,d.tbl_tests_id.toInt(),d.tbl_forms_id.toInt(),d.created_by,d.question_type,d.is_mandatory,d.order_by,d.is_validation_required,d.is_special_char_allowed,d.min_length,d.max_length,d.format,d.create_date,d.is_active,d.is_delete,d.last_update)
+                                            val testQuestion=TestQuestionsEntry(d.tbl_test_questions_id,d.tbl_test_questions_id,d.tbl_tests_id.toInt(),d.tbl_forms_id.toInt(),d.created_by,d.question_type,d.is_mandatory,d.order_by,d.is_validation_required,d.is_special_char_allowed,d.min_length,d.max_length,d.format,d.answer,d.create_date,d.is_active,d.is_delete,d.last_update)
                                             testQuestionEntity.add(testQuestion)
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
@@ -248,6 +262,10 @@ class SyncDataActivity : BaseActivity() {
                                 assignedSurveyList.add(assigned)
                             }
                             AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllAssignedSurvey(assignedSurveyList)
+
+                            for (d in data.training_tutorials){
+                                downloadPdf(d)
+                            }
                             runOnUiThread(Runnable {
                                 navigateToNext()
                                 preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)
@@ -258,7 +276,6 @@ class SyncDataActivity : BaseActivity() {
                         Log.e("response","response code ${response.code()}")
                         hideProgress()
                     }
-
                 }
             }
             /*Intent(this,LanguageActivity::class.java).apply {
@@ -279,5 +296,23 @@ class SyncDataActivity : BaseActivity() {
     fun hideProgress(){
         binding.llProgress.visibility=View.GONE
         binding.btnContinue.visibility=View.VISIBLE
+    }
+
+    private fun downloadPdf(url : String) {
+        val pdfUrl = url//"https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf"//url
+        var str = pdfUrl.split("/")
+        downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(Uri.parse(pdfUrl))
+            .setTitle("PDF Download")
+            .setDescription("Downloading")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, str.last())
+        downloadReference = downloadManager?.enqueue(request) ?: 0
+        val pdfFile = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), str.last())
+        val pdfUri = FileProvider.getUriForFile(this@SyncDataActivity, "your.fileprovider.authority", pdfFile)
+
+        trainingList.add(pdfUri)
+        preferenceManager.saveUriList(trainingList)
+       Log.d("traininglistforTest",pdfUri.toString())
     }
 }

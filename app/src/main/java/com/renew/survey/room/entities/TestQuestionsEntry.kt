@@ -19,6 +19,7 @@ data class TestQuestionsEntry(
     val min_length : String,
     val max_length : String,
     val format : String? = "",
+    val answer : String? = "",
     val create_date : String,
     val is_active : String,
     val is_delete : String,

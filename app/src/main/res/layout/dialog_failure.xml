@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="380dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="@dimen/dp_130"
+        android:layout_height="130dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_failure"/>
+
+    <TextView
+        android:id="@+id/success_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="@string/test_failed_n_your_obtained_marks"
+        android:textSize="20dp"
+        android:padding="16dp"/>
+
+    <TextView
+        android:id="@+id/btn_submit"
+        android:text="@string/retry"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dp_10"
+        android:textStyle="bold"
+        android:textSize="@dimen/dp_25"
+        android:textColor="@color/red"
+        android:layout_marginStart="@dimen/dp_5"
+        android:layout_marginEnd="@dimen/margin_15_dp"/>
+
+</LinearLayout>

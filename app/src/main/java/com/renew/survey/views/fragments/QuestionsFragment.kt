@@ -1,5 +1,6 @@
 package com.renew.survey.views.fragments
 
+import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -27,15 +29,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.renew.survey.R
 import com.renew.survey.adapter.QuestionsAdapter
+import com.renew.survey.adapter.TestQuestionsAdapter
 import com.renew.survey.databinding.FragmentQuestionsBinding
 import com.renew.survey.helper.compressor.Compressor
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.Options
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
+import com.renew.survey.room.entities.TestQuestionLanguage
 import com.renew.survey.utilities.FileUtils
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
+import com.renew.survey.views.DashboardActivity
+import com.renew.survey.views.FormsDetailsActivity
+import com.renew.survey.views.TrainingActivity
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -44,14 +51,19 @@ import java.util.Date
 import kotlin.math.roundToInt
 
 
-class QuestionsFragment constructor(val group: Int,val fragPos:Int, var questionGroupList: List<QuestionGroupWithLanguage>,
-                                    val status:Int, val isTraingForm:Boolean) : Fragment() ,QuestionsAdapter.ClickListener{
+class QuestionsFragment(
+    val group: Int,
+    val fragPos: Int,
+    var questionGroupList: List<QuestionGroupWithLanguage>,
+    var testquestionList: List<TestQuestionLanguage>,
+    val status: Int,
+    val isTraingForm: Boolean
+) : Fragment() ,QuestionsAdapter.ClickListener, FormsDetailsActivity.ClickListener {
 
     lateinit var binding:FragmentQuestionsBinding
     lateinit var prefsManager:PreferenceManager
     lateinit var questionsAdapter: QuestionsAdapter
-    var questionList: List<FormQuestionLanguage>  = listOf()
-
+    lateinit var testquestionsAdapter: TestQuestionsAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,40 +72,41 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
         prefsManager=PreferenceManager(requireContext())
         if (isTraingForm) {
             getTestQuestions()
+            binding.recyclerView.layoutManager=LinearLayoutManager(requireContext())
+            testquestionsAdapter= TestQuestionsAdapter(requireContext(),testquestionList)
+            binding.recyclerView.adapter=testquestionsAdapter
         } else {
             if (status==4||status==5||status==6) {
                 getQuestionsWithDraftAnswer()
             } else {
                 getQuestions()
             }
+            binding.recyclerView.layoutManager=LinearLayoutManager(requireContext())
+            questionsAdapter= QuestionsAdapter(requireContext(),questionGroupList[fragPos].questions,this)
+            binding.recyclerView.adapter=questionsAdapter
         }
-        binding.recyclerView.layoutManager=LinearLayoutManager(requireContext())
-        questionsAdapter= QuestionsAdapter(requireContext(),questionList,this)
-        binding.recyclerView.adapter=questionsAdapter
         return binding.root
     }
 
     private fun getTestQuestions() {
         lifecycleScope.launch {
-            questionList = AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
-            questionList.forEachIndexed { index, formQuestionLanguage ->
-                if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
-                    val options= formQuestionLanguage?.tbl_form_questions_id?.let {
+            if (testquestionList.isEmpty()) {
+                testquestionList = AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
+            }
+            testquestionList.forEachIndexed { index, testQuestionLanguage ->
+                if (testQuestionLanguage.question_type=="CHECKBOX"||testQuestionLanguage.question_type=="SINGLE_SELECT"||testQuestionLanguage.question_type=="MULTI_SELECT"||testQuestionLanguage.question_type=="RADIO"){
+                    val options= testQuestionLanguage?.tbl_test_questions_id?.let {
                         AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
                             it,prefsManager.getLanguage())
                     } as ArrayList
-                    if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
+                    if (testQuestionLanguage.question_type=="SINGLE_SELECT"){
                         options.add(0,Options(getString(R.string.select)))
                     }
-                    questionList[index].options=options
+                    testquestionList[index].options=options
                 }
             }
-            questionsAdapter.setData(questionList)
-            // questionsAdapter.setData(AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1))
-            Log.d("TestQuestionQuairy", questionList.toString())
+            testquestionsAdapter.setData(testquestionList)
         }
-       //questionsAdapter.setData(questionList)
-       Log.d("TestQuestionQuairy2", questionList.toString())
     }
 
     fun getQuestions(){
@@ -102,7 +115,7 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
                 questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id)
                 //questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
             }
-            val questionList=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
+            val questionList=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
             Log.d("TestQuestionQuairy", questionList.toString())
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
                 if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
@@ -298,7 +311,57 @@ class QuestionsFragment constructor(val group: Int,val fragPos:Int, var question
         }
 
     }
+    fun Showsuccess(count: Int, stringExtra: String?) {
+        val dialogView = Dialog(requireContext())
+        dialogView.setContentView(R.layout.dialog_success)
+        dialogView.setCancelable(false)
+        val submit: TextView = dialogView.findViewById(R.id.btn_submit)
+        val msg: TextView = dialogView.findViewById(R.id.success_tv)
+        var listOfFragment= arrayListOf<String>()
+        val retrievedList = prefsManager.getTrainingState("trainingState")
+        retrievedList?.forEach{
+            listOfFragment.add(it)
+        }
+        listOfFragment.add(stringExtra!!)
+         prefsManager.saveTrainingState("trainingState",listOfFragment)
+        msg.setText("You have successfully pass the test, \n Your obtained Marks :"+count.toString())
+        submit.setOnClickListener {
+            val intent = Intent(requireContext(), DashboardActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            dialogView.dismiss()
+        }
 
+        dialogView.show()
+    }
+    fun ShowFailure(count: Int) {
+        val dialogView = Dialog(requireContext())
+        dialogView.setContentView(R.layout.dialog_failure)
+        dialogView.setCancelable(false)
+        val submit: TextView = dialogView.findViewById(R.id.btn_submit)
+        val msg: TextView = dialogView.findViewById(R.id.success_tv)
+        msg.setText("Test Failed, \n Your obtained Marks :"+count.toString())
+        submit.setOnClickListener {
+            val intent = Intent(requireContext(), TrainingActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            dialogView.dismiss()
+        }
 
+        dialogView.show()
+    }
 
+    override fun onSubmit(stringExtra: String?) {
+        var count : Int = 0
+        testquestionList.forEach{
+            if (it.answer == it.answer2) {
+                count++
+            }
+        }
+        if (count < prefsManager.getPassingMarks()) {
+            ShowFailure(count)
+        } else {
+            Showsuccess(count,stringExtra)
+        }
+    }
 }

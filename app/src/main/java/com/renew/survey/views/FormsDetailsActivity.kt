@@ -2,7 +2,6 @@ package com.renew.survey.views
 
 import android.Manifest
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -31,6 +30,7 @@ import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DraftCommonAnswer
 import com.renew.survey.room.entities.DynamicAnswersEntity
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
+import com.renew.survey.room.entities.TestQuestionLanguage
 import com.renew.survey.utilities.UtilMethods
 import com.renew.survey.views.fragments.CommonQuestionFragment
 import com.renew.survey.views.fragments.QuestionsFragment
@@ -41,6 +41,7 @@ import java.util.Date
 class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     lateinit var binding: ActivityFormsDetailsBinding
     private var questionGroupList= arrayListOf<QuestionGroupWithLanguage>()
+    private var testquestionList : List<TestQuestionLanguage> = listOf()
     private var listOfFragment= arrayListOf<Fragment>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var locationRequest: LocationRequest? = null
@@ -75,16 +76,19 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             )
         }
         if (intent.getBooleanExtra("training",false)) {
-            val fragment=QuestionsFragment(0,0,questionGroupList,status,true)
+            lifecycleScope.launch {
+                testquestionList = AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getAllTestQuestions(preferenceManager.getLanguage(), 1)
+            }
+            val fragment=QuestionsFragment(0,0,questionGroupList,testquestionList,status,true)
             listOfFragment.add(fragment)
             supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
             binding.btnSaveDraft.visibility = View.GONE
             binding.btnNext.visibility = View.GONE
             binding.btnPrevious.visibility = View.GONE
             binding.btnContinue.visibility = View.VISIBLE
-
             binding.btnContinue.setOnClickListener {
-                Showsuccess()
+                Log.d("testprojectdetails",intent.getStringExtra("trainingInfo").toString())
+                fragment.onSubmit(intent.getStringExtra("trainingInfo"))
             }
         } else {
         getAllQuestionGroup()
@@ -248,7 +252,14 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                         listOfFragment.add(fragment)
                         supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
                     }else{
-                        val fragment=QuestionsFragment(questionGroupWithLanguage.mst_question_group_id,index,questionGroupList,status,false)
+                        val fragment=QuestionsFragment(
+                            questionGroupWithLanguage.mst_question_group_id,
+                            index,
+                            questionGroupList,
+                            testquestionList,
+                            status,
+                            false
+                        )
                         listOfFragment.add(fragment)
                         supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
                     }
@@ -298,29 +309,6 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         }
     }
 
-    fun Showsuccess() {
-        val dialogView = Dialog(this)
-        dialogView.setContentView(R.layout.dialog_success)
-        dialogView.setCancelable(false)
-        val submit: TextView = dialogView.findViewById(R.id.btn_submit)
-        var listOfFragment= arrayListOf<String>()
-        val retrievedList = preferenceManager.getTrainingState("trainingState")
-        retrievedList?.forEach{
-            listOfFragment.add(it)
-        }
-        listOfFragment.add(intent.getStringExtra("trainingInfo")!!)
-        preferenceManager.saveTrainingState("trainingState",listOfFragment)
-
-        submit.setOnClickListener {
-            val intent = Intent(this@FormsDetailsActivity, FormsDetailsActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
-            dialogView.dismiss()
-        }
-
-        dialogView.show()
-    }
     fun validateCommonQuestions():Boolean{
         if (commonAnswersEntity.banficary_name==""){
             UtilMethods.showToast(this,"Please add beneficiary name")
@@ -411,5 +399,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             return false
         }
         return true
+    }
+    interface ClickListener{
+        fun onSubmit(stringExtra: String?)
     }
 }
