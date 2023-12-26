@@ -23,6 +23,18 @@ class ResetPasswordActivity : BaseActivity() {
         binding= ActivityResetPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.btnContinue.setOnClickListener {
+            if (binding.edtPassword.text!!.length<6){
+                UtilMethods.showToast(this,"Password should atlease 6 digits")
+                return@setOnClickListener
+            }
+            if (binding.edtNewPassword.text!!.length<6){
+                UtilMethods.showToast(this,"Password should atlease 6 digits")
+                return@setOnClickListener
+            }
+            if (binding.edtNewPassword.text!!.length!=binding.edtPassword.text!!.length){
+                UtilMethods.showToast(this,"Password does not match")
+                return@setOnClickListener
+            }
             resetOtp()
         }
     }

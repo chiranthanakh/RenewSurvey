@@ -95,7 +95,7 @@
                                         android:text="Project: "
                                         android:textColor="@color/black"
                                         android:textStyle="bold"
-                                        android:textSize="16sp" />
+                                        android:textSize="@dimen/text_size_12sp" />
 
 
                                     <TextView
@@ -109,7 +109,7 @@
                                         android:fontFamily="@font/opensans_regular"
                                         android:text="Kundligi"
                                         android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                        android:textSize="@dimen/text_size_12sp" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -128,7 +128,7 @@
                                         android:text="State: "
                                         android:textColor="@color/black"
                                         android:textStyle="bold"
-                                        android:textSize="16sp" />
+                                        android:textSize="@dimen/text_size_12sp" />
 
 
                                     <TextView
@@ -142,7 +142,7 @@
                                         android:fontFamily="@font/opensans_regular"
                                         android:text="Kundligi"
                                         android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                        android:textSize="@dimen/text_size_12sp" />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -464,6 +464,11 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"/>
                             </RadioGroup>
+                            <CheckBox
+                                android:id="@+id/cb_terms"
+                                android:text="Accept to terms and conditions"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
 
 
                             <LinearLayout

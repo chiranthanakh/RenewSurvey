@@ -34,6 +34,7 @@ import com.renew.survey.room.entities.ProjectsPhase
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.TestEntry
+import com.renew.survey.room.entities.TestOptionsEntity
 import com.renew.survey.room.entities.TestQuestionsEntry
 import com.renew.survey.room.entities.TutorialEntity
 import com.renew.survey.room.entities.VillageEntity
@@ -244,11 +245,20 @@ class SyncDataActivity : BaseActivity() {
                                     "tbl_test_questions"->{
                                         val testQuestionEntity= arrayListOf<TestQuestionsEntry>()
                                         for (d in s.data){
-                                            val testQuestion=TestQuestionsEntry(d.tbl_test_questions_id,d.tbl_test_questions_id,d.tbl_tests_id.toInt(),d.tbl_forms_id.toInt(),d.created_by,d.question_type,d.is_mandatory,d.order_by,d.is_validation_required,d.is_special_char_allowed,d.min_length,d.max_length,d.format,d.answer,d.create_date,d.is_active,d.is_delete,d.last_update)
+                                            val testQuestion=TestQuestionsEntry(d.tbl_test_questions_id.toInt(),d.tbl_test_questions_id.toInt(),d.tbl_tests_id.toInt(),d.tbl_forms_id.toInt(),d.created_by,d.question_type,d.is_mandatory,d.order_by,d.is_validation_required,d.is_special_char_allowed,d.min_length,d.max_length,d.format,d.answer,d.create_date,d.is_active,d.is_delete,d.last_update)
                                             testQuestionEntity.add(testQuestion)
                                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                                         }
                                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllTestQuestions(testQuestionEntity)
+                                    }
+                                    "tbl_test_questions_option"->{
+                                        val testQuestionEntity= arrayListOf<TestOptionsEntity>()
+                                        for (d in s.data){
+                                            val testQuestion=TestOptionsEntity(d.tbl_test_questions_option_id.toInt(),d.is_answer,d.tbl_forms_id.toInt(),d.tbl_test_questions_id.toInt(),d.tbl_test_questions_option_id.toInt(),d.tbl_tests_id)
+                                            testQuestionEntity.add(testQuestion)
+                                            //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                                        }
+                                        AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllTestOptions(testQuestionEntity)
                                     }
                                 }
                             }

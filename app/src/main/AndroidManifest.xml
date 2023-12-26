@@ -24,17 +24,20 @@
         tools:ignore="ScopedStorage" />
 
     <application
-        android:requestLegacyExternalStorage="true"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Renew"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".views.TestActivity"
+            android:exported="false" />
         <activity
             android:name=".views.TrainingActivity"
             android:exported="false" />
@@ -121,4 +124,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+
 </manifest>

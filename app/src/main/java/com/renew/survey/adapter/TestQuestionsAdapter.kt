@@ -31,6 +31,7 @@ import com.renew.survey.databinding.ItemQuestionLayoutBinding
 import com.renew.survey.request.MultiSelectItem
 import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.Options
+import com.renew.survey.room.entities.TestOptionLanguage
 import com.renew.survey.room.entities.TestQuestionLanguage
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
@@ -69,7 +70,6 @@ class TestQuestionsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
-            //setIsRecyclable(false)
             with(list[position]){
                 when(question_type){
                     "DATETIME","TEXT","NUMBER","GEO_LOCATION","DATE","TIME","EMAIL"->{
@@ -107,8 +107,8 @@ class TestQuestionsAdapter(
                             }
 
                         })
-                       // binding.edittext.setText(this.answer)
-                        if (question_type=="DATETIME" || question_type=="DATE" || question_type=="TIME" || question_type=="GEO_LOCATION"){
+                       binding.edittext.setText(this.answer2)
+                        /*if (question_type=="DATETIME" || question_type=="DATE" || question_type=="TIME" || question_type=="GEO_LOCATION"){
                             binding.edittext.isFocusable=false
                             binding.edittext.setOnClickListener {
                                 when (question_type) {
@@ -161,7 +161,7 @@ class TestQuestionsAdapter(
                             binding.edittext.isFocusable=true
                             binding.edittext.isFocusableInTouchMode=true
                             binding.edittext.isEnabled=true
-                        }
+                        }*/
                         when(question_type){
                             "NUMBER"->{
                                 binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
@@ -187,13 +187,13 @@ class TestQuestionsAdapter(
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
                         binding.txtSpLable.text = getHintText(this.title,position+1,this.is_mandatory)
-                        binding.spinner.adapter=CustomSpinnerAdapter(context,getStringList(this.options))
-                        if (this.answer!=null){
-                            /*this.options.forEachIndexed { index, options ->
-                                if (options.title==answer){
-                                    binding.spinner.setSelection(index,true)
+                        binding.spinner.adapter=TestOptionsSpinnerAdapter(context,this.options)
+                        if (this.answers.isNotEmpty()){
+                            this.options.forEachIndexed { index, options ->
+                                if (options.title==answers[0].title){
+                                    binding.spinner.setSelection(index)
                                 }
-                            }*/
+                            }
                           //  binding.spinner.setSelection(getIndex(binding.spinner,this.answer!!))
                         }
                         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -203,53 +203,11 @@ class TestQuestionsAdapter(
 
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                 if (position>0){
-                                    answer2=binding.spinner.selectedItem.toString()
+                                    answers= arrayListOf()
+                                    answers.add(binding.spinner.selectedItem as TestOptionLanguage)
                                 }
                             }
 
-                        }
-                    }
-                    "MULTI_SELECT"->{
-                        binding.llEdittext.visibility = View.GONE
-                        binding.llMultiselect.visibility = View.VISIBLE
-                        binding.llSpinner.visibility = View.GONE
-                        binding.llRadio.visibility = View.GONE
-                        binding.llRange.visibility = View.GONE
-                        binding.llFile.visibility = View.GONE
-                        binding.llCheckbox.visibility = View.GONE
-                        binding.llRating.visibility = View.GONE
-                        binding.txtMultiselect.text = getHintText(this.title,position+1,this.is_mandatory)
-                        binding.multiselect.setText(this.answer)
-                        val options= arrayListOf<MultiSelectItem>()
-                        for (o in this.options){
-                            options.add(MultiSelectItem(o.title,false))
-                        }
-                        binding.multiselect.setOnClickListener {
-                            val dialog=Dialog(context)
-                            dialog.setContentView(R.layout.multi_select_layout_dialog)
-                            dialog.window!!
-                                .setLayout(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT
-                                )
-                            val recyclerView=dialog.findViewById<RecyclerView>(R.id.recyclerView)
-                            val text=dialog.findViewById<TextView>(R.id.text)
-                            val button=dialog.findViewById<Button>(R.id.button)
-                            recyclerView.layoutManager=LinearLayoutManager(context)
-                            recyclerView.adapter=MultiselectAdapterAdapter(context,options)
-                            button.setOnClickListener {
-                                dialog.cancel()
-                                val selectedList= arrayListOf<String>()
-                                for (x in options){
-                                    if (x.selected){
-                                        selectedList.add(x.name)
-                                    }
-                                }
-                                answer2=getComaSeparatedValues(selectedList)
-                                binding.multiselect.setText(getComaSeparatedValues(selectedList))
-                                Log.e("SelectedItems","items ${selectedList.toString()}")
-                            }
-                            dialog.show()
                         }
                     }
                     "RADIO"->{
@@ -271,7 +229,13 @@ class TestQuestionsAdapter(
                             }
                             radioButton.setOnCheckedChangeListener { compoundButton, b ->
                                 if (b){
-                                    answer2=compoundButton.text.toString()
+                                    options.forEachIndexed { index, testOptionLanguage ->
+                                        if (compoundButton.text==testOptionLanguage.title){
+                                            answers= arrayListOf()
+                                            answers.add(testOptionLanguage)
+                                        }
+                                    }
+                                    answer=compoundButton.text.toString()
                                 }
                             }
                             binding.rgRadio.addView(radioButton)
@@ -352,34 +316,30 @@ class TestQuestionsAdapter(
                         for (ops in this.options){
                             val checkBox=CheckBox(context)
                             checkBox.text=ops.title
+                            for (op in answers){
+                                if (op.title==ops.title){
+                                    checkBox.isChecked=true
+                                }
+                            }
                             checkBox.setOnCheckedChangeListener(object :OnCheckedChangeListener{
                                 override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
-                                    answer2 = if (p1){
-                                        modifyCommaSeparatedString(answer!!,"add",p0?.text.toString())
+                                    if (p1){
+                                        options.forEachIndexed { index, testOptionLanguage ->
+                                            if (testOptionLanguage.title==p0!!.text){
+                                                answers.add(testOptionLanguage)
+                                            }
+                                        }
                                     }else{
-                                        modifyCommaSeparatedString(answer!!,"remove",p0?.text.toString())
+                                        options.forEachIndexed { index, testOptionLanguage ->
+                                            if (testOptionLanguage.title==p0!!.text){
+                                                answers.remove(testOptionLanguage)
+                                            }
+                                        }
                                     }
                                 }
                             })
                             binding.llCheckboxAdd.addView(checkBox)
                         }
-                    }
-                    "RATING"->{
-                        binding.llEdittext.visibility = View.GONE
-                        binding.llMultiselect.visibility = View.GONE
-                        binding.llSpinner.visibility = View.GONE
-                        binding.llRadio.visibility = View.GONE
-                        binding.llRange.visibility = View.GONE
-                        binding.llFile.visibility = View.GONE
-                        binding.llCheckbox.visibility = View.GONE
-                        binding.llRating.visibility = View.VISIBLE
-                        binding.ratingBar.numStars=this.max_length.toInt()
-                        binding.ratingBar.stepSize=this.min_length.toFloat()
-                        binding.txtRatingLable.text = getHintText(this.title,position+1,this.is_mandatory)
-                        if(this.answer!=""){
-                            //binding.ratingBar.rating=this.answer!!.toFloat()
-                        }
-                        binding.ratingBar.setOnRatingBarChangeListener { ratingBar, fl, b -> answer2="$fl" }
                     }
                 }
             }

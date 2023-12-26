@@ -89,7 +89,7 @@ class QuestionsFragment(
     }
 
     private fun getTestQuestions() {
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             if (testquestionList.isEmpty()) {
                 testquestionList = AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
             }
@@ -106,7 +106,7 @@ class QuestionsFragment(
                 }
             }
             testquestionsAdapter.setData(testquestionList)
-        }
+        }*/
     }
 
     fun getQuestions(){

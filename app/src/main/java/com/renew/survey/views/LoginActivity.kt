@@ -12,6 +12,7 @@ import com.renew.survey.databinding.ActivityLoginBinding
 import com.renew.survey.databinding.DialogRegisterAsUserTeamBinding
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.AppConstants
+import com.renew.survey.utilities.UtilMethods
 import com.squareup.picasso.BuildConfig
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -70,6 +71,9 @@ class LoginActivity : BaseActivity() {
                                 preferenceManager.saveUserId(it)
                             }
                             preferenceManager.saveUserData(data.data!!)
+                            if (BuildConfig.DEBUG){
+                                UtilMethods.showToast(this@LoginActivity,"userid ${data.data!!.tbl_users_id}")
+                            }
                             Intent(this@LoginActivity,SyncDataActivity::class.java).apply {
                                 startActivity(this)
                                 finish()

@@ -66,12 +66,18 @@ class TrainingActivity : AppCompatActivity() {
             }
         }
         binding.startTest.setOnClickListener {
-            Intent(this,FormsDetailsActivity::class.java).apply {
+            Intent(this,TestActivity::class.java).apply{
                 putExtra("training",true)
                 putExtra("trainingInfo",intent.getStringExtra("trainingInfo"))
                 putExtra("passingMarks",PassingMarks)
                 startActivity(this)
             }
+            /*Intent(this,FormsDetailsActivity::class.java).apply {
+                putExtra("training",true)
+                putExtra("trainingInfo",intent.getStringExtra("trainingInfo"))
+                putExtra("passingMarks",PassingMarks)
+                startActivity(this)
+            }*/
         }
         binding.pdfView.setOnClickListener {
             pdfuri.forEach {

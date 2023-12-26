@@ -21,7 +21,9 @@ data class TestQuestionLanguage(
     var answer:String?,
     var answer2:String? = "",
     @Ignore
-    var options: List<Options>
+    var answers:ArrayList<TestOptionLanguage> = arrayListOf(),
+    @Ignore
+    var options: List<TestOptionLanguage>
 ) {
     constructor(
         id: Int?,
@@ -36,7 +38,7 @@ data class TestQuestionLanguage(
         tbl_test_questions_id: Int,
         title: String,
         answer: String?,
-        answer2: String?
+        answer2: String?,
     )
             : this(
         id,
@@ -52,6 +54,7 @@ data class TestQuestionLanguage(
         title,
         answer,
         answer2,
-        listOf()
+        arrayListOf(),
+        listOf(),
     )
 }

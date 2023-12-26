@@ -224,6 +224,10 @@ class SignUpDetailsActivity : BaseActivity() {
             UtilMethods.showToast(this,"Please select profile image")
             return
         }
+        if (!binding.cbTerms.isChecked){
+            UtilMethods.showToast(this,"Please accept to terms and conditions")
+            return
+        }
         signUpApi()
     }
     fun signUpApi() {

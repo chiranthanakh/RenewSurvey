@@ -6,63 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".views.SignUpActivity">
 
-    <LinearLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_nav_view"
-            android:layout_width="150dp"
-            android:layout_height="35dp"
-            android:layout_gravity="center"
-            android:background="?selectableItemBackground"
-            android:src="@drawable/header_logo" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:gravity="end"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:gravity="end">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="15dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_notification" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="15dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_setting" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <include
+        layout="@layout/toolbar_auth"/>
 
     <LinearLayout
         android:id="@+id/ll_layout"
@@ -137,7 +82,7 @@
                                 android:layout_centerInParent="true"
                                 android:layout_margin="@dimen/dp_3"
                                 android:text="PDF"
-                                android:layout_width="@dimen/dp_25"
+                                android:layout_width="wrap_content"
                                 android:layout_height="@dimen/dp_25"/>
 
                             <TextView

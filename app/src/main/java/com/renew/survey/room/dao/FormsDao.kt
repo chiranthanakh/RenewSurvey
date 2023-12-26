@@ -28,6 +28,8 @@ import com.renew.survey.room.entities.ProjectsPhase
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.room.entities.TestDetailsEntry
 import com.renew.survey.room.entities.TestEntry
+import com.renew.survey.room.entities.TestOptionLanguage
+import com.renew.survey.room.entities.TestOptionsEntity
 import com.renew.survey.room.entities.TestQuestionLanguage
 import com.renew.survey.room.entities.TestQuestionsEntry
 import com.renew.survey.room.entities.TutorialEntity
@@ -98,6 +100,9 @@ interface FormsDao {
     @Query("SELECT l.title from FormQuestionOptionsEntity as q inner join FormLanguageEntity as l on q.tbl_form_questions_option_id=l.module_id where l.module='tbl_form_questions_option' and tbl_form_questions_id=:question and l.mst_language_id=:language")
     suspend fun getAllOptions(question: Int,language: Int):List<Options>
 
+    @Query("SELECT l.title, q.* from TestOptionsEntity as q inner join FormLanguageEntity as l on q.tbl_test_questions_option_id=l.module_id where l.module='tbl_test_questions_option' and tbl_test_questions_id=:question and l.mst_language_id=:language")
+    suspend fun getAllTestOptions(question: Int,language: Int):List<TestOptionLanguage>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllFormsQuestionGroup(formList: List<FormQuestionGroupEntity>)
 
@@ -142,6 +147,9 @@ interface FormsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllTestQuestions(formList: List<TestQuestionsEntry>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllTestOptions(formList: List<TestOptionsEntity>)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAnswer(ans:AnswerEntity):Long
 
