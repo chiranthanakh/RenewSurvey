@@ -1,39 +1,25 @@
 package com.renew.survey.views
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.util.Log
-import android.view.View
 import android.widget.MediaController
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.renew.survey.R
-import com.renew.survey.databinding.ActivityLoginBinding
-import com.renew.survey.databinding.ActivitySplashBinding
 import com.renew.survey.databinding.ActivityTrainingBinding
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.TutorialsDetailsEntry
 import com.renew.survey.utilities.PreferenceManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.net.URL
 
 class TrainingActivity : AppCompatActivity() {
     lateinit var binding: ActivityTrainingBinding

@@ -49,6 +49,8 @@ interface FormsDao {
 
     @Query("SELECT COUNT(id) FROM AnswerEntity where draft=1 and tbl_forms_id=:formId")
     suspend fun getDraftSurvey(formId: Int): Int
+    @Query("SELECT COUNT(id) FROM AnswerEntity where draft=1")
+    suspend fun getAllDraftSurveyCount(): Int
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllForms(formList: List<FormEntity>)
 
@@ -188,5 +190,8 @@ interface FormsDao {
 
     @Query("UPDATE DynamicAnswersEntity set answer=:answer where mst_question_group_id=:group and tbl_form_questions_id=:question and answer_id=:answer_id")
     suspend fun updateDynamicAnswer(answer:String,group: Int,question: Int,answer_id: Int)
+
+    @Query("UPDATE AssignedSurveyEntity set status=1 where id=:id")
+    suspend fun updateAssignedStatus(id: Int)
 
 }

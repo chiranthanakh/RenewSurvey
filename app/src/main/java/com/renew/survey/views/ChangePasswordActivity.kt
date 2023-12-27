@@ -65,6 +65,14 @@ class ChangePasswordActivity : BaseActivity() {
                         Toast.makeText(this@ChangePasswordActivity,jsonObject.getString("message"), Toast.LENGTH_LONG).show()
                         finish()
                     }else{
+                            val data=jsonObject.getJSONObject("data")
+                            if (data.getBoolean("is_access_disable")){
+                                preferenceManager.clear()
+                                Intent(this@ChangePasswordActivity,LoginActivity::class.java).apply {
+                                    finishAffinity()
+                                    startActivity(this)
+                                }
+                            }
                         UtilMethods.showToast(this@ChangePasswordActivity,jsonObject.getString("message"))
                     }
                 }

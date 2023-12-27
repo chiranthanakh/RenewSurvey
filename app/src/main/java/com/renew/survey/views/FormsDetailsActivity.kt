@@ -1,14 +1,11 @@
 package com.renew.survey.views
 
 import android.Manifest
-import android.app.Dialog
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -50,6 +47,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     var previouslySelected=0
     lateinit var adapterQuestionGroup:QuestionGroupAdapter
     var tbl_project_survey_common_data_id=""
+    var assigned:AssignedSurveyEntity?=null
     var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,13 +56,13 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         setContentView(binding.root)
         if (intent.hasExtra("assigned")){
 
-            val a=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
+            assigned=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
             commonAnswersEntity= CommonAnswersEntity(
-                null,a.aadhar_card,a.annual_family_income,a.banficary_name,a.electricity_connection_available,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),null
+                null,assigned!!.aadhar_card,assigned!!.annual_family_income,assigned!!.banficary_name,assigned!!.electricity_connection_available,assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
+                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cow_dung_per_day,assigned!!.no_of_cylinder_per_year,assigned!!.willing_to_contribute_clean_cooking,assigned!!.wood_use_per_day_in_kg,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),null
             )
-            tbl_project_survey_common_data_id=a.tbl_project_survey_common_data_id.toString()
-            status=a.next_form_id
+            tbl_project_survey_common_data_id=assigned!!.tbl_project_survey_common_data_id.toString()
+            status=assigned!!.next_form_id
         }else if (intent.hasExtra("draft")){
 
             val a=gson.fromJson(intent.getStringExtra("draft"),DraftCommonAnswer::class.java)
@@ -111,8 +109,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                     ansId = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
                         .insertAnswer(ans).toInt()
                 }
-                val cm = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
-                    .getCommonAnswers(ansId)
+                val cm = AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getCommonAnswers(ansId)
 
                 commonAnswersEntity.answer_id=ansId.toInt()
                 if (status>3){
@@ -138,6 +135,24 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             finish()
         }
         binding.btnNext.setOnClickListener {
+            if (!validateCommonQuestions()){
+                return@setOnClickListener
+            }
+            questionGroupList.forEachIndexed { index, qg ->
+                if (index <= previouslySelected){
+                    for (q in qg.questions) {
+                        if (q.is_mandatory.equals("yes", ignoreCase = true)) {
+                            if (q.answer.equals("")) {
+                                UtilMethods.showToast(
+                                    this@FormsDetailsActivity,
+                                    "Please add/select ${q.title} in qustion group ${qg.title}"
+                                )
+                                return@setOnClickListener
+                            }
+                        }
+                    }
+                }
+            }
             loadFragment(previouslySelected+1)
         }
         binding.btnPrevious.setOnClickListener {
@@ -201,6 +216,9 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                         }
                     }
                 }
+                if (intent.hasExtra("assigned")){
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAssignedStatus(assigned!!.id!!)
+                }
             }
             UtilMethods.showToast(this, "Form saved successfully")
             finish()
@@ -238,6 +256,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
        }
     }
+
     fun getAllQuestionGroup(){
         lifecycleScope.launch {
             questionGroupList=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getAllFormsQuestionGroup(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,preferenceManager.getForm().tbl_forms_id) as ArrayList<QuestionGroupWithLanguage>

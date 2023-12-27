@@ -3,7 +3,6 @@ package com.renew.survey.views
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +12,7 @@ import com.renew.survey.databinding.NaviagationLayoutBinding
 import com.renew.survey.request.MediaSyncReqItem
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.utilities.ApiInterface
+import com.renew.survey.utilities.MyCustomDialog
 import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,8 +21,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
 import java.io.File
-import java.io.IOException
-import java.util.Date
 
 class DashboardActivity : BaseActivity() {
     lateinit var binding: ActivityDashboardBinding
@@ -54,10 +52,20 @@ class DashboardActivity : BaseActivity() {
         }
 
         bindingNav.llLogout.setOnClickListener {
-            preferenceManager.clear()
-            lifecycleScope.launch {
-                logout()
-            }
+            MyCustomDialog.showDialog(this,"Sign out?","Are you sure, you want to logout?","SIGN OUT","CANCEL",true,object :MyCustomDialog.ClickListener{
+                override fun onYes() {
+                    preferenceManager.clear()
+                    lifecycleScope.launch {
+                        logout()
+                    }
+                }
+
+                override fun onNo() {
+
+                }
+
+            })
+
 
         }
         binding.cardDraft.setOnClickListener {
@@ -103,6 +111,15 @@ class DashboardActivity : BaseActivity() {
                                     AppDatabase.getInstance(this@DashboardActivity).formDao().updateSync(ans.id!!)
                                 }
                                 getCounts()
+                            }else {
+                                val data=json.getJSONObject("data")
+                                if (data.getBoolean("is_access_disable")){
+                                    preferenceManager.clear()
+                                    Intent(this@DashboardActivity,LoginActivity::class.java).apply {
+                                        finishAffinity()
+                                        startActivity(this)
+                                    }
+                                }
                             }
                         }
                     }

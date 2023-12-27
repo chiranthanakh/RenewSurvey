@@ -75,7 +75,7 @@
         android:padding="@dimen/dp_10"
         android:gravity="center">
         <ImageView
-            android:src="@drawable/password"
+            android:src="@drawable/lock"
             app:tint="@color/black"
             android:layout_width="@dimen/dp_25"
             android:layout_height="@dimen/dp_25"/>

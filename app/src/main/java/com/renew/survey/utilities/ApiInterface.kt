@@ -179,7 +179,7 @@ interface ApiInterface {
                     .setLenient()
                     .create()*/
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("https://renewsms.proteam.co.in/api/v1/")
+                    .baseUrl("https://devrenewsms.proteam.co.in/api/v1/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build()

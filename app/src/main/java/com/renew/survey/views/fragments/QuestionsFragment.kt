@@ -275,9 +275,7 @@ class QuestionsFragment(
     @Throws(IOException::class)
     fun saveImageToExternal(bm: Bitmap, context: Context?): Uri? {
         // Create Path to save Image
-        val directory =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                .toString() + "/renewSurvey"
+        val directory = requireContext().filesDir.path
         val path = File(directory) // Creates app specific folder
         if (!path.exists()) {
             if (!path.mkdirs()) {

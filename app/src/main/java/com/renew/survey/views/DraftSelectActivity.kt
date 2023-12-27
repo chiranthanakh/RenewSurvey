@@ -17,6 +17,10 @@ class DraftSelectActivity : BaseActivity() ,DraftSurveyAdapter.ClickListener{
         binding=ActivityDraftSelectBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.recyclerView.layoutManager= LinearLayoutManager(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
         getData()
     }
     fun getData(){

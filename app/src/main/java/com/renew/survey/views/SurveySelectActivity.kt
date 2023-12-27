@@ -22,8 +22,12 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
         preferenceManager= PreferenceManager(this);
 
         binding.recyclerView.layoutManager=LinearLayoutManager(this)
-        getData()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getData()
     }
     fun getData(){
         lifecycleScope.launch {
