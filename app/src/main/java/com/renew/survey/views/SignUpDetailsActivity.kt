@@ -10,7 +10,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.Html
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -102,6 +104,8 @@ class SignUpDetailsActivity : BaseActivity() {
             }
 
         }
+        binding.tvTerms.setText(Html.fromHtml("I agree to the <a href='${ApiInterface.BASE_URL.replace("/api/v1/","")}/TermsConditions'> Terms and Conditions</a>"))
+        binding.tvTerms.setMovementMethod(LinkMovementMethod.getInstance());
         getState()
         spinnerSelectors()
 

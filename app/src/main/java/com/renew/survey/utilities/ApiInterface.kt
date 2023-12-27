@@ -165,6 +165,7 @@ interface ApiInterface {
 
     companion object {
         var retrofitService: ApiInterface?=null
+        val BASE_URL="https://devrenewsms.proteam.co.in/api/v1/"
         fun getInstance() : ApiInterface? {
 
             val loggingInterceptor = HttpLoggingInterceptor()
@@ -179,7 +180,7 @@ interface ApiInterface {
                     .setLenient()
                     .create()*/
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("https://devrenewsms.proteam.co.in/api/v1/")
+                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build()
