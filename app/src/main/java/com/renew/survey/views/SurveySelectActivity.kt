@@ -22,13 +22,10 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
         preferenceManager= PreferenceManager(this);
 
         binding.recyclerView.layoutManager=LinearLayoutManager(this)
-
-    }
-
-    override fun onResume() {
-        super.onResume()
         getData()
+
     }
+
     fun getData(){
         lifecycleScope.launch {
             val list=AppDatabase.getInstance(this@SurveySelectActivity).formDao().getAllAssignedSurvey(preferenceManager.getForm().tbl_forms_id)

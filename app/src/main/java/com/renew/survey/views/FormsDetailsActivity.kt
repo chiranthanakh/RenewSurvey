@@ -48,6 +48,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     lateinit var adapterQuestionGroup:QuestionGroupAdapter
     var tbl_project_survey_common_data_id=""
     var assigned:AssignedSurveyEntity?=null
+    var draftAnsId:Int?=null
     var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,6 +154,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                     }
                 }
             }
+            //saveInDraftEveryStep()
             loadFragment(previouslySelected+1)
         }
         binding.btnPrevious.setOnClickListener {
@@ -421,5 +423,41 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     }
     interface ClickListener{
         fun onSubmit(stringExtra: String?)
+    }
+    fun saveInDraftEveryStep(){
+        lifecycleScope.launch {
+            val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
+                Date(),"dd:MM:yyyy:HH:mm:ss")}"
+            val ans=AnswerEntity(draftAnsId,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,1)
+            if (status>3){
+                ans.id=preferenceManager.getDraft()
+                draftAnsId= preferenceManager.getDraft()
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAnswer(ans)
+            } else {
+                draftAnsId = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                    .insertAnswer(ans).toInt()
+            }
+            val cm = AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getCommonAnswers(draftAnsId!!)
+
+            commonAnswersEntity.answer_id=draftAnsId!!.toInt()
+            if (status>3){
+                commonAnswersEntity.id=cm.id
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateCommonAnswer(commonAnswersEntity)
+            } else {
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertCommonAnswer(commonAnswersEntity)
+            }
+
+            for (qg in questionGroupList){
+                for(q in qg.questions){
+                    if(status>3){
+                        Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
+                        AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,draftAnsId!!)
+                    }else{
+                        val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,draftAnsId!!.toInt())
+                        AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
+                    }
+                }
+            }
+        }
     }
 }
