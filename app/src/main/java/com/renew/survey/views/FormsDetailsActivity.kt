@@ -145,7 +145,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                             if (q.answer.equals("")) {
                                 UtilMethods.showToast(
                                     this@FormsDetailsActivity,
-                                    "Please add/select ${q.title} in qustion group ${qg.title}"
+                                    "Please add/select ${q.title} in question group ${qg.title}"
                                 )
                                 return@setOnClickListener
                             }
