@@ -45,7 +45,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         Log.d("formDetails",form.toString())
         preferenceManager.saveForm(form)
         val retrievedList = preferenceManager.getTrainingState("trainingState")
-        /*if (retrievedList?.contains("${form.tbl_forms_id}-${preferenceManager.getProject().id}") != true) {
+        if (retrievedList?.contains("${form.tbl_forms_id}-${preferenceManager.getProject().id}") != true) {
             Intent(this,TrainingActivity::class.java).apply {
                 putExtra("trainingInfo",preferenceManager.getProject().id.toString()+form.tbl_forms_id)
                 startActivity(this)
@@ -57,9 +57,9 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
             Intent(this,DashboardActivity::class.java).apply {
                 startActivity(this)
             }
-        }*/
-        Intent(this,DashboardActivity::class.java).apply {
-            startActivity(this)
         }
+        /*Intent(this,DashboardActivity::class.java).apply {
+            startActivity(this)
+        }*/
     }
 }

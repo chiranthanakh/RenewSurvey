@@ -51,6 +51,12 @@ class DashboardActivity : BaseActivity() {
             }
         }
 
+        bindingNav.llProfile.setOnClickListener{
+            Intent(this,ProfileActivity::class.java).apply {
+                startActivity(this)
+            }
+        }
+
         bindingNav.llLogout.setOnClickListener {
             MyCustomDialog.showDialog(this,"Sign out?","Are you sure, you want to logout?","SIGN OUT","CANCEL",true,object :MyCustomDialog.ClickListener{
                 override fun onYes() {

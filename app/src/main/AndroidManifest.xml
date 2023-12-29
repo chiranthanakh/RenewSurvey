@@ -36,6 +36,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".views.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.TestActivity"
             android:exported="false" />
         <activity
@@ -43,15 +46,15 @@
             android:exported="false" />
         <activity
             android:name=".views.DraftSelectActivity"
-            android:launchMode="singleInstance"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".views.ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".views.SurveySelectActivity"
-            android:launchMode="singleInstance"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".views.SyncDataActivity"
             android:exported="false" />
