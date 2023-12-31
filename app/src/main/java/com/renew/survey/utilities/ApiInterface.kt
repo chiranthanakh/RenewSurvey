@@ -156,8 +156,8 @@ interface ApiInterface {
     @POST("ProjectMaster/sync_media")
     suspend fun syncMediaFiles(
         @Header("Authorization") headers: String,
-        @Part("post_data")tbl_projects_id:RequestBody,
-        //@Part("post_data") generalPaymentRequest:List<MediaSyncReqItem>,
+        //@Part("post_data")tbl_projects_id:RequestBody,
+        @Part("post_data") generalPaymentRequest:List<MediaSyncReqItem>,
         @Part file: Array<MultipartBody.Part?>?
     ) : Response<JsonElement>
 

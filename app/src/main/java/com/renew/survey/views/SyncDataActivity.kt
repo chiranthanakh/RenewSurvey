@@ -346,18 +346,20 @@ class SyncDataActivity : BaseActivity() {
                 if (d.mst_panchayat_id!=null){
                     panchayathId=d.mst_panchayat_id.toInt()
                 }
-                val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cow_dung_per_day,d.no_of_cylinder_per_year,d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,d.wood_use_per_day_in_kg)
+                val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cow_dung_per_day,d.no_of_cylinder_per_year,d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,d.wood_use_per_day_in_kg,d.family_member_above_15_year,d.family_member_below_15_year!!)
                 assignedSurveyList.add(assigned)
             }
             AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllAssignedSurvey(assignedSurveyList)
+            try{
+                for (d in data.training_tutorials){
+                    downloadPdf(d)
+                }
 
-            for (d in data.training_tutorials){
-                downloadPdf(d)
+            }catch (e:Exception){
+                e.toString()
             }
-            runOnUiThread(Runnable {
-                navigateToNext()
-                preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)
-            })
+            navigateToNext()
+            preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)
         }
     }
     var answers= listOf<AnswerEntity>()
@@ -404,7 +406,8 @@ class SyncDataActivity : BaseActivity() {
                     }
                 }
             }else{
-                UtilMethods.showToast(this@SyncDataActivity,"No data to sync")
+                syncMedia()
+                //UtilMethods.showToast(this@SyncDataActivity,"No data to sync")
             }
         }
     }
@@ -442,17 +445,21 @@ class SyncDataActivity : BaseActivity() {
                 binding.llProgress.visibility=View.VISIBLE
                 ApiInterface.getInstance()?.apply {
                     val datapart= RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
-                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
+                    val response=syncMediaFiles(preferenceManager.getToken()!!,mediaList,surveyImagesParts)
                     binding.llProgress.visibility=View.GONE
                     if (response.isSuccessful){
                         val jsonObject=JSONObject(response.body().toString())
                         Log.e("response",jsonObject.toString())
                         UtilMethods.showToast(this@SyncDataActivity,jsonObject.getString("message"))
                         if (jsonObject.getString("success")=="1"){
-
+                            for (ans in answers){
+                                AppDatabase.getInstance(this@SyncDataActivity).formDao().updateMediaSync(ans.id!!)
+                            }
                         }
                     }
                 }
+            }else{
+                //UtilMethods.showToast(this@SyncDataActivity,"No media to sync")
             }
         }
     }

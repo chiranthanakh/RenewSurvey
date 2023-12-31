@@ -131,6 +131,7 @@ class DashboardActivity : BaseActivity() {
                     }
                 }else{
                     UtilMethods.showToast(this@DashboardActivity,"No data to sync")
+                    syncMedia()
                 }
             }
         }
@@ -166,7 +167,7 @@ class DashboardActivity : BaseActivity() {
     }
     fun syncMedia(){
         lifecycleScope.launch {
-            val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswers()
+            val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedMediaAnswers()
             for (a in answers){
                 val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
                 val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
@@ -199,17 +200,21 @@ class DashboardActivity : BaseActivity() {
                 binding.progressMessage.text="Synchronizing media with server"
                 ApiInterface.getInstance()?.apply {
                     val datapart=RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
-                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
+                    val response=syncMediaFiles(preferenceManager.getToken()!!,mediaList,surveyImagesParts)
                     binding.llProgress.visibility=View.GONE
                     if (response.isSuccessful){
                         val jsonObject=JSONObject(response.body().toString())
                         Log.e("response",jsonObject.toString())
                         UtilMethods.showToast(this@DashboardActivity,jsonObject.getString("message"))
                         if (jsonObject.getString("success")=="1"){
-
+                            for (ans in answers){
+                                AppDatabase.getInstance(this@DashboardActivity).formDao().updateMediaSync(ans.id!!)
+                            }
                         }
                     }
                 }
+            }else{
+                UtilMethods.showToast(this@DashboardActivity,"No media to sync")
             }
         }
     }

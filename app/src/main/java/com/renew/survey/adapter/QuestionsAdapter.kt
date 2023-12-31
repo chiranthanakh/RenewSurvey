@@ -120,7 +120,7 @@ class QuestionsAdapter(
                                             calendar[Calendar.DAY_OF_MONTH]=dayOfMonth
                                             calendar[Calendar.MONTH]=month
                                             calendar[Calendar.YEAR]=year
-                                            binding.edittext.setText(UtilMethods.getFormattedDate(calendar.time,this.format))
+                                            binding.edittext.setText(UtilMethods.getFormattedDate(calendar.time,this.format!!))
                                             this.answer=UtilMethods.getFormattedDate(calendar.time,this.format)
                                         }, year, month, day)
                                         dpd.show()
@@ -130,7 +130,7 @@ class QuestionsAdapter(
                                             val calendar=Calendar.getInstance()
                                             calendar[Calendar.HOUR]=i
                                             calendar[Calendar.MINUTE]=i2
-                                            binding.edittext.setText(UtilMethods.getFormattedDate(calendar.time,this.format))
+                                            binding.edittext.setText(UtilMethods.getFormattedDate(calendar.time,this.format!!))
                                             this.answer=UtilMethods.getFormattedDate(calendar.time,this.format)
                                         },hour,minute,false)
                                         tpd.show()
@@ -144,7 +144,7 @@ class QuestionsAdapter(
                                             val tpd = TimePickerDialog(context,TimePickerDialog.OnTimeSetListener { timePicker, i, i2 ->
                                                 calendar[Calendar.HOUR]=i
                                                 calendar[Calendar.MINUTE]=i2
-                                                binding.edittext.setText(UtilMethods.getFormattedDate(calendar.time,this.format))
+                                                binding.edittext.setText(UtilMethods.getFormattedDate(calendar.time,this.format!!))
                                                 this.answer=UtilMethods.getFormattedDate(calendar.time,this.format)
                                             },hour,minute,false)
                                             tpd.show()

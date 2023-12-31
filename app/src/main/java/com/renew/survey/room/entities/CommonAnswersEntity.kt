@@ -31,5 +31,7 @@ data class CommonAnswersEntity(
     var wood_use_per_day_in_kg: String,
     var parent_survey_id: String,
     var tbl_project_survey_common_data_id: String,
+    var family_member_below_15_year: String?,
+    var family_member_above_15_year: String?,
     var answer_id:Int?,
 )

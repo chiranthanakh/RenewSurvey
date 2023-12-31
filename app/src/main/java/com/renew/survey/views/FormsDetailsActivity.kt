@@ -49,7 +49,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     var tbl_project_survey_common_data_id=""
     var assigned:AssignedSurveyEntity?=null
     var draftAnsId:Int?=null
-    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","","","",0)
+    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
@@ -60,7 +60,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             assigned=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
             commonAnswersEntity= CommonAnswersEntity(
                 null,assigned!!.aadhar_card,assigned!!.annual_family_income,assigned!!.banficary_name,assigned!!.electricity_connection_available,assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
-                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cow_dung_per_day,assigned!!.no_of_cylinder_per_year,assigned!!.willing_to_contribute_clean_cooking,assigned!!.wood_use_per_day_in_kg,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),null
+                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cow_dung_per_day,assigned!!.no_of_cylinder_per_year,assigned!!.willing_to_contribute_clean_cooking,assigned!!.wood_use_per_day_in_kg,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),assigned!!.family_member_below_15_year,assigned!!.family_member_above_15_year,null
             )
             tbl_project_survey_common_data_id=assigned!!.tbl_project_survey_common_data_id.toString()
             status=assigned!!.next_form_id
@@ -71,7 +71,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
             commonAnswersEntity= CommonAnswersEntity(
                 null,a.aadhar_card,a.annual_family_income,a.banficary_name,a.electricity_connection_available,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),null
+                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),"","",null
             )
         }
         if (intent.getBooleanExtra("training",false)) {
@@ -100,7 +100,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             lifecycleScope.launch {
                 val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
                     Date(),"dd:MM:yyyy:HH:mm:ss")}"
-                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,1)
+                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,0,1)
                 var ansId=0
                 if (status>3){
                     ans.id=preferenceManager.getDraft()
@@ -185,7 +185,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
                 val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
                     Date(),"dd:MM:yyyy:HH:mm:ss")}"
-                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,0)
+                val ans=AnswerEntity(null,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,0,0)
                 ans.tbl_project_survey_common_data_id=tbl_project_survey_common_data_id
                 var ansId=0
                 if (status>3){
@@ -367,17 +367,21 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             UtilMethods.showToast(this,"Please select is using LPG")
             return false
         }
-        if (commonAnswersEntity.no_of_cylinder_per_year==""){
-            UtilMethods.showToast(this,"Please add no of cylinder used")
-            return false
+        if (commonAnswersEntity.no_of_cylinder_per_year==getString(R.string.yes)){
+            if (commonAnswersEntity.no_of_cylinder_per_year==""){
+                UtilMethods.showToast(this,"Please add no of cylinder used")
+                return false
+            }
         }
         if (commonAnswersEntity.is_cow_dung==""){
             UtilMethods.showToast(this,"Please select is cow dung is used")
             return false
         }
-        if (commonAnswersEntity.no_of_cow_dung_per_day==""){
-            UtilMethods.showToast(this,"Please add no of cow dung used")
-            return false
+        if (commonAnswersEntity.is_cow_dung==getString(R.string.yes)){
+            if (commonAnswersEntity.no_of_cow_dung_per_day==""){
+                UtilMethods.showToast(this,"Please add no of cow dung used")
+                return false
+            }
         }
         if (commonAnswersEntity.house_type==""){
             UtilMethods.showToast(this,"Please select house type")
@@ -415,8 +419,21 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             UtilMethods.showToast(this,"Please add aadhar number")
             return false
         }
+        if (commonAnswersEntity.family_member_above_15_year==""){
+            UtilMethods.showToast(this,"Please add family member below 15")
+            return false
+        }
+        if (commonAnswersEntity.family_member_below_15_year==""){
+            UtilMethods.showToast(this,"Please add family member above 15")
+            return false
+        }
         if (commonAnswersEntity.aadhar_card.length!=12){
             UtilMethods.showToast(this,"Please enter valid aadhar number")
+            return false
+        }
+        val totalFamily=commonAnswersEntity.family_member_above_15_year!!.toInt() + commonAnswersEntity.family_member_below_15_year!!.toInt()-commonAnswersEntity.family_size.toInt()
+        if(totalFamily!=0){
+            UtilMethods.showToast(this,"Please enter valid family number")
             return false
         }
         return true
@@ -428,7 +445,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         lifecycleScope.launch {
             val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
                 Date(),"dd:MM:yyyy:HH:mm:ss")}"
-            val ans=AnswerEntity(draftAnsId,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,1)
+            val ans=AnswerEntity(draftAnsId,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,0,1)
             if (status>3){
                 ans.id=preferenceManager.getDraft()
                 draftAnsId= preferenceManager.getDraft()

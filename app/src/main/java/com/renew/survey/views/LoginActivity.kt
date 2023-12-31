@@ -31,14 +31,14 @@ class LoginActivity : BaseActivity() {
         binding.tvSignup.setOnClickListener {
             openRegisterAsDialog()
         }
-        if (BuildConfig.DEBUG){
-            binding.etUserName.setText("9924618599")
-            binding.etPassword.setText("123456")
-        }
         binding.btnContinue.setOnClickListener {
             if (binding.etUserName.text.toString() != "") {
                 if (binding.etPassword.text.toString() != "") {
-                    callLoginapi()
+                    if (UtilMethods.isNetworkAvailable(this)){
+                        callLoginApi()
+                    }else{
+                        UtilMethods.showToast(this,"Please check your internet connection")
+                    }
                    // Intent(this@LoginActivity,TrainingActivity::class.java).apply {
                     //    startActivity(this)}
                 } else {
@@ -52,7 +52,7 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private fun callLoginapi() {
+    private fun callLoginApi() {
         binding.progressLayout.visibility= View.VISIBLE
         lifecycleScope.launch {
             ApiInterface.getInstance()?.apply {

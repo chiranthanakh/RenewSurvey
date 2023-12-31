@@ -34,5 +34,7 @@ data class AssignedSurveyEntity(
     val tbl_project_survey_common_data_id: Int,
     val tbl_projects_id: Int,
     val willing_to_contribute_clean_cooking: String,
+    var family_member_below_15_year: String?,
+    var family_member_above_15_year: String?,
     val wood_use_per_day_in_kg: String
 )

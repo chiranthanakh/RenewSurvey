@@ -80,5 +80,7 @@
     <string name="select">Select</string>
     <string name="retry">Retry</string>
     <string name="test_failed_n_your_obtained_marks">Test Failed, \n Your obtained Marks :</string>
+    <string name="above_15_year_family_members">8.1 Above 15 Year Family Members<font color='#EA0C27'>*</font></string>
+    <string name="below_15_year_family_members">8.2 Below 15 Year Family Members<font color='#EA0C27'>*</font></string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.renew.survey.utilities
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import java.io.File
@@ -61,6 +62,12 @@ object UtilMethods {
         } else {
             image
         }
+    }
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo!!
+            .isConnected
     }
 
 }

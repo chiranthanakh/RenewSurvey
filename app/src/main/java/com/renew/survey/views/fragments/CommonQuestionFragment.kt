@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.renew.survey.R
@@ -51,6 +52,30 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         if (status==2||status==3||status==5||status==6){
             disableViews=true
         }
+
+       /*
+        binding.rbCowDungNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                binding.llNoCowDung.visibility=View.VISIBLE
+            }else{
+                binding.llNoCowDung.visibility=View.GONE
+            }
+        }
+        binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                binding.llNoOfCylinder.visibility=View.GONE
+            }else{
+                binding.llNoOfCylinder.visibility=View.VISIBLE
+            }
+        }
+        binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                binding.llNoOfCylinder.visibility=View.VISIBLE
+            }else{
+                binding.llNoOfCylinder.visibility=View.GONE
+            }
+        }*/
+
         if (status>0){
             binding.edtBeneficiaryName.setText(commonAnswersEntity.banficary_name)
             binding.edtMobile.setText(commonAnswersEntity.mobile_number)
@@ -61,6 +86,8 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             binding.edtAnnualFamilyIncome.setText(commonAnswersEntity.annual_family_income)
             binding.edtNoCowDungPerDay.setText(commonAnswersEntity.no_of_cow_dung_per_day)
             binding.edtFamilySize.setText(commonAnswersEntity.family_size)
+            binding.edtAbove15.setText(commonAnswersEntity.family_member_above_15_year)
+            binding.edtBelow15.setText(commonAnswersEntity.family_member_below_15_year)
             when(commonAnswersEntity.gender.uppercase(Locale.ROOT)){
                 getString(R.string.male).uppercase(Locale.ROOT) ->{
                     binding.rbMale.isChecked=true
@@ -111,6 +138,8 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 binding.rbCleanNo.isEnabled=false
                 binding.rbElectricityYes.isEnabled=false
                 binding.rbElectricityNo.isEnabled=false
+                binding.edtBelow15.isEnabled=false
+                binding.edtAbove15.isEnabled=false
                 for (i in 0 until binding.llLayout.getChildCount()) {
                     val child: View = binding.llLayout.getChildAt(i)
                     child.isEnabled = false
@@ -119,6 +148,50 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         }
         getStateData()
         spinnerSelectors()
+        binding.rgLpg.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_lpg_no -> {
+                    binding.llNoOfCylinder.visibility=View.GONE
+                }
+                R.id.rb_lpg_yes -> {
+                    binding.llNoOfCylinder.visibility=View.VISIBLE
+                }
+            }
+        })
+        binding.rgCowDung.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_cow_dung_no -> {
+                    binding.llNoCowDung.visibility=View.GONE
+                }
+                R.id.rb_cow_dung_yes -> {
+                    binding.llNoCowDung.visibility=View.VISIBLE
+                }
+            }
+        })
+        binding.edtAbove15.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.family_member_above_15_year=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+        binding.edtBelow15.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.family_member_below_15_year=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
         binding.edtBeneficiaryName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }

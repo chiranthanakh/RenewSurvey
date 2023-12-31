@@ -78,6 +78,8 @@
     <string name="attach_file">फाईल जोडा</string>
     <string name="capture_image">प्रतिमा कॅप्चर करा</string>
     <string name="select">निवडा</string>
+    <string name="above_15_year_family_members">8.1 15 वर्षांवरील कुटुंबातील सदस्य<font color='#EA0C27'>*</font></string>
+    <string name="below_15_year_family_members">8.2 15 वर्षाखालील कुटुंबातील सदस्य<font color='#EA0C27'>*</font></string>
 
 
 </resources>

@@ -7,7 +7,7 @@ data class FormQuestionEntity(
     @PrimaryKey
     val id: Int? = null,
     val allowed_file_type: String,
-    val format: String,
+    val format: String?,
     val is_mandatory: String,
     val is_special_char_allowed: String,
     val is_validation_required: String,

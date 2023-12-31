@@ -91,12 +91,19 @@ class SignUpDetailsActivity : BaseActivity() {
             binding.edtFullName.setText(userInfo!!.full_name)
             binding.edtUsername.setText(userInfo!!.username)
             binding.edtEmail.setText(userInfo!!.email)
-            binding.edtPassword.isFocusable=false
-            binding.edtPassword.setText("123456")
+            if (intent.getStringExtra("user_type")=="MEMBER"){
+                binding.edtPassword.isFocusable=false
+                binding.edtPassword.setText("123456")
+            }
             binding.tilPassword.isPasswordVisibilityToggleEnabled=false
             binding.edtAddress.setText(userInfo!!.address)
             binding.edtPincode.setText(userInfo!!.pincode)
-            binding.edtDob.setText(UtilMethods.getDisplayDateFormat(userInfo!!.date_of_birth))
+            try {
+                binding.edtDob.setText(UtilMethods.getDisplayDateFormat(userInfo!!.date_of_birth))
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+
             if (userInfo!!.gender=="MALE"){
                 binding.rbMale.isChecked=true
             }else{
@@ -232,12 +239,18 @@ class SignUpDetailsActivity : BaseActivity() {
             UtilMethods.showToast(this,"Please accept to terms and conditions")
             return
         }
-        signUpApi()
+        if (UtilMethods.isNetworkAvailable(this)){
+            signUpApi()
+        }else{
+            UtilMethods.showToast(this,"Please check your internet connection")
+        }
+
     }
     fun signUpApi() {
         binding.progressLayout.visibility = View.VISIBLE
         lifecycleScope.launch {
             ApiInterface.getInstance()?.apply {
+                Log.e("FCM_TOKEN","${preferenceManager.getFCMToken()}")
                 val fcmToken = preferenceManager.getFCMToken()
                 var gender = "MALE"
                 if (binding.rbMale.isChecked) {
@@ -249,6 +262,10 @@ class SignUpDetailsActivity : BaseActivity() {
                 var password: String? = null
                 if (userInfo == null) {
                     password = binding.edtPassword.text.toString()
+                }else{
+                    if (intent.getStringExtra("user_type")=="USER"){
+                        password = binding.edtPassword.text.toString()
+                    }
                 }
 
                     val file = File(FileUtils.getPathFromUri(context, imageUri1))

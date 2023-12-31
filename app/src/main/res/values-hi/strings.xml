@@ -78,5 +78,6 @@
     <string name="attach_file">फ़ाइल जोड़ें</string>
     <string name="capture_image">छवि कैप्चर करें</string>
     <string name="select">चुनना</string>
-
+    <string name="above_15_year_family_members">8.1 15 वर्ष से ऊपर के परिवार के सदस्य<font color='#EA0C27'>*</font></string>
+    <string name="below_15_year_family_members">8.2 15 वर्ष से कम आयु के परिवार के सदस्य<font color='#EA0C27'>*</font></string>
 </resources>

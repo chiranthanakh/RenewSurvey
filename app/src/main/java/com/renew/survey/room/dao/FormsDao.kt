@@ -170,6 +170,9 @@ interface FormsDao {
     @Query("Select * from AnswerEntity where sync=0 and draft=0")
     suspend fun getAllUnsyncedAnswers(): List<AnswerEntity>
 
+    @Query("Select * from AnswerEntity where media_sync=0 and draft=0")
+    suspend fun getAllUnsyncedMediaAnswers(): List<AnswerEntity>
+
     @Query("Select * from CommonAnswersEntity where answer_id=:ansId limit 1")
     suspend fun getCommonAnswers(ansId:Int): CommonAnswersEntity
 
@@ -181,6 +184,9 @@ interface FormsDao {
 
     @Query("Update AnswerEntity set sync=1 where id=:ans_id")
     suspend fun updateSync(ans_id:Int)
+
+    @Query("Update AnswerEntity set media_sync=1 where id=:ans_id")
+    suspend fun updateMediaSync(ans_id:Int)
 
     @Query("Select * from AssignedSurveyEntity where status=0 and next_form_id=:formId")
     suspend fun getAllAssignedSurvey(formId: Int): List<AssignedSurveyEntity>

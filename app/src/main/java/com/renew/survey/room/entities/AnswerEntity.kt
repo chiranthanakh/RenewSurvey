@@ -20,6 +20,7 @@ data class AnswerEntity(
     val tbl_users_id: String,
     val version: String,
     var sync: Int,
+    var media_sync: Int,
     var draft: Int,
     @Ignore
     @SerializedName("common_question_answer")
@@ -41,6 +42,7 @@ data class AnswerEntity(
         tbl_users_id: String,
         version: String,
         sync: Int,
+        media_sync: Int,
         draft: Int
     ) : this(
         id,
@@ -55,6 +57,7 @@ data class AnswerEntity(
         tbl_users_id,
         version,
         sync,
+        media_sync,
         draft,
         null,
         listOf()

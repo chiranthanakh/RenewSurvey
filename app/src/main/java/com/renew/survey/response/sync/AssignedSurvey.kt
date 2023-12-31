@@ -27,5 +27,7 @@ data class AssignedSurvey(
     val tbl_project_survey_common_data_id: String,
     val tbl_projects_id: String,
     val willing_to_contribute_clean_cooking: String,
-    val wood_use_per_day_in_kg: String
+    val wood_use_per_day_in_kg: String,
+    var family_member_below_15_year: String?,
+    var family_member_above_15_year: String?,
 )

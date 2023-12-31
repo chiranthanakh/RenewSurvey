@@ -50,7 +50,11 @@ class SignUpActivity : BaseActivity() {
             UtilMethods.showToast(this,"Please enter valid aadhar number")
             return
         }
-        validationAPI()
+        if (UtilMethods.isNetworkAvailable(this)){
+            validationAPI()
+        }else{
+            UtilMethods.showToast(this,"Please check your internet connection")
+        }
     }
     private fun validationAPI(){
         binding.progressLayout.visibility=View.VISIBLE
