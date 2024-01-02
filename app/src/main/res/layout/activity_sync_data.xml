@@ -18,8 +18,8 @@
         <LinearLayout
             android:id="@+id/ll_progress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:layout_height="match_parent"
+            android:visibility="visible"
             android:orientation="vertical">
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progress_horizontal"
@@ -31,6 +31,7 @@
                 android:layout_marginStart="@dimen/dp_20"
                 android:layout_marginEnd="@dimen/dp_20"/>
             <TextView
+                android:id="@+id/tv_text"
                 android:gravity="center"
                 android:text="Synchronizing the data from server"
                 android:layout_width="match_parent"

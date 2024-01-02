@@ -194,6 +194,19 @@ class SignUpDetailsActivity : BaseActivity() {
                 UtilMethods.showToast(this,"Please enter password")
                 return
             }
+            if (binding.edtPassword.text!!.length<6){
+                UtilMethods.showToast(this,"Password should atlease 6 digits")
+                return
+            }
+            if (binding.edtConfirmPassword.text!!.length<6){
+                UtilMethods.showToast(this,"Password should atlease 6 digits")
+                return
+            }
+            if (binding.edtConfirmPassword.text!!.length!=binding.edtPassword.text!!.length){
+                UtilMethods.showToast(this,"Password does not match")
+                return
+            }
+
         }
         if (binding.edtAddress.text.toString().isEmpty()){
             UtilMethods.showToast(this,"Please enter full name")

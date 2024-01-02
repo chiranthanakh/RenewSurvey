@@ -119,6 +119,7 @@ class SyncDataActivity : BaseActivity() {
         }
     }
     fun showProgress(){
+        binding.tvText.text="Synchronizing the data from server"
         binding.llProgress.visibility= View.VISIBLE
         binding.btnContinue.visibility= View.GONE
     }
@@ -388,9 +389,12 @@ class SyncDataActivity : BaseActivity() {
             Log.e("data",jsonData)
             if(answers.size>0){
                 binding.llProgress.visibility=View.VISIBLE
+                binding.btnContinue.visibility=View.GONE
+                binding.tvText.text="Synchronizing the data to server"
                 ApiInterface.getInstance()?.apply {
                     val response=syncSubmitForms(preferenceManager.getToken()!!,answers)
                     binding.llProgress.visibility=View.GONE
+                    binding.btnContinue.visibility=View.VISIBLE
                     if (response.isSuccessful){
                         Log.e("response","${response.body()}")
                         val json=JSONObject(response.body().toString())
@@ -451,10 +455,13 @@ class SyncDataActivity : BaseActivity() {
                 val jsonData=gson.toJson(mediaList)
                 Log.e("params",jsonData.toString())
                 binding.llProgress.visibility=View.VISIBLE
+                binding.btnContinue.visibility=View.GONE
+                binding.tvText.text="Synchronizing the media to server"
                 ApiInterface.getInstance()?.apply {
                     val datapart= RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
                     val response=syncMediaFiles(preferenceManager.getToken()!!,mediaList,surveyImagesParts)
                     binding.llProgress.visibility=View.GONE
+                    binding.btnContinue.visibility=View.VISIBLE
                     if (response.isSuccessful){
                         val jsonObject=JSONObject(response.body().toString())
                         Log.e("response",jsonObject.toString())

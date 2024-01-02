@@ -20,6 +20,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import java.util.concurrent.TimeUnit
 
 
 interface ApiInterface {
@@ -173,6 +174,8 @@ interface ApiInterface {
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
+                .connectTimeout(60,TimeUnit.SECONDS)
+                .readTimeout(60,TimeUnit.SECONDS)
                 .build()
 
             if (retrofitService == null) {

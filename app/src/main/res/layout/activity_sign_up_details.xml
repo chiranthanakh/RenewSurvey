@@ -302,6 +302,38 @@
                                 </com.google.android.material.textfield.TextInputLayout>
                             </LinearLayout>
                             <LinearLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                app:layout_constraintTop_toBottomOf="@+id/top_bar">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColorHint="@color/black"
+                                    app:boxStrokeColor="@color/demo_state_foreground_color"
+                                    app:hintTextColor="@color/black"
+                                    app:passwordToggleEnabled="true"
+                                    app:passwordToggleTint="@color/demo_state_second"
+                                    app:startIconTint="@color/grey_dark">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/edt_confirm_password"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:background="@null"
+                                        android:hint="Re-type Password"
+                                        android:inputType="textPassword"
+                                        android:lines="4"
+                                        android:padding="@dimen/dp_0"
+                                        android:textColor="@color/black"
+                                        android:textColorHint="@color/black"
+                                        android:textSize="@dimen/text_size_14sp" />
+                                </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
