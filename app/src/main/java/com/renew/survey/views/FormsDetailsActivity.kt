@@ -471,7 +471,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                     if(status>3){
                         Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
                         AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,draftAnsId!!)
-                    }else{
+                    } else{
                         val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,draftAnsId!!.toInt())
                         AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
                     }
