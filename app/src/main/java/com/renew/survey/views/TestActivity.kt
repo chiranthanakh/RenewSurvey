@@ -64,7 +64,7 @@ class TestActivity : BaseActivity() {
                                 rightAns++
                             }
                         }
-                        if (wrongAns==0 && rightAns>1){
+                        if (wrongAns==0 && rightAns>0){
                             count++
                         }
                     }

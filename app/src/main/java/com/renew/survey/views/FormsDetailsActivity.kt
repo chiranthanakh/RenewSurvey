@@ -431,10 +431,12 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             UtilMethods.showToast(this,"Please enter valid aadhar number")
             return false
         }
-        val totalFamily=commonAnswersEntity.family_member_above_15_year!!.toInt() + commonAnswersEntity.family_member_below_15_year!!.toInt()-commonAnswersEntity.family_size.toInt()
-        if(totalFamily!=0){
-            UtilMethods.showToast(this,"Please enter valid family number")
-            return false
+        if (preferenceManager.getForm().tbl_forms_id==1){
+            val totalFamily=commonAnswersEntity.family_member_above_15_year!!.toInt() + commonAnswersEntity.family_member_below_15_year!!.toInt()-commonAnswersEntity.family_size.toInt()
+            if(totalFamily!=0){
+                UtilMethods.showToast(this,"Please enter valid family number")
+                return false
+            }
         }
         return true
     }
