@@ -200,4 +200,7 @@ interface FormsDao {
     @Query("UPDATE AssignedSurveyEntity set status=1 where id=:id")
     suspend fun updateAssignedStatus(id: Int)
 
+    @Query("Delete from AnswerEntity where draft=:id")
+    suspend fun deleteDrafts(id: Int)
+
 }

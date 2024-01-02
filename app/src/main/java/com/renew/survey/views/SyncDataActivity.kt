@@ -69,6 +69,9 @@ class SyncDataActivity : BaseActivity() {
             if (draftCount>0){
                MyCustomDialog.showDialog(this,"","All the draft data will be overwritten","OK","",true,object :MyCustomDialog.ClickListener{
                    override fun onYes() {
+                       lifecycleScope.launch {
+                           AppDatabase.getInstance(this@SyncDataActivity).formDao().deleteDrafts(1)
+                       }
                        syncAPI()
                    }
 
