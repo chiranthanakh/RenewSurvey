@@ -8,9 +8,10 @@ import com.renew.survey.databinding.ItemMultiSelectBinding
 import com.renew.survey.databinding.ItemProjectSelectBinding
 import com.renew.survey.request.MultiSelectItem
 import com.renew.survey.response.Project
+import com.renew.survey.room.entities.Options
 import com.renew.survey.room.entities.ProjectEntity
 
-class MultiselectAdapterAdapter(val context:Context, private var list: List<MultiSelectItem>) : RecyclerView.Adapter<MultiselectAdapterAdapter.ViewHolder>() {
+class MultiselectAdapterAdapter(val context:Context, private var list: List<Options>) : RecyclerView.Adapter<MultiselectAdapterAdapter.ViewHolder>() {
 
     class ViewHolder (val binding: ItemMultiSelectBinding):RecyclerView.ViewHolder(binding.root)
 
@@ -26,7 +27,10 @@ class MultiselectAdapterAdapter(val context:Context, private var list: List<Mult
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             with(list[position]){
-                binding.checkbox.text=this.name
+                binding.checkbox.text=this.title
+                if (this.selected){
+                    binding.checkbox.isChecked=true
+                }
                 binding.checkbox.setOnClickListener {
                     list[position].selected = binding.checkbox.isChecked
                 }

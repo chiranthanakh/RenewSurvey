@@ -1,6 +1,7 @@
 package com.renew.survey.views
 
 import android.Manifest
+import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -10,13 +11,22 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.PendingResult
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.LocationSettingsResult
+import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.renew.survey.R
 import com.renew.survey.adapter.QuestionGroupAdapter
 import com.renew.survey.databinding.ActivityFormsDetailsBinding
@@ -49,7 +59,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     var tbl_project_survey_common_data_id=""
     var assigned:AssignedSurveyEntity?=null
     var draftAnsId:Int?=null
-    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(0,"","","","","","","","","","","","","","","","","","","","","","","","",0)
+    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(null,"","","","","","","","","","","","","","","","","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
@@ -71,7 +81,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
             commonAnswersEntity= CommonAnswersEntity(
                 null,a.aadhar_card,a.annual_family_income,a.banficary_name,a.electricity_connection_available,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),"","",null
+                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,null
             )
         }
         if (intent.getBooleanExtra("training",false)) {
@@ -139,20 +149,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             if (!validateCommonQuestions()){
                 return@setOnClickListener
             }
-            questionGroupList.forEachIndexed { index, qg ->
-                if (index <= previouslySelected){
-                    for (q in qg.questions) {
-                        if (q.is_mandatory.equals("yes", ignoreCase = true)) {
-                            if (q.answer.equals("")) {
-                                UtilMethods.showToast(
-                                    this@FormsDetailsActivity,
-                                    "Please add/select ${q.title} in question group ${qg.title}"
-                                )
-                                return@setOnClickListener
-                            }
-                        }
-                    }
-                }
+            if (!validateDynamicQuestions()){
+                return@setOnClickListener
             }
             //saveInDraftEveryStep()
             loadFragment(previouslySelected+1)
@@ -168,18 +166,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             if (!validateCommonQuestions()){
                 return@setOnClickListener
             }
-            for (qg in questionGroupList) {
-                for (q in qg.questions) {
-                    if (q.is_mandatory.equals("yes", ignoreCase = true)) {
-                        if (q.answer.equals("")) {
-                            UtilMethods.showToast(
-                                this@FormsDetailsActivity,
-                                "Please add/select ${q.title} in qustion group ${qg.title}"
-                            )
-                            return@setOnClickListener
-                        }
-                    }
-                }
+            if (!validateDynamicQuestions()){
+                return@setOnClickListener
             }
             lifecycleScope.launch {
 
@@ -221,11 +209,11 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                 if (intent.hasExtra("assigned")){
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAssignedStatus(assigned!!.id!!)
                 }
+                UtilMethods.showToast(this@FormsDetailsActivity, "Form saved successfully")
+                finish()
             }
-            UtilMethods.showToast(this, "Form saved successfully")
-            finish()
         }
-        turnOnLocation()
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -240,6 +228,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         locationRequest = LocationRequest.create()
         locationRequest!!.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         locationRequest!!.setInterval(20 * 1000)
+            enableLoc()
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
@@ -255,7 +244,6 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                     preferenceManager.saveLocation("${location.latitude},${location.longitude}")
                 }
             }
-
        }
     }
 
@@ -320,15 +308,6 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
     }
 
-    fun turnOnLocation(){
-        try {
-            val googleApiClient=GoogleApiClient.Builder(this).addApi(LocationServices.API).build()
-            val req=LocationSettingsRequest.Builder().addLocationRequest(locationRequest!!)
-            req.setAlwaysShow(false)
-        }catch (e:Exception){
-            e.printStackTrace()
-        }
-    }
 
     fun validateCommonQuestions():Boolean{
         if (commonAnswersEntity.banficary_name==""){
@@ -479,4 +458,74 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             }
         }
     }
+    fun validateDynamicQuestions():Boolean{
+        questionGroupList.forEachIndexed { index, qg ->
+            if (index <= previouslySelected){
+                for (q in qg.questions) {
+                    if (q.is_mandatory.equals("yes", ignoreCase = true)) {
+                        if (q.answer.equals("")) {
+                            UtilMethods.showToast(
+                                this@FormsDetailsActivity,
+                                "Please add/select ${q.title} in question group ${qg.title}"
+                            )
+                            return false
+                        }
+                    }
+                    if (q.is_validation_required.equals("yes",ignoreCase = true)){
+                        if (q.question_type=="TEXT" || q.question_type=="NUMBER"||q.question_type=="EMAIL"){
+                            if (q.answer!!.length>q.max_length.toInt() ||q.answer!!.length<q.min_length.toInt()){
+                                UtilMethods.showToast(
+                                    this@FormsDetailsActivity,
+                                    "Please add valid answer ${q.title} in question group ${qg.title}"
+                                )
+                                return false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    private fun enableLoc() {
+        val locationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = (30 * 1000).toLong()
+        locationRequest.fastestInterval = (5 * 1000).toLong()
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+        builder.setAlwaysShow(true)
+        val result: Task<LocationSettingsResponse> =
+            LocationServices.getSettingsClient(this).checkLocationSettings(builder.build())
+        result.addOnCompleteListener(OnCompleteListener<LocationSettingsResponse?> { task ->
+            try {
+                val response = task.getResult(ApiException::class.java)
+                // All location settings are satisfied. The client can initialize location
+                // requests here.
+            } catch (exception: ApiException) {
+                when (exception.statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED ->                         // Location settings are not satisfied. But could be fixed by showing the
+                        // user a dialog.
+                        try {
+                            // Cast to a resolvable exception.
+                            val resolvable = exception as ResolvableApiException
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            resolvable.startResolutionForResult(
+                                this@FormsDetailsActivity,
+                                LOCATION_SETTINGS_REQUEST
+                            )
+                        } catch (e: SendIntentException) {
+                            // Ignore the error.
+                        } catch (e: ClassCastException) {
+                            // Ignore, should be an impossible error.
+                        }
+
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {}
+                }
+            }
+        })
+    }
+    val LOCATION_SETTINGS_REQUEST=88;
 }

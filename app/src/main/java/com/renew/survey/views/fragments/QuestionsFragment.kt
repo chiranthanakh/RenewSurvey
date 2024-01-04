@@ -124,7 +124,7 @@ class QuestionsFragment(
                             it,prefsManager.getLanguage())
                     } as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
-                        options.add(0,Options(getString(R.string.select)))
+                        options.add(0,Options(getString(R.string.select),false))
                     }
                     questionGroupList[fragPos].questions[index].options=options
                 }
@@ -148,7 +148,7 @@ class QuestionsFragment(
                     val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
                         formQuestionLanguage.tbl_form_questions_id!!,prefsManager.getLanguage()) as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
-                        options.add(0,Options(getString(R.string.select)))
+                        options.add(0,Options(getString(R.string.select),false))
                     }
                     questionGroupList[fragPos].questions[index].options=options
                 }

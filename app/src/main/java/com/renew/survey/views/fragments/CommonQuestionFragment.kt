@@ -30,6 +30,7 @@ import com.renew.survey.room.entities.PanchayathEntity
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
+import com.renew.survey.utilities.AppConstants
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -89,22 +90,22 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             binding.edtAbove15.setText(commonAnswersEntity.family_member_above_15_year)
             binding.edtBelow15.setText(commonAnswersEntity.family_member_below_15_year)
             when(commonAnswersEntity.gender.uppercase(Locale.ROOT)){
-                getString(R.string.male).uppercase(Locale.ROOT) ->{
+                AppConstants.male.uppercase(Locale.ROOT) ->{
                     binding.rbMale.isChecked=true
                 }
-                getString(R.string.female).uppercase(Locale.ROOT)->{
+                AppConstants.female.uppercase(Locale.ROOT)->{
                     binding.rbFemale.isChecked=true
                 }
-                getString(R.string.other).uppercase(Locale.ROOT)->{
+                AppConstants.other.uppercase(Locale.ROOT)->{
                     binding.rbOther.isChecked=true
                 }
             }
-            if (commonAnswersEntity.is_lpg_using==getString(R.string.yes).uppercase(Locale.ROOT)){
+            if (commonAnswersEntity.is_lpg_using.toUpperCase(Locale.ROOT)==AppConstants.yes.uppercase(Locale.ROOT)){
                 binding.rbLpgYes.isChecked=true
             }else{
                 binding.rbLpgNo.isChecked=true
             }
-            if (commonAnswersEntity.is_cow_dung==getString(R.string.yes).uppercase(Locale.ROOT)){
+            if (commonAnswersEntity.is_cow_dung==AppConstants.yes.uppercase(Locale.ROOT)){
                 binding.rbCowDungYes.isChecked=true
             }else{
                 binding.rbCowDungNo.isChecked=true
@@ -114,12 +115,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }else{
                 binding.rbRented.isChecked=true
             }
-            if (commonAnswersEntity.willing_to_contribute_clean_cooking==getString(R.string.yes).uppercase(Locale.ROOT)){
+            if (commonAnswersEntity.willing_to_contribute_clean_cooking==AppConstants.yes.uppercase(Locale.ROOT)){
                 binding.rbCleanYes.isChecked=true
             }else{
                 binding.rbCleanNo.isChecked=true
             }
-            if (commonAnswersEntity.electricity_connection_available==getString(R.string.yes).uppercase(Locale.ROOT)){
+            if (commonAnswersEntity.electricity_connection_available==AppConstants.yes.uppercase(Locale.ROOT)){
                 binding.rbElectricityYes.isChecked=true
             }else{
                 binding.rbElectricityNo.isChecked=true
@@ -206,17 +207,17 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         })
         binding.rbMale.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.gender=compoundButton.text.toString()
+                commonAnswersEntity.gender=AppConstants.male
             }
         }
         binding.rbFemale.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.gender=compoundButton.text.toString()
+                commonAnswersEntity.gender=AppConstants.female
             }
         }
         binding.rbOther.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.gender=compoundButton.text.toString()
+                commonAnswersEntity.gender=AppConstants.other
             }
         }
         binding.edtFamilySize.addTextChangedListener(object : TextWatcher {
@@ -233,12 +234,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         })
         binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.is_lpg_using=compoundButton.text.toString()
+                commonAnswersEntity.is_lpg_using=AppConstants.yes
             }
         }
         binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.is_lpg_using=compoundButton.text.toString()
+                commonAnswersEntity.is_lpg_using=AppConstants.no
             }
         }
         binding.edtNoCylinderYear.addTextChangedListener(object : TextWatcher {
@@ -255,12 +256,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         })
         binding.rbCowDungYes.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.is_cow_dung=compoundButton.text.toString()
+                commonAnswersEntity.is_cow_dung=AppConstants.yes
             }
         }
         binding.rbCowDungNo.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.is_cow_dung=compoundButton.text.toString()
+                commonAnswersEntity.is_cow_dung=AppConstants.no
             }
         }
         binding.edtNoCowDungPerDay.addTextChangedListener(object : TextWatcher {
@@ -277,12 +278,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         })
         binding.rbOwn.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.house_type=compoundButton.text.toString()
+                commonAnswersEntity.house_type=AppConstants.owned
             }
         }
         binding.rbRented.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.house_type=compoundButton.text.toString()
+                commonAnswersEntity.house_type=AppConstants.rented
             }
         }
         binding.edtAnnualFamilyIncome.addTextChangedListener(object : TextWatcher {
@@ -299,12 +300,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         })
         binding.rbCleanYes.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.willing_to_contribute_clean_cooking=compoundButton.text.toString()
+                commonAnswersEntity.willing_to_contribute_clean_cooking=AppConstants.yes
             }
         }
         binding.rbCleanNo.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.willing_to_contribute_clean_cooking=compoundButton.text.toString()
+                commonAnswersEntity.willing_to_contribute_clean_cooking=AppConstants.no
             }
         }
         binding.edtWoodUsed.addTextChangedListener(object : TextWatcher {
@@ -321,12 +322,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         })
         binding.rbElectricityYes.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.electricity_connection_available=compoundButton.text.toString()
+                commonAnswersEntity.electricity_connection_available=AppConstants.yes
             }
         }
         binding.rbElectricityNo.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
-                commonAnswersEntity.electricity_connection_available=compoundButton.text.toString()
+                commonAnswersEntity.electricity_connection_available=AppConstants.no
             }
         }
 
@@ -441,7 +442,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     fun getVillage(state: Int){
         lifecycleScope.launch {
             villageList=AppDatabase.getInstance(requireContext()).placesDao().getAllVillages(state).transformVillage() as ArrayList<VillageModel>
-            villageList.add(0,VillageModel("","Select State"))
+            villageList.add(0,VillageModel("","Select Village"))
             binding.spVillage.adapter=VillageSpinnerAdapter(requireContext(),villageList)
             if (status>0){
                 villageList.forEachIndexed { index, villageModel ->

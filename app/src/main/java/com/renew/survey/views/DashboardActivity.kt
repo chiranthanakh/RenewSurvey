@@ -39,6 +39,11 @@ class DashboardActivity : BaseActivity() {
                 binding.myDrawerLayout.openDrawer(GravityCompat.START)
             }
         }
+        bindingNav.llProject1.setOnClickListener {
+            Intent(this,SignUpActivity::class.java).apply{
+                startActivity(this)
+            }
+        }
         Log.e("userdata",gson.toJson(preferenceManager.getUserdata()))
         bindingNav.name.setText(preferenceManager.getUserdata().full_name)
         bindingNav.mobile.setText(preferenceManager.getUserdata().mobile)
@@ -86,7 +91,11 @@ class DashboardActivity : BaseActivity() {
         }
 
         binding.surveyType.text = preferenceManager.getForm().title
-        binding.project.text=preferenceManager.getProject().project_code
+        lifecycleScope.launch {
+            val prjPhase=AppDatabase.getInstance(this@DashboardActivity).formDao().getProjectPhase(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().id!!.toInt())
+            binding.project.text=preferenceManager.getProject().project_code+" v"+prjPhase.release_version
+        }
+
         binding.btnSync.setOnClickListener {
             lifecycleScope.launch {
                 val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswers()
@@ -192,7 +201,7 @@ class DashboardActivity : BaseActivity() {
                     val file = File(mediaList[i].path)
                     val mimeType = UtilMethods.getMimeType(file)
                     val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
-                    surveyImagesParts[i] = MultipartBody.Part.createFormData("files",mediaList[i].file_name, surveyBody)
+                    surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
                 }
                 val jsonData=gson.toJson(mediaList)
                 Log.e("params",jsonData.toString())
@@ -200,7 +209,7 @@ class DashboardActivity : BaseActivity() {
                 binding.progressMessage.text="Synchronizing media with server"
                 ApiInterface.getInstance()?.apply {
                     val datapart=RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
-                    val response=syncMediaFiles(preferenceManager.getToken()!!,mediaList,surveyImagesParts)
+                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
                     binding.llProgress.visibility=View.GONE
                     if (response.isSuccessful){
                         val jsonObject=JSONObject(response.body().toString())

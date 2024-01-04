@@ -46,15 +46,13 @@
             android:exported="false" />
         <activity
             android:name=".views.DraftSelectActivity"
-            android:exported="false"
-            android:launchMode="singleInstance" />
+            android:exported="false" />
         <activity
             android:name=".views.ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".views.SurveySelectActivity"
-            android:exported="false"
-            android:launchMode="singleInstance" />
+            android:exported="false" />
         <activity
             android:name=".views.SyncDataActivity"
             android:exported="false" />
