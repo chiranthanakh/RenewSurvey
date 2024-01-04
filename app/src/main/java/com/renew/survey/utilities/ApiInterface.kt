@@ -157,8 +157,8 @@ interface ApiInterface {
     @POST("ProjectMaster/sync_media")
     suspend fun syncMediaFiles(
         @Header("Authorization") headers: String,
-        //@Part("post_data")tbl_projects_id:RequestBody,
-        @Part("post_data") generalPaymentRequest:List<MediaSyncReqItem>,
+        @Part("post_data")tbl_projects_id:RequestBody,
+        //@Part("post_data") generalPaymentRequest:List<MediaSyncReqItem>,
         @Part file: Array<MultipartBody.Part?>?
     ) : Response<JsonElement>
 
@@ -166,8 +166,8 @@ interface ApiInterface {
 
     companion object {
         var retrofitService: ApiInterface?=null
-        //val BASE_URL="https://devrenewsms.proteam.co.in/api/v1/"
-        val BASE_URL="https://renewsms.proteam.co.in/api/v1/"
+        val BASE_URL="https://devrenewsms.proteam.co.in/api/v1/"
+        //val BASE_URL="https://renewsms.proteam.co.in/api/v1/"
         fun getInstance() : ApiInterface? {
 
             val loggingInterceptor = HttpLoggingInterceptor()

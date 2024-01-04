@@ -53,7 +53,7 @@
     <string name="tehsil">4. Tehsil<font color='#EA0C27'>*</font></string>
     <string name="panchayath">5. Panchayath<font color='#EA0C27'>*</font></string>
     <string name="village">6. Village<font color='#EA0C27'>*</font></string>
-    <string name="own">Own</string>
+    <string name="own">Owned</string>
     <string name="rented">Rented</string>
     <string name="male">Male</string>
     <string name="female">Female</string>

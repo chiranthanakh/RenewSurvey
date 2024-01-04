@@ -1,11 +1,8 @@
 package com.renew.survey.views
 
-import android.annotation.SuppressLint
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -453,7 +450,7 @@ class SyncDataActivity : BaseActivity() {
                     val file = File(mediaList[i].path)
                     val mimeType = UtilMethods.getMimeType(file)
                     val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
-                    surveyImagesParts[i] = MultipartBody.Part.createFormData("files",mediaList[i].file_name, surveyBody)
+                    surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
                 }
                 val jsonData=gson.toJson(mediaList)
                 Log.e("params",jsonData.toString())
@@ -462,7 +459,7 @@ class SyncDataActivity : BaseActivity() {
                 binding.tvText.text="Synchronizing the media to server"
                 ApiInterface.getInstance()?.apply {
                     val datapart= RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
-                    val response=syncMediaFiles(preferenceManager.getToken()!!,mediaList,surveyImagesParts)
+                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
                     binding.llProgress.visibility=View.GONE
                     binding.btnContinue.visibility=View.VISIBLE
                     if (response.isSuccessful){

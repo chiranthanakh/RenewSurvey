@@ -203,4 +203,7 @@ interface FormsDao {
     @Query("Delete from AnswerEntity where draft=:id")
     suspend fun deleteDrafts(id: Int)
 
+    @Query("Select * from ProjectsPhase where tbl_forms_id=:formId and tbl_projects_id=:project")
+    suspend fun getProjectPhase(formId: Int,project: Int):ProjectsPhase
+
 }

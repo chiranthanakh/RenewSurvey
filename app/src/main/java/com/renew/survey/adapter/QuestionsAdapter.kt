@@ -155,7 +155,11 @@ class QuestionsAdapter(
                                     }
                                     "GEO_LOCATION" -> {
                                         binding.edittext.setText(preferenceManager.getLocation())
-                                        this.answer=preferenceManager.getLocation()
+                                        if (preferenceManager.getLocation()==""){
+                                            UtilMethods.showToast(context,"Location not available. Please make sure that you enabled the location and internet in your device")
+                                        }else{
+                                            this.answer=preferenceManager.getLocation()
+                                        }
                                     }
                                 }
                             }
@@ -222,10 +226,10 @@ class QuestionsAdapter(
                         binding.llRating.visibility = View.GONE
                         binding.txtMultiselect.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.multiselect.setText(this.answer)
-                        val options= arrayListOf<MultiSelectItem>()
+                        /*val options= arrayListOf<MultiSelectItem>()
                         for (o in this.options){
                             options.add(MultiSelectItem(o.title,false))
-                        }
+                        }*/
                         binding.multiselect.setOnClickListener {
                             val dialog=Dialog(context)
                             dialog.setContentView(R.layout.multi_select_layout_dialog)
@@ -238,13 +242,13 @@ class QuestionsAdapter(
                             val text=dialog.findViewById<TextView>(R.id.text)
                             val button=dialog.findViewById<Button>(R.id.button)
                             recyclerView.layoutManager=LinearLayoutManager(context)
-                            recyclerView.adapter=MultiselectAdapterAdapter(context,options)
+                            recyclerView.adapter=MultiselectAdapterAdapter(context,this.options)
                             button.setOnClickListener {
                                 dialog.cancel()
                                 val selectedList= arrayListOf<String>()
                                 for (x in options){
-                                    if (x.selected){
-                                        selectedList.add(x.name)
+                                    if (x.selected!!){
+                                        selectedList.add(x.title)
                                     }
                                 }
                                 answer=getComaSeparatedValues(selectedList)
