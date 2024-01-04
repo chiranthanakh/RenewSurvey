@@ -42,7 +42,7 @@ class TrainingActivity : AppCompatActivity() {
             val testquestionList = AppDatabase.getInstance(this@TrainingActivity).formDao().getAllTestQuestions(preferenceManager.getLanguage(), preferenceManager.getForm().tbl_forms_id)
              tutorials = AppDatabase.getInstance(this@TrainingActivity).formDao().getTutorial( preferenceManager.getForm().tbl_forms_id)
 
-            Log.d("testtutorialsdetail",tutorials.toString())
+            Log.d("testtutorialsdetail",tutorials.toString()+"--"+preferenceManager.getForm().tbl_forms_id)
 
             if (testDetails?.title != null && testDetails?.passing_marks != null ) {
                 preferenceManager.savePassingMarks(testDetails.passing_marks.toInt())
