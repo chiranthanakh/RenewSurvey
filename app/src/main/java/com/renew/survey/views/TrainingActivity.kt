@@ -69,7 +69,12 @@ class TrainingActivity : AppCompatActivity() {
             pdfuri.forEach {
                 tutorials?.let { it1 ->
                     if(it.toString().endsWith(it1.tutorial_file,true) ) {
-                        openPdf(it)
+                        if(it1.tutorial_file.endsWith(".mp4",true)) {
+                            Log.d("videoUri",it.toString()+"--"+it.path)
+                            openVideo(it)
+                        } else {
+                            openPdf(it)
+                        }
                     }
                 }
             }
@@ -78,6 +83,12 @@ class TrainingActivity : AppCompatActivity() {
         mediaController.setAnchorView(binding.videoView)
         mediaController.setMediaPlayer(binding.videoView)
         binding.videoView.setMediaController(mediaController)
+    }
+
+    private fun openVideo(it: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(it, "video/*")
+        startActivity(intent)
     }
 
     private fun openPdf(pdfUriString: Uri) {

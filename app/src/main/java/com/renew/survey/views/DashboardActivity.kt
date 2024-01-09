@@ -162,10 +162,6 @@ class DashboardActivity : BaseActivity() {
             binding.myDrawerLayout.closeDrawer(GravityCompat.START)
         }else{
             super.onBackPressed()
-            Intent(this,FormsDetailsActivity::class.java).apply {
-                startActivity(this)
-            }
-            finishAffinity()
         }
     }
     fun logout(){

@@ -5,9 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TutorialEntity(
-    @PrimaryKey
     val id: Int? = null,
     val tbl_tutorials_id: Int,
+    @PrimaryKey
     val tbl_forms_id: Int,
     val tutorial_file: String,
     val tutorial_code: String,

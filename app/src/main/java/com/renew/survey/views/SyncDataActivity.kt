@@ -310,6 +310,7 @@ class SyncDataActivity : BaseActivity() {
                             tutorialEntity.add(tutorials)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                         }
+                        Log.d("tutorialsDetails", tutorialEntity.size.toString() + "-" + tutorialEntity.toString())
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllTutorials(tutorialEntity)
                     }
                     "tbl_tests"->{
@@ -319,6 +320,8 @@ class SyncDataActivity : BaseActivity() {
                             testEntry.add(tests)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                         }
+                        Log.d("tutorialsDetails2", testEntry.size.toString() + "-" + testEntry.toString())
+
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllTests(testEntry)
                     }
                     "tbl_test_questions"->{
@@ -410,8 +413,8 @@ class SyncDataActivity : BaseActivity() {
                             if (data.getBoolean("is_access_disable")){
                                 preferenceManager.clear()
                                 Intent(this@SyncDataActivity,LoginActivity::class.java).apply {
-                                    finishAffinity()
-                                    startActivity(this)
+                                    //finishAffinity()
+                                    //startActivity(this)
                                 }
                             }
                         }
