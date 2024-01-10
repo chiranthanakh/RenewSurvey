@@ -152,7 +152,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             if (!validateDynamicQuestions()){
                 return@setOnClickListener
             }
-            //saveInDraftEveryStep()
+            saveInDraftEveryStep()
             loadFragment(previouslySelected+1)
         }
         binding.btnPrevious.setOnClickListener {
@@ -422,42 +422,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     interface ClickListener{
         fun onSubmit(stringExtra: String?)
     }
-    fun saveInDraftEveryStep(){
-        lifecycleScope.launch {
-            val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
-                Date(),"dd:MM:yyyy:HH:mm:ss")}"
-            val ans=AnswerEntity(draftAnsId,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,0,1)
-            if (status>3){
-                ans.id=preferenceManager.getDraft()
-                draftAnsId= preferenceManager.getDraft()
-                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAnswer(ans)
-            } else {
-                draftAnsId = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
-                    .insertAnswer(ans).toInt()
-            }
-            val cm = AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getCommonAnswers(draftAnsId!!)
 
-            commonAnswersEntity.answer_id=draftAnsId!!.toInt()
-            if (status>3){
-                commonAnswersEntity.id=cm.id
-                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateCommonAnswer(commonAnswersEntity)
-            } else {
-                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertCommonAnswer(commonAnswersEntity)
-            }
-
-            for (qg in questionGroupList){
-                for(q in qg.questions){
-                    if(status>3){
-                        Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
-                        AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,draftAnsId!!)
-                    } else{
-                        val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,draftAnsId!!.toInt())
-                        AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
-                    }
-                }
-            }
-        }
-    }
     fun validateDynamicQuestions():Boolean{
         questionGroupList.forEachIndexed { index, qg ->
             if (index <= previouslySelected){
@@ -470,15 +435,15 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
                             )
                             return false
                         }
-                    }
-                    if (q.is_validation_required.equals("yes",ignoreCase = true)){
-                        if (q.question_type=="TEXT" || q.question_type=="NUMBER"||q.question_type=="EMAIL"){
-                            if (q.answer!!.length>q.max_length.toInt() ||q.answer!!.length<q.min_length.toInt()){
-                                UtilMethods.showToast(
-                                    this@FormsDetailsActivity,
-                                    "Please add valid answer ${q.title} in question group ${qg.title}"
-                                )
-                                return false
+                        if (q.is_validation_required.equals("yes",ignoreCase = true)){
+                            if (q.question_type=="TEXT" || q.question_type=="NUMBER"||q.question_type=="EMAIL"){
+                                if (q.answer!!.length>q.max_length.toInt() ||q.answer!!.length<q.min_length.toInt()){
+                                    UtilMethods.showToast(
+                                        this@FormsDetailsActivity,
+                                        "Please add valid answer ${q.title} in question group ${qg.title}"
+                                    )
+                                    return false
+                                }
                             }
                         }
                     }
@@ -528,4 +493,46 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         })
     }
     val LOCATION_SETTINGS_REQUEST=88;
+
+
+    fun saveInDraftEveryStep(){
+        lifecycleScope.launch {
+            val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
+                Date(),"dd:MM:yyyy:HH:mm:ss")}"
+            val ans=AnswerEntity(draftAnsId,appUniqueCode,preferenceManager.getLanguage().toString(),commonAnswersEntity.parent_survey_id,questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getForm().tbl_forms_id.toString(),questionGroupList[1].tbl_project_phase_id.toString(),preferenceManager.getProject().id.toString(),preferenceManager.getUserId().toString(),questionGroupList[1].version,0,0,1)
+            if (status>3){
+                ans.id=preferenceManager.getDraft()
+                draftAnsId= preferenceManager.getDraft()
+
+            } else {
+                draftAnsId = AppDatabase.getInstance(this@FormsDetailsActivity).formDao()
+                    .insertAnswer(ans).toInt()
+            }
+            val cm = AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getCommonAnswers(draftAnsId!!)
+
+            commonAnswersEntity.answer_id=draftAnsId!!.toInt()
+            if (status>3){
+                commonAnswersEntity.id=cm.id
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateCommonAnswer(commonAnswersEntity)
+            } else {
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertCommonAnswer(commonAnswersEntity)
+            }
+
+            for (qg in questionGroupList){
+                for(q in qg.questions){
+                    if(status>3){
+                        Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
+                        AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,draftAnsId!!)
+                    } else{
+                        val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,draftAnsId!!.toInt())
+                        AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
+                    }
+                }
+            }
+            if (status < 4){
+                status=3 + ans.tbl_forms_id.toInt()
+                preferenceManager.saveDraft(draftAnsId!!)
+            }
+        }
+    }
 }

@@ -55,7 +55,7 @@ interface FormsDao {
     suspend fun insertAllForms(formList: List<FormEntity>)
 
     @Query("Select fm.tbl_forms_id,mst_form_language_id,title,pp.tbl_project_phase_id,pp.version from FormEntity as fm " +
-            "inner join ProjectsPhase pp on fm.id=pp.tbl_forms_id inner join FormLanguageEntity as fl on fm.tbl_forms_id=fl.module_id where fl.module='tbl_forms' and fl.mst_language_id=:language")
+            "inner join ProjectsPhase pp on fm.id=pp.tbl_forms_id inner join FormLanguageEntity as fl on fm.tbl_forms_id=fl.module_id where fl.module='tbl_forms' and fl.mst_language_id=:language order by fm.tbl_forms_id")
     suspend fun getAllFormsWithLanguage(language:Int):List<FormWithLanguage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
