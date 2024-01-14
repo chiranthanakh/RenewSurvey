@@ -6,14 +6,37 @@
 
         <item name="colorPrimary">@color/demo_state_foreground_color</item>
         <item name="colorPrimaryVariant">@color/demo_state_second</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/demo_state_foreground_color</item>
+        <item name="colorSecondaryVariant">@color/demo_state_foreground_color</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
     </style>
     <style name="Theme.Renew" parent="Base.Theme.Renew" />
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation
+        duration. -->
+        <item name="android:forceDarkAllowed" tools:ignore="NewApi">false</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="postSplashScreenTheme">@style/Theme.Material3.DayNight.NoActionBar</item>
+    </style>
+    <style name="otpTextStlye">
+        <item name="android:layout_width">@dimen/dp_42</item>
+        <item name="android:layout_height">@dimen/dp_42</item>
+        <item name="android:gravity">center</item>
+        <item name="android:hint">0</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_22sp</item>
+        <item name="android:textColorHint">@color/black20per</item>
+        <item name="android:background">@drawable/otp_hallow_back</item>
+    </style>
+    <style name="circleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 
 </resources>
