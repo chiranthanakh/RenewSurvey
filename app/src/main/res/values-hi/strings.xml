@@ -34,6 +34,7 @@
     <string name="medical_cert">Upload Medical Certificate<font color='#EA0C27'>*</font></string>
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
+    <string name="gps_location">जीपीएस लोकेशन<font color='#EA0C27'>*</font></string>
     <string name="date_and_time_of_visit">1. दौरे की तारीख और समय<font color='#EA0C27'>*</font></string>
     <string name="allowed_for_data">क्या जो व्यक्ति मिला, उसने अनुमति दी है? <font color='#EA0C27'>*</font></string>
     <string name="aadhar_card">आपके पास आधार कार्ड है?<font color='#EA0C27'>*</font></string>
@@ -83,4 +84,6 @@
     <string name="select">चुनना</string>
     <string name="above_15_year_family_members">8.1 15 वर्ष से ऊपर के परिवार के सदस्य<font color='#EA0C27'>*</font></string>
     <string name="below_15_year_family_members">8.2 15 वर्ष से कम आयु के परिवार के सदस्य<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_front">आधार कार्ड का सामने का फोटो खींचिए<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_back">आधार कार्ड का पिछला फोटो खींचिए<font color='#EA0C27'>*</font></string>
 </resources>

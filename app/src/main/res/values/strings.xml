@@ -26,6 +26,10 @@
     <string name="driving">Driving licence no<font color='#EA0C27'>*</font></string>
     <string name="induction_state">Induction Status<font color='#EA0C27'>*</font></string>
     <string name="aadhar">20. Aadhaar Card<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_front">Capture Front Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_back">Capture Back Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
+
+
     <string name="medical_states">Medical test status<font color='#EA0C27'>*</font></string>
     <string name="report">Medical Report is Ok<font color='#EA0C27'>*</font></string>
 
@@ -37,7 +41,7 @@
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
     <string name="date_and_time_of_visit">1. Date and Time of visit<font color='#EA0C27'>*</font></string>
-
+    <string name="gps_location">GPS Location<font color='#EA0C27'>*</font></string>
     <string name="beneficiary_name">1. Beneficiary Name<font color='#EA0C27'>*</font></string>
     <string name="family_size">8. Family size<font color='#EA0C27'>*</font></string>
     <string name="lpg_using">9. LPG using<font color='#EA0C27'>*</font></string>

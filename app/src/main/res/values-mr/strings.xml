@@ -37,6 +37,7 @@
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
     <string name="date_and_time_of_visit">1. भेटीची तारीख आणि वेळ<font color='#EA0C27'>*</font></string>
+    <string name="gps_location">जीपीएस लोकेशन<font color='#EA0C27'>*</font></string>
     <string name="beneficiary_name">1. लाभार्थीचे नाव<font color='#EA0C27'>*</font></string>
     <string name="family_size">8. एकूण कुटुंब सदस्य<font color='#EA0C27'>*</font></string>
     <string name="lpg_using">9. तुम्ही LPG वापरता का?<font color='#EA0C27'>*</font></string>
@@ -84,5 +85,6 @@
     <string name="above_15_year_family_members">8.1 15 वर्षांवरील कुटुंबातील सदस्य<font color='#EA0C27'>*</font></string>
     <string name="below_15_year_family_members">8.2 15 वर्षाखालील कुटुंबातील सदस्य<font color='#EA0C27'>*</font></string>
 
-
+    <string name="aadhar_front">आधार कार्डचा पुढचा फोटो घ्या<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_back">आधार कार्डचा मागील फोटो घ्या<font color='#EA0C27'>*</font></string>
 </resources>
