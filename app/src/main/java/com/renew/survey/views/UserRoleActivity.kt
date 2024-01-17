@@ -46,7 +46,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         preferenceManager.saveForm(form)
         val retrievedList = preferenceManager.getTrainingState("trainingState")
         if (retrievedList?.contains("${form.tbl_forms_id}-${preferenceManager.getProject().id}") != true && form.tbl_forms_id != 4) {
-            Intent(this,TrainingActivity::class.java).apply {
+            Intent(this,DashboardActivity::class.java).apply {
                 putExtra("trainingInfo",preferenceManager.getProject().id.toString()+form.tbl_forms_id)
                 startActivity(this)
             }

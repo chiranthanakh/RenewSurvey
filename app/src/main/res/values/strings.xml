@@ -11,6 +11,8 @@
     <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
     <string name="address">Address<font color='#EA0C27'>*</font></string>
     <string name="state">2. State<font color='#EA0C27'>*</font></string>
+    <string name="allowed_for_data">Did the Met Person Allowed for Data? <font color='#EA0C27'>*</font></string>
+    <string name="aadhar_card">Do you have Aadhar Card?<font color='#EA0C27'>*</font></string>
     <string name="locatioon">District<font color='#EA0C27'>*</font></string>
     <string name="skill_type">Skill Type<font color='#EA0C27'>*</font></string>
     <string name="skill_set">Skill Set<font color='#EA0C27'>*</font></string>
@@ -34,6 +36,8 @@
     <string name="medical_cert">Upload Medical Certificate<font color='#EA0C27'>*</font></string>
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
+    <string name="date_and_time_of_visit">1. Date and Time of visit<font color='#EA0C27'>*</font></string>
+
     <string name="beneficiary_name">1. Beneficiary Name<font color='#EA0C27'>*</font></string>
     <string name="family_size">8. Family size<font color='#EA0C27'>*</font></string>
     <string name="lpg_using">9. LPG using<font color='#EA0C27'>*</font></string>

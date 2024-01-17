@@ -16,6 +16,44 @@
             android:paddingStart="@dimen/margin_15_dp"
             android:paddingEnd="@dimen/margin_15_dp"
             android:orientation="vertical">
+
+            <TextView
+                android:text="@string/date_and_time_of_visit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
+            <EditText
+                android:id="@+id/edt_date_and_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:background="@drawable/spinner_background"
+                />
+
+            <TextView
+                android:text="@string/allowed_for_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
+            <RadioGroup
+                android:id="@+id/rb_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rb_data_yes"
+                    android:text="@string/yes"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/rb_data_no"
+                    android:text="@string/no"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
+
             <TextView
                 android:text="@string/beneficiary_name"
                 android:layout_width="wrap_content"
@@ -26,8 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:background="@drawable/spinner_background"
-                />
+                android:background="@drawable/spinner_background" />
+
             <TextView
                 android:text="@string/state"
                 android:layout_width="wrap_content"
@@ -371,11 +409,38 @@
                 android:maxLength="10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
             <TextView
+                android:text="@string/aadhar_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
+            <RadioGroup
+                android:id="@+id/rb_aadhar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rb_aadhar_yes"
+                    android:text="@string/yes"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/rb_aadhar_no"
+                    android:text="@string/no"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/edt_aadhar_text"
                 android:text="@string/aadhar"
                 android:layout_marginTop="@dimen/dp_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
             <EditText
                 android:id="@+id/edt_aadhaar_card"
                 android:inputType="number"

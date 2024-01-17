@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -42,6 +43,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     var tehsilList= arrayListOf<TehsilModel>()
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
+    var singleSelect = arrayListOf<String>()
     var disableViews=false
 
     override fun onCreateView(
@@ -53,29 +55,32 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         if (status==2||status==3||status==5||status==6){
             disableViews=true
         }
+        singleSelect.add("YES")
+        singleSelect.add("NO")
 
-       /*
-        binding.rbCowDungNo.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                binding.llNoCowDung.visibility=View.VISIBLE
-            }else{
-                binding.llNoCowDung.visibility=View.GONE
-            }
-        }
-        binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                binding.llNoOfCylinder.visibility=View.GONE
-            }else{
-                binding.llNoOfCylinder.visibility=View.VISIBLE
-            }
-        }
-        binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                binding.llNoOfCylinder.visibility=View.VISIBLE
-            }else{
-                binding.llNoOfCylinder.visibility=View.GONE
-            }
-        }*/
+
+        /*
+         binding.rbCowDungNo.setOnCheckedChangeListener { compoundButton, b ->
+             if (b){
+                 binding.llNoCowDung.visibility=View.VISIBLE
+             }else{
+                 binding.llNoCowDung.visibility=View.GONE
+             }
+         }
+         binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
+             if (b){
+                 binding.llNoOfCylinder.visibility=View.GONE
+             }else{
+                 binding.llNoOfCylinder.visibility=View.VISIBLE
+             }
+         }
+         binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
+             if (b){
+                 binding.llNoOfCylinder.visibility=View.VISIBLE
+             }else{
+                 binding.llNoOfCylinder.visibility=View.GONE
+             }
+         }*/
 
         if (status>0){
             binding.edtBeneficiaryName.setText(commonAnswersEntity.banficary_name)
@@ -149,6 +154,31 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         }
         getStateData()
         spinnerSelectors()
+        binding.rbDataYes.setOnCheckedChangeListener { compoundButton, b ->
+
+        }
+        binding.rbData.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_data_no -> {
+                    //Todo hide all forms question
+                }
+                R.id.rb_data_yes -> {
+                    //todo continue to forms fill
+                }
+            }
+        })
+        binding.rbAadhar.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_aadhar_no -> {
+                binding.edtAadharText.visibility = View.GONE
+                binding.edtAadhaarCard.visibility = View.GONE
+                }
+                R.id.rb_aadhar_yes -> {
+                binding.edtAadharText.visibility = View.VISIBLE
+                binding.edtAadhaarCard.visibility = View.VISIBLE
+                }
+            }
+        })
         binding.rgLpg.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
             when (id) {
                 R.id.rb_lpg_no -> {
@@ -454,7 +484,6 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                         binding.spVillage.isEnabled=false
                 }
             }
-
         }
     }
 
@@ -512,6 +541,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }
 
         }
+
         binding.spVillage.onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 if (p2>0){

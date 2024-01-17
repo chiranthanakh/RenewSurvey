@@ -34,6 +34,9 @@
     <string name="medical_cert">Upload Medical Certificate<font color='#EA0C27'>*</font></string>
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
+    <string name="date_and_time_of_visit">1. दौरे की तारीख और समय<font color='#EA0C27'>*</font></string>
+    <string name="allowed_for_data">क्या जो व्यक्ति मिला, उसने अनुमति दी है? <font color='#EA0C27'>*</font></string>
+    <string name="aadhar_card">आपके पास आधार कार्ड है?<font color='#EA0C27'>*</font></string>
     <string name="beneficiary_name">1. लाभार्थी का नाम<font color='#EA0C27'>*</font></string>
     <string name="family_size">8. परिवार के कुल सदस्य<font color='#EA0C27'>*</font></string>
     <string name="lpg_using">9. क्या एलपीजी का उपयोग कर रहे हैं?<font color='#EA0C27'>*</font></string>

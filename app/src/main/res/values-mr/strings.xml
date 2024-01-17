@@ -11,6 +11,8 @@
     <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
     <string name="address">Address<font color='#EA0C27'>*</font></string>
     <string name="state">2. राज्याचे नाव<font color='#EA0C27'>*</font></string>
+    <string name="allowed_for_data">मेट व्यक्तीने डेटासाठी परवानगी दिली होती का?<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_card">तुमच्याकडे आधार कार्ड आहे का?<font color='#EA0C27'>*</font></string>
     <string name="locatioon">District<font color='#EA0C27'>*</font></string>
     <string name="skill_type">Skill Type<font color='#EA0C27'>*</font></string>
     <string name="skill_set">Skill Set<font color='#EA0C27'>*</font></string>
@@ -34,6 +36,7 @@
     <string name="medical_cert">Upload Medical Certificate<font color='#EA0C27'>*</font></string>
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
+    <string name="date_and_time_of_visit">1. भेटीची तारीख आणि वेळ<font color='#EA0C27'>*</font></string>
     <string name="beneficiary_name">1. लाभार्थीचे नाव<font color='#EA0C27'>*</font></string>
     <string name="family_size">8. एकूण कुटुंब सदस्य<font color='#EA0C27'>*</font></string>
     <string name="lpg_using">9. तुम्ही LPG वापरता का?<font color='#EA0C27'>*</font></string>
