@@ -26,7 +26,7 @@
                 android:id="@+id/edt_date_and_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="datetime"
                 android:background="@drawable/spinner_background"
                 />
 
@@ -601,7 +601,7 @@
             </LinearLayout>
 
             <TextView
-                android:text="@string/aadhar_card"
+                android:text="@string/aadhar_or_ration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"/>

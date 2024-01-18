@@ -32,6 +32,8 @@ import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
 import com.renew.survey.utilities.AppConstants
+import com.renew.survey.utilities.PreferenceManager
+import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -44,6 +46,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
     var disableViews=false
+   // val preferenceManager= PreferenceManager(requireContext())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,9 +153,39 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         }
         getStateData()
         spinnerSelectors()
-        binding.rbDataYes.setOnCheckedChangeListener { compoundButton, b ->
 
-        }
+        binding.edtDateAndTime.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.date_and_time_of_visit=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+       /* binding.edtGpsLocation.setOnClickListener {
+            binding.edtGpsLocation.setText(preferenceManager.getLocation())
+            if (preferenceManager.getLocation()==""){
+                UtilMethods.showToast(requireContext(),"Location not available. Please make sure that you enabled the location and internet in your device")
+            }else{
+                commonAnswersEntity.gps_location = preferenceManager.getLocation().toString()
+            }
+        }*/
+        binding.edtGpsLocation.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.gps_location=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
         binding.rbData.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
             when (id) {
                 R.id.rb_data_no -> {
@@ -163,6 +196,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 }
             }
         })
+
         binding.rbAadhar.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
             when (id) {
                 R.id.rb_aadhar_no -> {
@@ -170,15 +204,29 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 binding.edtAadhaarCard.visibility = View.GONE
                 binding.llABack.visibility = View.GONE
                 binding.llAFront.visibility = View.GONE
+                commonAnswersEntity.do_you_have_aadhar_card = "NO"
                 }
                 R.id.rb_aadhar_yes -> {
                 binding.edtAadharText.visibility = View.VISIBLE
                 binding.edtAadhaarCard.visibility = View.VISIBLE
                 binding.llABack.visibility = View.VISIBLE
                 binding.llAFront.visibility = View.VISIBLE
+                commonAnswersEntity.do_you_have_aadhar_card = "YES"
                 }
             }
         })
+
+        binding.rbAadharOrRation.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_a_or_r_yes -> {
+                    commonAnswersEntity.do_you_have_ration_or_aadhar = "YES"
+                }
+                R.id.rb_a_or_r_no -> {
+                    commonAnswersEntity.do_you_have_ration_or_aadhar = "NO"
+                }
+            }
+        })
+
         binding.rgLpg.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
             when (id) {
                 R.id.rb_lpg_no -> {

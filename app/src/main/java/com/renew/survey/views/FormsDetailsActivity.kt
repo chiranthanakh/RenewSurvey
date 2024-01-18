@@ -59,7 +59,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
     var tbl_project_survey_common_data_id=""
     var assigned:AssignedSurveyEntity?=null
     var draftAnsId:Int?=null
-    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(null,"","","","","","","","","","","","","","","","","","","","","","","","",0)
+    var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(null,"","","","","","","","","","","","","","","","","","","","","","","","","","",
+        "","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
@@ -69,8 +70,9 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
             assigned=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
             commonAnswersEntity= CommonAnswersEntity(
-                null,assigned!!.aadhar_card,assigned!!.annual_family_income,assigned!!.banficary_name,assigned!!.electricity_connection_available,assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
-                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cow_dung_per_day,assigned!!.no_of_cylinder_per_year,assigned!!.willing_to_contribute_clean_cooking,assigned!!.wood_use_per_day_in_kg,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),assigned!!.family_member_below_15_year,assigned!!.family_member_above_15_year,null
+                null,assigned!!.aadhar_card,"","","",assigned!!.annual_family_income,assigned!!.banficary_name,"","","",assigned!!.electricity_connection_available,"","","",assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
+                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cow_dung_per_day,assigned!!.no_of_cylinder_per_year,"",assigned!!.willing_to_contribute_clean_cooking,assigned!!.wood_use_per_day_in_kg,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),assigned!!.family_member_below_15_year,
+                assigned?.family_member_above_15_year,"",null
             )
             tbl_project_survey_common_data_id=assigned!!.tbl_project_survey_common_data_id.toString()
             status=assigned!!.next_form_id
@@ -80,8 +82,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             status=3+a.tbl_forms_id!!
 
             commonAnswersEntity= CommonAnswersEntity(
-                null,a.aadhar_card,a.annual_family_income,a.banficary_name,a.electricity_connection_available,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,null
+                null,a.aadhar_card,"","","",a.annual_family_income,a.banficary_name,"","","",a.electricity_connection_available,"","","",a.family_size,a.gender,a.house_type,a.is_cow_dung,
+                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,"",a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,"",null
             )
         }
         if (intent.getBooleanExtra("training",false)) {
@@ -310,6 +312,18 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
 
 
     fun validateCommonQuestions():Boolean{
+        if (commonAnswersEntity.date_and_time_of_visit==""){
+            UtilMethods.showToast(this,"Please add beneficiary name")
+            return false
+        }
+        if (commonAnswersEntity.did_the_met_person_allowed_for_data==""){
+            UtilMethods.showToast(this,"Please add beneficiary name")
+            return false
+        }
+        if (commonAnswersEntity.gps_location==""){
+            UtilMethods.showToast(this,"Please add beneficiary name")
+            return false
+        }
         if (commonAnswersEntity.banficary_name==""){
             UtilMethods.showToast(this,"Please add beneficiary name")
             return false
@@ -396,6 +410,14 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
         }
         if (commonAnswersEntity.aadhar_card==""){
             UtilMethods.showToast(this,"Please add aadhar number")
+            return false
+        }
+        if (commonAnswersEntity.aadhar_card==""){
+            UtilMethods.showToast(this,"Please add aadhar number")
+            return false
+        }
+        if (commonAnswersEntity.do_you_have_aadhar_card==""){
+            UtilMethods.showToast(this,"Please select aadhar status")
             return false
         }
         if (commonAnswersEntity.family_member_above_15_year==""){
