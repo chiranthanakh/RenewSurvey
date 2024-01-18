@@ -48,6 +48,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_of_cylinder_per_year">10. No of cylinder per year<font color='#EA0C27'>*</font></string>
+    <string name="cost_of_cylinder">Cost of LPG cylinder?<font color='#EA0C27'>*</font></string>
     <string name="no_of_cow_dung_per_day">12. No Of Cow Dung Per Day<font color='#EA0C27'>*</font></string>
     <string name="cow_dung_cake_using">11. Cow dung cake using?<font color='#EA0C27'>*</font></string>
     <string name="annual_family_income">14. Annual Family Income<font color='#EA0C27'>*</font></string>
@@ -55,6 +56,9 @@
     <string name="willing_to_contribute_to_clean_cooking_device">15. Willing to contribute to clean cooking device?<font color='#EA0C27'>*</font></string>
     <string name="wood_used_per_day_in_kg">16. Wood Used Per Day In KG<font color='#EA0C27'>*</font></string>
     <string name="electricity_connection_available">17. Electricity connection available<font color='#EA0C27'>*</font></string>
+    <string name="total_electricity_bill">Total Electricity Bill<font color='#EA0C27'>*</font></string>
+    <string name="e_bill_photo">If bill available than capture photo<font color='#EA0C27'>*</font></string>
+
     <string name="no_of_cattle_own">18. No of cattle own<font color='#EA0C27'>*</font></string>
     <string name="mobile_number">19. Mobile number<font color='#EA0C27'>*</font></string>
     <string name="district">3. District<font color='#EA0C27'>*</font></string>
@@ -90,5 +94,7 @@
     <string name="test_failed_n_your_obtained_marks">Test Failed, \n Your obtained Marks :</string>
     <string name="above_15_year_family_members">8.1 Above 15 Year Family Members<font color='#EA0C27'>*</font></string>
     <string name="below_15_year_family_members">8.2 Below 15 Year Family Members<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_or_ration">Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
+
 
 </resources>

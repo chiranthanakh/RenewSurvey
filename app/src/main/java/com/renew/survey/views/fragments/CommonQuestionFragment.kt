@@ -43,7 +43,6 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     var tehsilList= arrayListOf<TehsilModel>()
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
-    var singleSelect = arrayListOf<String>()
     var disableViews=false
 
     override fun onCreateView(
@@ -55,9 +54,6 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         if (status==2||status==3||status==5||status==6){
             disableViews=true
         }
-        singleSelect.add("YES")
-        singleSelect.add("NO")
-
 
         /*
          binding.rbCowDungNo.setOnCheckedChangeListener { compoundButton, b ->
@@ -172,10 +168,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 R.id.rb_aadhar_no -> {
                 binding.edtAadharText.visibility = View.GONE
                 binding.edtAadhaarCard.visibility = View.GONE
+                binding.llABack.visibility = View.GONE
+                binding.llAFront.visibility = View.GONE
                 }
                 R.id.rb_aadhar_yes -> {
                 binding.edtAadharText.visibility = View.VISIBLE
                 binding.edtAadhaarCard.visibility = View.VISIBLE
+                binding.llABack.visibility = View.VISIBLE
+                binding.llAFront.visibility = View.VISIBLE
                 }
             }
         })

@@ -44,6 +44,7 @@
     <string name="yes">हाँ</string>
     <string name="no">नहीं</string>
     <string name="no_of_cylinder_per_year">10. प्रति वर्ष सिलेंडर की संख्या<font color='#EA0C27'>*</font></string>
+    <string name="cost_of_cylinder">एलपीजी सिलेंडर की कीमत?<font color='#EA0C27'>*</font></string>
     <string name="no_of_cow_dung_per_day">12. प्रति दिन गाय के गोबर की संख्या<font color='#EA0C27'>*</font></string>
     <string name="cow_dung_cake_using">11. गाय के गोबर का उपयोग?<font color='#EA0C27'>*</font></string>
     <string name="annual_family_income">14. वार्षिक पारिवारिक आय<font color='#EA0C27'>*</font></string>
@@ -51,6 +52,9 @@
     <string name="willing_to_contribute_to_clean_cooking_device">15. खाना पकाने के उपकरण को साफ़ करने में योगदान देने के इच्छुक हैं?<font color='#EA0C27'>*</font></string>
     <string name="wood_used_per_day_in_kg">16. प्रति दिन प्रयुक्त लकड़ी किलोग्राम में<font color='#EA0C27'>*</font></string>
     <string name="electricity_connection_available">17. बिजली कनेक्शन उपलब्ध है<font color='#EA0C27'>*</font></string>
+    <string name="total_electricity_bill">Total Electricity Bill<font color='#EA0C27'>*</font></string>
+    <string name="e_bill_photo">यदि बिल उपलब्ध हो तो फोटो खींच लें<font color='#EA0C27'>*</font></string>
+
     <string name="no_of_cattle_own">18. स्वयं के मवेशियों की संख्या<font color='#EA0C27'>*</font></string>
     <string name="mobile_number">19. मोबाइल नंबर<font color='#EA0C27'>*</font></string>
     <string name="district">3. जिले का नाम<font color='#EA0C27'>*</font></string>
@@ -86,4 +90,6 @@
     <string name="below_15_year_family_members">8.2 15 वर्ष से कम आयु के परिवार के सदस्य<font color='#EA0C27'>*</font></string>
     <string name="aadhar_front">आधार कार्ड का सामने का फोटो खींचिए<font color='#EA0C27'>*</font></string>
     <string name="aadhar_back">आधार कार्ड का पिछला फोटो खींचिए<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_or_ration">Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
+
 </resources>

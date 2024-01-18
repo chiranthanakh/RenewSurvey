@@ -10,9 +10,13 @@ data class CommonAnswersEntity(
     @PrimaryKey(autoGenerate = true)
     var id:Int?,
     var aadhar_card: String,
+    var date_and_time: String,
+    var data_available : String,
+    var gps_location : String,
     var annual_family_income: String,
     var banficary_name: String,
     var electricity_connection_available: String,
+    var electricty_bill: String,
     var family_size: String,
     var gender: String,
     var house_type: String,

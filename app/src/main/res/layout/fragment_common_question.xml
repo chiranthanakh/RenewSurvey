@@ -63,7 +63,7 @@
                 android:id="@+id/edt_gps_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="none"
                 android:background="@drawable/spinner_background" />
 
             <TextView
@@ -264,6 +264,26 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/ll_cylinder_cost">
+                <TextView
+                    android:text="@string/no_of_cylinder_per_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"/>
+                <EditText
+                    android:id="@+id/edt_cylinder_cost"
+                    android:maxLength="2"
+                    android:inputType="number"
+                    android:background="@drawable/spinner_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
             <TextView
                 android:text="@string/cow_dung_cake_using"
                 android:layout_marginTop="@dimen/dp_10"
@@ -396,6 +416,55 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+
+            <TextView
+                android:text="@string/total_electricity_bill"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/edt_total_e_bill"
+                android:inputType="number"
+                android:maxLength="6"
+                android:background="@drawable/spinner_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/ll_e_bill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_e_bill"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/e_bill_photo"
+                    android:layout_marginEnd="@dimen/margin_15_dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_15_dp"
+                    android:background="@drawable/spinner_background">
+                    <ImageView
+                        android:src="@drawable/ic_file_attach"
+                        android:layout_width="@dimen/dp_25"
+                        android:layout_height="@dimen/dp_25"
+                        android:layout_marginStart="@dimen/dp_5"/>
+                    <TextView
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="@string/attach_file"
+                        android:drawablePadding="@dimen/dp_10"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
             <TextView
                 android:text="@string/no_of_cattle_own"
                 android:layout_marginTop="@dimen/dp_10"
@@ -461,30 +530,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/tv_aadhar_front"
-                android:text="@string/aadhar_front"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <LinearLayout
-                android:id="@+id/ll_file"
+                android:id="@+id/ll_a_front"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/txt_file_lable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_15_dp"
-                    android:layout_marginStart="@dimen/margin_15_dp"/>
+                    android:text="@string/aadhar_front"
+                    android:layout_marginEnd="@dimen/margin_15_dp" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:layout_marginEnd="@dimen/margin_15_dp"
-                    android:layout_marginStart="@dimen/margin_15_dp"
                     android:background="@drawable/spinner_background">
                     <ImageView
                         android:id="@+id/file_image"
@@ -501,32 +564,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_aadhar_back"
-                android:text="@string/aadhar_back"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <LinearLayout
+                android:id="@+id/ll_a_back"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_100dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_aadhar_back"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_15_dp"
-                    android:layout_marginStart="@dimen/margin_15_dp"/>
+                    android:text="@string/aadhar_back"
+                    android:layout_marginEnd="@dimen/margin_15_dp" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:layout_marginEnd="@dimen/margin_15_dp"
-                    android:layout_marginStart="@dimen/margin_15_dp"
                     android:background="@drawable/spinner_background">
                     <ImageView
                         android:src="@drawable/ic_file_attach"
@@ -543,6 +599,31 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:text="@string/aadhar_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
+            <RadioGroup
+                android:id="@+id/rb_aadhar_or_ration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_100dp"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rb_a_or_r_yes"
+                    android:text="@string/yes"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/rb_a_or_r_no"
+                    android:text="@string/no"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
