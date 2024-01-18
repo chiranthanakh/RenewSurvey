@@ -43,17 +43,55 @@
             android:layout_marginEnd="@dimen/dp_5"/>
 
     </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        android:id="@+id/recyclerView"
+    <LinearLayout
+        android:id="@+id/ll_groups"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:id="@+id/ll_item"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_77dp"
+            android:weightSum="1"
+            android:visibility="gone"
+            android:background="@color/demo_state_third"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_question_group_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:singleLine="false"
+                android:layout_marginTop="@dimen/dp_10"
+                android:lines="2"
+                android:minLines="2"
+                android:layout_marginStart="@dimen/dp_5"
+                android:layout_marginEnd="@dimen/dp_5"
+                android:text="@string/basic_info"
+                android:maxLines="2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
     <LinearLayout
         android:id="@+id/container"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@id/ll_groups"
         app:layout_constraintBottom_toTopOf="@id/ll_submit"
         android:layout_width="match_parent"
         android:layout_height="0dp">

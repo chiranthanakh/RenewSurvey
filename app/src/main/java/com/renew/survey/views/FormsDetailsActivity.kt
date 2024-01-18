@@ -38,6 +38,7 @@ import com.renew.survey.room.entities.DraftCommonAnswer
 import com.renew.survey.room.entities.DynamicAnswersEntity
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.room.entities.TestQuestionLanguage
+import com.renew.survey.utilities.DataAllowMetPerson
 import com.renew.survey.utilities.UtilMethods
 import com.renew.survey.views.fragments.CommonQuestionFragment
 import com.renew.survey.views.fragments.QuestionsFragment
@@ -45,7 +46,8 @@ import kotlinx.coroutines.launch
 import java.util.Date
 
 
-class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
+class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
+    DataAllowMetPerson {
     lateinit var binding: ActivityFormsDetailsBinding
     private var questionGroupList= arrayListOf<QuestionGroupWithLanguage>()
     private var testquestionList : List<TestQuestionLanguage> = listOf()
@@ -259,7 +261,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             ))
             questionGroupList.forEachIndexed { index, questionGroupWithLanguage ->
                     if (questionGroupWithLanguage.mst_question_group_id==0){
-                        val fragment=CommonQuestionFragment(commonAnswersEntity,status)
+                        val fragment=CommonQuestionFragment(commonAnswersEntity,status,this@FormsDetailsActivity)
                         listOfFragment.add(fragment)
                         supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
                     }else{
@@ -557,4 +559,20 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener{
             }
         }
     }
+
+    override fun dataAllowed(boolean: Boolean) {
+        allowedByPerson=boolean
+        if (boolean){
+            binding.llItem.visibility=View.GONE
+            binding.btnNext.visibility=View.VISIBLE
+            binding.btnContinue.visibility=View.GONE
+            binding.recyclerView.visibility=View.VISIBLE
+        }else{
+            binding.llItem.visibility=View.VISIBLE
+            binding.recyclerView.visibility=View.GONE
+            binding.btnNext.visibility=View.GONE
+            binding.btnContinue.visibility=View.VISIBLE
+        }
+    }
+    var allowedByPerson=true
 }

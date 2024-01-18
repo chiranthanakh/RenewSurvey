@@ -1,6 +1,20 @@
 package com.renew.survey.views.fragments
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -10,6 +24,9 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.renew.survey.R
@@ -19,6 +36,7 @@ import com.renew.survey.adapter.StateSpinnerAdapter
 import com.renew.survey.adapter.TehsilSpinnerAdapter
 import com.renew.survey.adapter.VillageSpinnerAdapter
 import com.renew.survey.databinding.FragmentCommonQuestionBinding
+import com.renew.survey.helper.compressor.Compressor
 import com.renew.survey.response.DistrictModel
 import com.renew.survey.response.PanchayathModel
 import com.renew.survey.response.StateModel
@@ -32,13 +50,22 @@ import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
 import com.renew.survey.utilities.AppConstants
+import com.renew.survey.utilities.DataAllowMetPerson
+import com.renew.survey.utilities.FileUtils
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
+import kotlin.math.roundToInt
 
 
-class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersEntity,val status:Int) : Fragment() {
+class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersEntity,val status:Int,val listener:DataAllowMetPerson) : Fragment() {
     lateinit var binding:FragmentCommonQuestionBinding
     var stateList= arrayListOf<StateModel>();
     var districtList= arrayListOf<DistrictModel>()
@@ -46,14 +73,22 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
     var disableViews=false
-   // val preferenceManager= PreferenceManager(requireContext())
+    lateinit var preferenceManager:PreferenceManager
+    val c = Calendar.getInstance()
+    val year = c.get(Calendar.YEAR)
+    val month = c.get(Calendar.MONTH)
+    val day = c.get(Calendar.DAY_OF_MONTH)
+    val hour = c.get(Calendar.HOUR)
+    val minute = c.get(Calendar.MINUTE)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
+        preferenceManager= PreferenceManager(requireContext())
         Log.e("status","$status")
+
         if (status==2||status==3||status==5||status==6){
             disableViews=true
         }
@@ -154,27 +189,42 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         getStateData()
         spinnerSelectors()
 
-        binding.edtDateAndTime.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                commonAnswersEntity.date_and_time_of_visit=p0.toString().trim()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })
-       /* binding.edtGpsLocation.setOnClickListener {
+        binding.edtDateAndTime.setOnClickListener {
+            val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                val calendar= Calendar.getInstance()
+                calendar[Calendar.DAY_OF_MONTH]=dayOfMonth
+                calendar[Calendar.MONTH]=month
+                calendar[Calendar.YEAR]=year
+                val tpd = TimePickerDialog(context,
+                    TimePickerDialog.OnTimeSetListener { timePicker, i, i2 ->
+                    calendar[Calendar.HOUR]=i
+                    calendar[Calendar.MINUTE]=i2
+                    binding.edtDateAndTime.setText(UtilMethods.getFormattedDate(calendar.time,"dd-MM-yyyy HH:mm"))
+                    commonAnswersEntity.date_and_time_of_visit=UtilMethods.getFormattedDate(calendar.time,"dd-MM-yyyy HH:mm")
+                },hour,minute,false)
+                tpd.show()
+                binding.edtDateAndTime.setText(UtilMethods.getFormattedDate(calendar.time,"dd-MM-yyyy HH:mm"))
+            }, year, month, day)
+            dpd.show()
+        }
+        binding.edtGpsLocation.setOnClickListener {
             binding.edtGpsLocation.setText(preferenceManager.getLocation())
             if (preferenceManager.getLocation()==""){
                 UtilMethods.showToast(requireContext(),"Location not available. Please make sure that you enabled the location and internet in your device")
             }else{
                 commonAnswersEntity.gps_location = preferenceManager.getLocation().toString()
             }
-        }*/
-        binding.edtGpsLocation.addTextChangedListener(object : TextWatcher {
+        }
+        binding.llAadharBack.setOnClickListener {
+            openCamera(AADHAR_BACK)
+        }
+        binding.llAadharFront.setOnClickListener {
+            openCamera(AADHAR_FRONT)
+        }
+        binding.llBillImage.setOnClickListener {
+            openCamera(BILL_IMAGE)
+        }
+       /* binding.edtGpsLocation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -185,14 +235,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             override fun afterTextChanged(p0: Editable?) {
 
             }
-        })
+        })*/
         binding.rbData.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
             when (id) {
                 R.id.rb_data_no -> {
-                    //Todo hide all forms question
+                    listener.dataAllowed(false)
                 }
                 R.id.rb_data_yes -> {
-                    //todo continue to forms fill
+                    listener.dataAllowed(true)
                 }
             }
         })
@@ -667,5 +717,109 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 mst_village_id.toString(),village_name
             )
         }
+    }
+    var imageUri1: Uri? = null
+    private fun openCamera(from:Int) {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, "New Picture")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera")
+        imageUri1 = requireContext().contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values
+        )
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri1)
+        startActivityForResult(intent, from)
+    }
+    val AADHAR_BACK=345;
+    val AADHAR_FRONT=565;
+    val BILL_IMAGE=656;
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode== AppCompatActivity.RESULT_OK){
+            when(requestCode){
+                AADHAR_BACK->{
+                    val path = FileUtils.getRealPathFromURI(requireContext(), imageUri1)
+                    val bmOptions = BitmapFactory.Options()
+                    val bitmap = BitmapFactory.decodeFile(path, bmOptions)
+                    val scaledBitmap=UtilMethods.getResizedBitmap(bitmap,1500,1500)
+                    val bmTimeStamp=drawTextToBitmap(scaledBitmap,18,UtilMethods.getFormattedDate(
+                        Date(),"dd-MM-yyyy HH:mm:ss"))
+                    val newPath=saveImageToExternal(bmTimeStamp,requireContext())
+                    lifecycleScope.launch {
+                        val compressed= Compressor.compress(requireContext(), File(newPath!!.path))
+                        commonAnswersEntity.back_photo_of_aadhar_card= compressed.path
+
+                        deleteFile(path)
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun drawTextToBitmap(bitmap: Bitmap, textSize: Int = 78, text: String): Bitmap {
+        val mutableBitmap: Bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(mutableBitmap)
+
+        // new antialised Paint - empty constructor does also work
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.RED
+
+        // text size in pixels
+        val scale = requireContext().resources.displayMetrics.density
+        paint.textSize = (textSize * scale).roundToInt().toFloat()
+
+        //custom fonts or a default font
+        val fontFace = ResourcesCompat.getFont(requireContext(), R.font.opensans_bold)
+        paint.typeface = Typeface.create(fontFace, Typeface.NORMAL)
+
+
+        // draw text to the Canvas center
+        val bounds = Rect()
+        //draw the text
+        paint.getTextBounds(text, 0, text.length, bounds)
+        val height: Float = paint.measureText("yY")
+
+        //x and y defines the position of the text, starting in the top left corner
+        canvas.drawText(text, 20F, height+15F, paint)
+        return mutableBitmap
+    }
+
+    @Throws(IOException::class)
+    fun saveImageToExternal(bm: Bitmap, context: Context?): Uri? {
+        // Create Path to save Image
+        val directory = requireContext().filesDir.path
+        val path = File(directory) // Creates app specific folder
+        if (!path.exists()) {
+            if (!path.mkdirs()) {
+                Toast.makeText(context, "Unable to create directory", Toast.LENGTH_SHORT).show()
+            }
+        }
+        val imageFile = File(path,  UtilMethods.getFormattedDate(Date(),"yyyyMMddHHmmssSSS") + ".jpg") // Imagename.png
+        val out = FileOutputStream(imageFile)
+        return try {
+            // bm = Bitmap.createScaledBitmap(bm, 600, 400, false);
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, out) // Compress Image
+            out.flush()
+            out.close()
+            Uri.fromFile(imageFile)
+        } catch (e: Exception) {
+            throw IOException()
+        }
+    }
+    fun deleteFile(path: String){
+        try {
+            val file: File = File(path)
+            file.delete()
+            if (file.exists()) {
+                file.canonicalFile.delete()
+                if (file.exists()) {
+                    requireContext().deleteFile(file.name)
+                }
+            }
+        }catch (e:Exception){
+            e.toString()
+        }
+
     }
 }
