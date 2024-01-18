@@ -177,6 +177,7 @@ class DashboardActivity : BaseActivity() {
     fun syncMedia(){
         lifecycleScope.launch {
             val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedMediaAnswers()
+            val mediaList= arrayListOf<MediaSyncReqItem>()
             for (a in answers){
                 val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
                 val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
@@ -186,8 +187,11 @@ class DashboardActivity : BaseActivity() {
                     a.parent_survey_id=commonAns.parent_survey_id
                     a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
                 }
+                if (commonAns.font_photo_of_aadar_card.isNotEmpty()){
+                    //mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.font_photo_of_aadar_card.substring(commonAns.font_photo_of_aadar_card.lastIndexOf("/")+1),a.phase,d.tbl_form_questions_id.toString(),a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.font_photo_of_aadar_card!!))
+                }
             }
-            val mediaList= arrayListOf<MediaSyncReqItem>()
+
             for (a in answers){
                 for (d in a.dynamicAnswersList){
                     if (d.answer!!.startsWith("/")){

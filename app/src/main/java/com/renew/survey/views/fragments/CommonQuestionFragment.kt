@@ -370,6 +370,31 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 commonAnswersEntity.is_lpg_using=AppConstants.no
             }
         }
+        binding.edtTotalEBill.addTextChangedListener(object  : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.total_electricity_bill=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+        binding.edtCylinderCost.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.cost_of_lpg_cyliner=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
         binding.edtNoCylinderYear.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -748,7 +773,36 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                     lifecycleScope.launch {
                         val compressed= Compressor.compress(requireContext(), File(newPath!!.path))
                         commonAnswersEntity.back_photo_of_aadhar_card= compressed.path
-
+                        binding.tvAadharBack.setText(commonAnswersEntity.back_photo_of_aadhar_card.substring(commonAnswersEntity.back_photo_of_aadhar_card.lastIndexOf("/")+1))
+                        deleteFile(path)
+                    }
+                }
+                AADHAR_FRONT->{
+                    val path = FileUtils.getRealPathFromURI(requireContext(), imageUri1)
+                    val bmOptions = BitmapFactory.Options()
+                    val bitmap = BitmapFactory.decodeFile(path, bmOptions)
+                    val scaledBitmap=UtilMethods.getResizedBitmap(bitmap,1500,1500)
+                    val bmTimeStamp=drawTextToBitmap(scaledBitmap,18,UtilMethods.getFormattedDate(
+                        Date(),"dd-MM-yyyy HH:mm:ss"))
+                    val newPath=saveImageToExternal(bmTimeStamp,requireContext())
+                    lifecycleScope.launch {
+                        val compressed= Compressor.compress(requireContext(), File(newPath!!.path))
+                        commonAnswersEntity.font_photo_of_aadar_card= compressed.path
+                        binding.tvAadharFront.setText(commonAnswersEntity.font_photo_of_aadar_card.substring(commonAnswersEntity.font_photo_of_aadar_card.lastIndexOf("/")+1))
+                        deleteFile(path)
+                    }
+                }
+                BILL_IMAGE->{
+                    val path = FileUtils.getRealPathFromURI(requireContext(), imageUri1)
+                    val bmOptions = BitmapFactory.Options()
+                    val bitmap = BitmapFactory.decodeFile(path, bmOptions)
+                    val scaledBitmap=UtilMethods.getResizedBitmap(bitmap,1500,1500)
+                    val bmTimeStamp=drawTextToBitmap(scaledBitmap,18,UtilMethods.getFormattedDate(Date(),"dd-MM-yyyy HH:mm:ss"))
+                    val newPath=saveImageToExternal(bmTimeStamp,requireContext())
+                    lifecycleScope.launch {
+                        val compressed= Compressor.compress(requireContext(), File(newPath!!.path))
+                        commonAnswersEntity.photo_of_bill= compressed.path
+                        binding.tvBillPhoto.setText(commonAnswersEntity.photo_of_bill.substring(commonAnswersEntity.photo_of_bill.lastIndexOf("/")+1))
                         deleteFile(path)
                     }
                 }
