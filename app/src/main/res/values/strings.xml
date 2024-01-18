@@ -10,9 +10,9 @@
     <string name="emergency_contact">Emergency Contact Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
     <string name="address">Address<font color='#EA0C27'>*</font></string>
-    <string name="state">2. State<font color='#EA0C27'>*</font></string>
-    <string name="allowed_for_data">Did the Met Person Allowed for Data? <font color='#EA0C27'>*</font></string>
-    <string name="aadhar_card">Do you have Aadhar Card?<font color='#EA0C27'>*</font></string>
+    <string name="state">10. State<font color='#EA0C27'>*</font></string>
+    <string name="allowed_for_data">2. Did the Met Person Allowed for Data? <font color='#EA0C27'>*</font></string>
+    <string name="aadhar_card">6. Do you have Aadhar Card?<font color='#EA0C27'>*</font></string>
     <string name="locatioon">District<font color='#EA0C27'>*</font></string>
     <string name="skill_type">Skill Type<font color='#EA0C27'>*</font></string>
     <string name="skill_set">Skill Set<font color='#EA0C27'>*</font></string>
@@ -25,9 +25,9 @@
 
     <string name="driving">Driving licence no<font color='#EA0C27'>*</font></string>
     <string name="induction_state">Induction Status<font color='#EA0C27'>*</font></string>
-    <string name="aadhar">20. Aadhaar Card<font color='#EA0C27'>*</font></string>
-    <string name="aadhar_front">Capture Front Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
-    <string name="aadhar_back">Capture Back Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
+    <string name="aadhar">7. Aadhaar Card<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_front">8. Capture Front Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_back">9. Capture Back Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
 
 
     <string name="medical_states">Medical test status<font color='#EA0C27'>*</font></string>
@@ -41,8 +41,8 @@
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
     <string name="date_and_time_of_visit">1. Date and Time of visit<font color='#EA0C27'>*</font></string>
-    <string name="gps_location">GPS Location<font color='#EA0C27'>*</font></string>
-    <string name="beneficiary_name">1. Beneficiary Name<font color='#EA0C27'>*</font></string>
+    <string name="gps_location">3. GPS Location<font color='#EA0C27'>*</font></string>
+    <string name="beneficiary_name">4. Beneficiary Name<font color='#EA0C27'>*</font></string>
     <string name="family_size">8. Family size<font color='#EA0C27'>*</font></string>
     <string name="lpg_using">9. LPG using<font color='#EA0C27'>*</font></string>
     <string name="yes">Yes</string>
@@ -60,11 +60,11 @@
     <string name="e_bill_photo">If bill available than capture photo<font color='#EA0C27'>*</font></string>
 
     <string name="no_of_cattle_own">18. No of cattle own<font color='#EA0C27'>*</font></string>
-    <string name="mobile_number">19. Mobile number<font color='#EA0C27'>*</font></string>
-    <string name="district">3. District<font color='#EA0C27'>*</font></string>
-    <string name="tehsil">4. Tehsil<font color='#EA0C27'>*</font></string>
-    <string name="panchayath">5. Panchayath<font color='#EA0C27'>*</font></string>
-    <string name="village">6. Village<font color='#EA0C27'>*</font></string>
+    <string name="mobile_number">5. Mobile number<font color='#EA0C27'>*</font></string>
+    <string name="district">11. District<font color='#EA0C27'>*</font></string>
+    <string name="tehsil">12. Tehsil<font color='#EA0C27'>*</font></string>
+    <string name="panchayath">13. Panchayath<font color='#EA0C27'>*</font></string>
+    <string name="village">14. Village<font color='#EA0C27'>*</font></string>
     <string name="own">Owned</string>
     <string name="rented">Rented</string>
     <string name="male">Male</string>

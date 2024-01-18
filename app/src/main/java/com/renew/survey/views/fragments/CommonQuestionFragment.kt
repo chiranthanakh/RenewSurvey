@@ -1,6 +1,11 @@
 package com.renew.survey.views.fragments
 
+import android.app.DatePickerDialog
+import android.content.ContentValues
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -35,6 +40,7 @@ import com.renew.survey.utilities.AppConstants
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Locale
 
 
@@ -46,6 +52,16 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
     var disableViews=false
+    val PICKFILE_REQUEST_CODE=43
+    val FROM_CAMERA=49
+    var position=0
+    var imageUri1: Uri? = null
+    val c = Calendar.getInstance()
+    val year = c.get(Calendar.YEAR)
+    val month = c.get(Calendar.MONTH)
+    val day = c.get(Calendar.DAY_OF_MONTH)
+    val hour = c.get(Calendar.HOUR)
+    val minute = c.get(Calendar.MINUTE)
    // val preferenceManager= PreferenceManager(requireContext())
 
     override fun onCreateView(
@@ -154,7 +170,10 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         getStateData()
         spinnerSelectors()
 
-        binding.edtDateAndTime.addTextChangedListener(object : TextWatcher {
+        binding.edtDateAndTime.setOnClickListener {
+            datePicker()
+        }
+        /*binding.edtDateAndTime.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -165,7 +184,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             override fun afterTextChanged(p0: Editable?) {
 
             }
-        })
+        })*/
        /* binding.edtGpsLocation.setOnClickListener {
             binding.edtGpsLocation.setText(preferenceManager.getLocation())
             if (preferenceManager.getLocation()==""){
@@ -224,6 +243,19 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 R.id.rb_a_or_r_no -> {
                     commonAnswersEntity.do_you_have_ration_or_aadhar = "NO"
                 }
+            }
+        })
+
+        binding.edtCylinderCost.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.cost_of_lpg_cyliner=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
             }
         })
 
@@ -408,6 +440,19 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 commonAnswersEntity.electricity_connection_available=AppConstants.no
             }
         }
+
+        binding.edtTotalEBill.addTextChangedListener(object  : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                commonAnswersEntity.total_electricity_bill=p0.toString().trim()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
 
         binding.edtCattleOwn.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -667,5 +712,28 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 mst_village_id.toString(),village_name
             )
         }
+    }
+
+    private fun datePicker() {
+        val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            val calendar= Calendar.getInstance()
+            calendar[Calendar.DAY_OF_MONTH]=dayOfMonth
+            calendar[Calendar.MONTH]=monthOfYear
+            calendar[Calendar.YEAR]=year
+            binding.edtDateAndTime.setText(UtilMethods.getFormattedDate(calendar.time,"dd-MM-yyyy"))
+            commonAnswersEntity.date_and_time_of_visit=UtilMethods.getFormattedDate(calendar.time,"yyyy-MM-dd")
+        }, year, month, day)
+        dpd.show()
+    }
+    private fun openCamera() {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, "New Picture")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera")
+        imageUri1 = requireContext().contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values
+        )
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri1)
+        startActivityForResult(intent, FROM_CAMERA)
     }
 }
