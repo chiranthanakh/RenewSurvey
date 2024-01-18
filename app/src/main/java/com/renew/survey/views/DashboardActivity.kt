@@ -188,7 +188,13 @@ class DashboardActivity : BaseActivity() {
                     a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
                 }
                 if (commonAns.font_photo_of_aadar_card.isNotEmpty()){
-                    //mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.font_photo_of_aadar_card.substring(commonAns.font_photo_of_aadar_card.lastIndexOf("/")+1),a.phase,d.tbl_form_questions_id.toString(),a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.font_photo_of_aadar_card!!))
+                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.font_photo_of_aadar_card.substring(commonAns.font_photo_of_aadar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.font_photo_of_aadar_card))
+                }
+                if (commonAns.back_photo_of_aadhar_card.isNotEmpty()){
+                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.back_photo_of_aadhar_card.substring(commonAns.back_photo_of_aadhar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.back_photo_of_aadhar_card))
+                }
+                if (commonAns.photo_of_bill.isNotEmpty()){
+                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.photo_of_bill.substring(commonAns.photo_of_bill.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.photo_of_bill))
                 }
             }
 
