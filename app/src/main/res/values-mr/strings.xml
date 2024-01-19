@@ -5,7 +5,7 @@
     <string name="Project">Project<font color='#EA0C27'>*</font></string>
     <string name="name">Name of the Employee<font color='#EA0C27'>*</font></string>
     <string name="dob">Date of Birth (DD-MM-YYYY)<font color='#EA0C27'>*</font></string>
-    <string name="gender">7. लिंग<font color='#EA0C27'>*</font></string>
+    <string name="gender">15. लिंग<font color='#EA0C27'>*</font></string>
     <string name="phone">Worker Phone Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_contact">Emergency Contact Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
@@ -39,23 +39,24 @@
     <string name="date_and_time_of_visit">1. भेटीची तारीख आणि वेळ<font color='#EA0C27'>*</font></string>
     <string name="gps_location">3. जीपीएस लोकेशन<font color='#EA0C27'>*</font></string>
     <string name="beneficiary_name">4. लाभार्थीचे नाव<font color='#EA0C27'>*</font></string>
-    <string name="family_size">8. एकूण कुटुंब सदस्य<font color='#EA0C27'>*</font></string>
-    <string name="lpg_using">9. तुम्ही LPG वापरता का?<font color='#EA0C27'>*</font></string>
+    <string name="family_size">16. एकूण कुटुंब सदस्य<font color='#EA0C27'>*</font></string>
+    <string name="lpg_using">17. तुम्ही LPG वापरता का?<font color='#EA0C27'>*</font></string>
     <string name="yes">होय</string>
     <string name="no">नाही</string>
-    <string name="no_of_cylinder_per_year">10. दर वर्षी सिलेंडरची संख्या<font color='#EA0C27'>*</font></string>
-    <string name="cost_of_cylinder">एलपीजी सिलेंडर की कीमत?<font color='#EA0C27'>*</font></string>
+    <string name="no_of_cylinder_per_year">18. दर वर्षी सिलेंडरची संख्या<font color='#EA0C27'>*</font></string>
+    <string name="cost_of_cylinder">19. एलपीजी सिलेंडर की कीमत?<font color='#EA0C27'>*</font></string>
     <string name="no_of_cow_dung_per_day">12. दररोज शेणाची संख्या<font color='#EA0C27'>*</font></string>
     <string name="cow_dung_cake_using">11. गायीचे शेण वापरताय?<font color='#EA0C27'>*</font></string>
-    <string name="annual_family_income">14. वार्षिक कौटुंबिक उत्पन्न</string>
-    <string name="house_type">13. घराचा प्रकार<font color='#EA0C27'>*</font></string>
-    <string name="willing_to_contribute_to_clean_cooking_device">15. स्वच्छ स्वयंपाक उपकरणासाठी योगदान देण्यास इच्छुक आहात?<font color='#EA0C27'>*</font></string>
+    <string name="annual_family_income">21. वार्षिक कौटुंबिक उत्पन्न</string>
+    <string name="house_type">20. घराचा प्रकार<font color='#EA0C27'>*</font></string>
+    <string name="willing_to_contribute_to_clean_cooking_device">22. स्वच्छ स्वयंपाक उपकरणासाठी योगदान देण्यास इच्छुक आहात?<font color='#EA0C27'>*</font></string>
     <string name="wood_used_per_day_in_kg">16. केजीमध्ये प्रतिदिन वापरण्यात येणारे लाकूड<font color='#EA0C27'>*</font></string>
     <string name="electricity_connection_available">17. वीज जोडणी उपलब्ध<font color='#EA0C27'>*</font></string>
-    <string name="total_electricity_bill">एकूण वीज बिल<font color='#EA0C27'>*</font></string>
-    <string name="e_bill_photo">फोटो काढण्यापेक्षा बिल उपलब्ध असल्यास<font color='#EA0C27'>*</font></string>
+    <string name="total_electricity_bill">24. एकूण वीज बिल<font color='#EA0C27'>*</font></string>
+    <string name="frequancy_of_electricity_bill">25.बिल भरण्याची वारंवारता<font color='#EA0C27'>*</font></string>
+    <string name="e_bill_photo">25. फोटो काढण्यापेक्षा बिल उपलब्ध असल्यास<font color='#EA0C27'>*</font></string>
 
-    <string name="no_of_cattle_own">18. स्वत:च्या गुरांची संख्या<font color='#EA0C27'>*</font></string>
+    <string name="no_of_cattle_own">26. स्वत:च्या गुरांची संख्या<font color='#EA0C27'>*</font></string>
     <string name="mobile_number">5. मोबाइल नंबर<font color='#EA0C27'>*</font></string>
     <string name="district">11. जिल्ह्याचे नाव<font color='#EA0C27'>*</font></string>
     <string name="tehsil">12. तहसील नाव<font color='#EA0C27'>*</font></string>
@@ -91,6 +92,6 @@
 
     <string name="aadhar_front">9. आधार कार्डचा पुढचा फोटो घ्या<font color='#EA0C27'>*</font></string>
     <string name="aadhar_back">9. आधार कार्डचा मागील फोटो घ्या<font color='#EA0C27'>*</font></string>
-    <string name="aadhar_or_ration">Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_or_ration">27. Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
 
 </resources>

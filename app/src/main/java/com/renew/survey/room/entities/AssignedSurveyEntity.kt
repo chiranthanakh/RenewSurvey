@@ -36,5 +36,16 @@ data class AssignedSurveyEntity(
     val willing_to_contribute_clean_cooking: String,
     var family_member_below_15_year: String?,
     var family_member_above_15_year: String?,
-    val wood_use_per_day_in_kg: String
+    val wood_use_per_day_in_kg: String,
+    var date_and_time_of_visit: String,
+    var did_the_met_person_allowed_for_data : String,
+    var gps_location : String,
+    var do_you_have_aadhar_card: String,
+    var font_photo_of_aadar_card: String,
+    var back_photo_of_aadhar_card: String,
+    var total_electricity_bill: String,
+    var frequency_of_bill_payment: String,
+    var photo_of_bill: String,
+    var cost_of_lpg_cyliner: String,
+    var do_you_have_ration_or_aadhar: String
 )

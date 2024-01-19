@@ -5,7 +5,7 @@
     <string name="Project">Project<font color='#EA0C27'>*</font></string>
     <string name="name">Name of the Employee<font color='#EA0C27'>*</font></string>
     <string name="dob">Date of Birth (DD-MM-YYYY)<font color='#EA0C27'>*</font></string>
-    <string name="gender">7. Gender<font color='#EA0C27'>*</font></string>
+    <string name="gender">15. Gender<font color='#EA0C27'>*</font></string>
     <string name="phone">Worker Phone Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_contact">Emergency Contact Number<font color='#EA0C27'>*</font></string>
     <string name="emergency_name">Emergency Contact Name<font color='#EA0C27'>*</font></string>
@@ -43,23 +43,24 @@
     <string name="date_and_time_of_visit">1. Date and Time of visit<font color='#EA0C27'>*</font></string>
     <string name="gps_location">3. GPS Location<font color='#EA0C27'>*</font></string>
     <string name="beneficiary_name">4. Beneficiary Name<font color='#EA0C27'>*</font></string>
-    <string name="family_size">8. Family size<font color='#EA0C27'>*</font></string>
-    <string name="lpg_using">9. LPG using<font color='#EA0C27'>*</font></string>
+    <string name="family_size">16. Family size<font color='#EA0C27'>*</font></string>
+    <string name="lpg_using">17. LPG using<font color='#EA0C27'>*</font></string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="no_of_cylinder_per_year">10. No of cylinder per year<font color='#EA0C27'>*</font></string>
-    <string name="cost_of_cylinder">Cost of LPG cylinder?<font color='#EA0C27'>*</font></string>
+    <string name="no_of_cylinder_per_year">18. No of cylinder per year<font color='#EA0C27'>*</font></string>
+    <string name="cost_of_cylinder">19. Cost of LPG cylinder?<font color='#EA0C27'>*</font></string>
     <string name="no_of_cow_dung_per_day">12. No Of Cow Dung Per Day<font color='#EA0C27'>*</font></string>
     <string name="cow_dung_cake_using">11. Cow dung cake using?<font color='#EA0C27'>*</font></string>
-    <string name="annual_family_income">14. Annual Family Income<font color='#EA0C27'>*</font></string>
-    <string name="house_type">13. House type<font color='#EA0C27'>*</font></string>
-    <string name="willing_to_contribute_to_clean_cooking_device">15. Willing to contribute to clean cooking device?<font color='#EA0C27'>*</font></string>
+    <string name="annual_family_income">21. Annual Family Income<font color='#EA0C27'>*</font></string>
+    <string name="house_type">20. House type<font color='#EA0C27'>*</font></string>
+    <string name="willing_to_contribute_to_clean_cooking_device">22. Willing to contribute to clean cooking device?<font color='#EA0C27'>*</font></string>
     <string name="wood_used_per_day_in_kg">16. Wood Used Per Day In KG<font color='#EA0C27'>*</font></string>
-    <string name="electricity_connection_available">17. Electricity connection available<font color='#EA0C27'>*</font></string>
-    <string name="total_electricity_bill">Total Electricity Bill<font color='#EA0C27'>*</font></string>
-    <string name="e_bill_photo">If bill available than capture photo<font color='#EA0C27'>*</font></string>
+    <string name="electricity_connection_available">23. Electricity connection available<font color='#EA0C27'>*</font></string>
+    <string name="total_electricity_bill">24.Total Electricity Bill<font color='#EA0C27'>*</font></string>
+    <string name="frequancy_of_electricity_bill">25.Frequency of bill payment<font color='#EA0C27'>*</font></string>
+    <string name="e_bill_photo">25. If bill available than capture photo<font color='#EA0C27'>*</font></string>
 
-    <string name="no_of_cattle_own">18. No of cattle own<font color='#EA0C27'>*</font></string>
+    <string name="no_of_cattle_own">26. No of cattle own<font color='#EA0C27'>*</font></string>
     <string name="mobile_number">5. Mobile number<font color='#EA0C27'>*</font></string>
     <string name="district">11. District<font color='#EA0C27'>*</font></string>
     <string name="tehsil">12. Tehsil<font color='#EA0C27'>*</font></string>
@@ -70,6 +71,14 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="other">Other</string>
+
+    <string-array name="frequancy">
+        <item>Once/Month</item>
+        <item>Once/2Month</item>
+        <item>Once/3Month</item>
+        <item>Once/4Month</item>
+        <item>Annualy</item>
+    </string-array>
 
     <string-array name="state">
         <item>Select State</item>
@@ -92,9 +101,9 @@
     <string name="select">Select</string>
     <string name="retry">Retry</string>
     <string name="test_failed_n_your_obtained_marks">Test Failed, \n Your obtained Marks :</string>
-    <string name="above_15_year_family_members">8.1 Above 15 Year Family Members<font color='#EA0C27'>*</font></string>
-    <string name="below_15_year_family_members">8.2 Below 15 Year Family Members<font color='#EA0C27'>*</font></string>
-    <string name="aadhar_or_ration">Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
+    <string name="above_15_year_family_members">16.1 Above 15 Year Family Members<font color='#EA0C27'>*</font></string>
+    <string name="below_15_year_family_members">16.2 Below 15 Year Family Members<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_or_ration">27. Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
 
 
 </resources>

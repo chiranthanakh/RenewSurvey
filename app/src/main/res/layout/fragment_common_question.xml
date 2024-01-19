@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
     tools:context=".views.fragments.CommonQuestionFragment">
     <androidx.core.widget.NestedScrollView
@@ -26,8 +25,9 @@
                 android:id="@+id/edt_date_and_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="datetime"
-                android:focusable="false"
+                android:inputType="none"
+                android:editable="false"
+                android:cursorVisible="false"
                 android:background="@drawable/spinner_background"
                 />
 
@@ -45,6 +45,7 @@
                     android:id="@+id/rb_data_yes"
                     android:text="@string/yes"
                     android:layout_weight="2"
+                    android:checked="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <RadioButton
@@ -65,9 +66,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:focusable="false"
                 android:background="@drawable/spinner_background" />
 
+        <LinearLayout
+            android:id="@+id/ll_data_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <TextView
                 android:text="@string/beneficiary_name"
                 android:layout_width="wrap_content"
@@ -79,6 +84,131 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:background="@drawable/spinner_background" />
+
+            <TextView
+                android:text="@string/mobile_number"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/edt_mobile"
+                android:inputType="number"
+                android:background="@drawable/spinner_background"
+                android:maxLength="10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/aadhar_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
+            <RadioGroup
+                android:id="@+id/rb_aadhar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rb_aadhar_yes"
+                    android:text="@string/yes"
+                    android:layout_weight="2"
+                    android:checked="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/rb_aadhar_no"
+                    android:text="@string/no"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/edt_aadhar_text"
+                android:text="@string/aadhar"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/edt_aadhaar_card"
+                android:inputType="number"
+                android:background="@drawable/spinner_background"
+                android:maxLength="12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/ll_a_front"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_aadhar_front"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aadhar_front"
+                    android:layout_marginEnd="@dimen/margin_15_dp" />
+                <LinearLayout
+                    android:id="@+id/ll_aadhar_front"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_15_dp"
+                    android:background="@drawable/spinner_background">
+                    <ImageView
+                        android:id="@+id/file_image"
+                        android:src="@drawable/ic_file_attach"
+                        android:layout_width="@dimen/dp_25"
+                        android:layout_height="@dimen/dp_25"
+                        android:layout_marginStart="@dimen/dp_5"/>
+                    <TextView
+                        android:id="@+id/tv_file"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="@string/attach_file"
+                        android:drawablePadding="@dimen/dp_10"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_a_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_aadhar_back"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aadhar_back"
+                    android:layout_marginEnd="@dimen/margin_15_dp" />
+                <LinearLayout
+                    android:id="@+id/ll_aadhar_back"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/margin_15_dp"
+                    android:background="@drawable/spinner_background">
+                    <ImageView
+                        android:src="@drawable/ic_file_attach"
+                        android:layout_width="@dimen/dp_25"
+                        android:layout_height="@dimen/dp_25"
+                        android:layout_marginStart="@dimen/dp_5"/>
+                    <TextView
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="@string/attach_file"
+                        android:drawablePadding="@dimen/dp_10"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:text="@string/state"
@@ -272,7 +402,7 @@
                 android:orientation="vertical"
                 android:id="@+id/ll_cylinder_cost">
                 <TextView
-                    android:text="@string/no_of_cylinder_per_year"
+                    android:text="@string/cost_of_cylinder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"/>
@@ -289,11 +419,13 @@
             <TextView
                 android:text="@string/cow_dung_cake_using"
                 android:layout_marginTop="@dimen/dp_10"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <RadioGroup
                 android:id="@+id/rg_cow_dung"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <RadioButton
@@ -313,6 +445,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:visibility="gone"
                 android:id="@+id/ll_no_cow_dung">
                 <TextView
                     android:text="@string/no_of_cow_dung_per_day"
@@ -387,12 +520,14 @@
             <TextView
                 android:text="@string/wood_used_per_day_in_kg"
                 android:layout_marginTop="@dimen/dp_10"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <EditText
                 android:id="@+id/edt_wood_used"
                 android:inputType="number"
                 android:maxLength="6"
+                android:visibility="gone"
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -431,6 +566,23 @@
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/frequancy_of_electricity_bill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_background">
+                <Spinner
+                    android:id="@+id/sp_state"
+                    android:entries="@array/state"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_e_bill"
@@ -481,130 +633,6 @@
                 android:background="@drawable/spinner_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:text="@string/mobile_number"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <EditText
-                android:id="@+id/edt_mobile"
-                android:inputType="number"
-                android:background="@drawable/spinner_background"
-                android:maxLength="10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:text="@string/aadhar_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"/>
-            <RadioGroup
-                android:id="@+id/rb_aadhar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:id="@+id/rb_aadhar_yes"
-                    android:text="@string/yes"
-                    android:layout_weight="2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <RadioButton
-                    android:id="@+id/rb_aadhar_no"
-                    android:text="@string/no"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/edt_aadhar_text"
-                android:text="@string/aadhar"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <EditText
-                android:id="@+id/edt_aadhaar_card"
-                android:inputType="number"
-                android:background="@drawable/spinner_background"
-                android:maxLength="12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-            <LinearLayout
-                android:id="@+id/ll_a_front"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/txt_file_lable"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/aadhar_front"
-                    android:layout_marginEnd="@dimen/margin_15_dp" />
-                <LinearLayout
-                    android:id="@+id/ll_aadhar_front"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginEnd="@dimen/margin_15_dp"
-                    android:background="@drawable/spinner_background">
-                    <ImageView
-                        android:id="@+id/file_image"
-                        android:src="@drawable/ic_camera"
-                        android:layout_width="@dimen/dp_25"
-                        android:layout_height="@dimen/dp_25"
-                        android:layout_marginStart="@dimen/dp_5"/>
-                    <TextView
-                        android:id="@+id/tv_aadhar_front"
-                        android:layout_marginStart="@dimen/dp_5"
-                        android:text="@string/capture_image"
-                        android:drawablePadding="@dimen/dp_10"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_a_back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/aadhar_back"
-                    android:layout_marginEnd="@dimen/margin_15_dp" />
-                <LinearLayout
-                    android:id="@+id/ll_aadhar_back"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginEnd="@dimen/margin_15_dp"
-                    android:background="@drawable/spinner_background">
-                    <ImageView
-                        android:src="@drawable/ic_camera"
-                        android:layout_width="@dimen/dp_25"
-                        android:layout_height="@dimen/dp_25"
-                        android:layout_marginStart="@dimen/dp_5"/>
-                    <TextView
-                        android:id="@+id/tv_aadhar_back"
-                        android:layout_marginStart="@dimen/dp_5"
-                        android:text="@string/capture_image"
-                        android:drawablePadding="@dimen/dp_10"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-            </LinearLayout>
 
             <TextView
                 android:text="@string/aadhar_or_ration"
@@ -631,6 +659,7 @@
                     android:layout_height="wrap_content"/>
             </RadioGroup>
 
+        </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

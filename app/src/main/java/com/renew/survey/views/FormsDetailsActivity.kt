@@ -38,12 +38,14 @@ import com.renew.survey.room.entities.DraftCommonAnswer
 import com.renew.survey.room.entities.DynamicAnswersEntity
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.room.entities.TestQuestionLanguage
+import com.renew.survey.utilities.AppConstants
 import com.renew.survey.utilities.DataAllowMetPerson
 import com.renew.survey.utilities.UtilMethods
 import com.renew.survey.views.fragments.CommonQuestionFragment
 import com.renew.survey.views.fragments.QuestionsFragment
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.Locale
 
 
 class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
@@ -72,9 +74,9 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
 
             assigned=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
             commonAnswersEntity= CommonAnswersEntity(
-                null,assigned!!.aadhar_card,"","","",assigned!!.annual_family_income,assigned!!.banficary_name,"","","",assigned!!.electricity_connection_available,"","","",assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
-                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cow_dung_per_day,assigned!!.no_of_cylinder_per_year,"",assigned!!.willing_to_contribute_clean_cooking,assigned!!.wood_use_per_day_in_kg,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),assigned!!.family_member_below_15_year,
-                assigned?.family_member_above_15_year,"",null
+                null,assigned!!.aadhar_card,assigned!!.date_and_time_of_visit,assigned!!.did_the_met_person_allowed_for_data,assigned!!.gps_location,assigned!!.annual_family_income,assigned!!.banficary_name,assigned!!.do_you_have_aadhar_card,assigned!!.font_photo_of_aadar_card,assigned!!.back_photo_of_aadhar_card,assigned!!.electricity_connection_available,assigned!!.total_electricity_bill,assigned!!.frequency_of_bill_payment,assigned!!.photo_of_bill,assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
+                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cow_dung_per_day,assigned!!.no_of_cylinder_per_year,assigned!!.cost_of_lpg_cyliner,assigned!!.willing_to_contribute_clean_cooking,assigned!!.wood_use_per_day_in_kg,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),assigned!!.family_member_below_15_year,
+                assigned?.family_member_above_15_year,assigned!!.do_you_have_ration_or_aadhar,null
             )
             tbl_project_survey_common_data_id=assigned!!.tbl_project_survey_common_data_id.toString()
             status=assigned!!.next_form_id
@@ -84,8 +86,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             status=3+a.tbl_forms_id!!
 
             commonAnswersEntity= CommonAnswersEntity(
-                null,a.aadhar_card,"","","",a.annual_family_income,a.banficary_name,"","","",a.electricity_connection_available,"","","",a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,"",a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,"",null
+                null,a.aadhar_card,a.date_and_time_of_visit,a.did_the_met_person_allowed_for_data,a.gps_location,a.annual_family_income,a.banficary_name,a.do_you_have_aadhar_card,a.font_photo_of_aadar_card,a.back_photo_of_aadhar_card,a.electricity_connection_available,a.total_electricity_bill,"",a.photo_of_bill,a.family_size,a.gender,a.house_type,a.is_cow_dung,
+                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.cost_of_lpg_cyliner,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,a.do_you_have_ration_or_aadhar,null
             )
         }
         if (intent.getBooleanExtra("training",false)) {
@@ -167,12 +169,16 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         }
         binding.btnContinue.setOnClickListener {
             Log.d("question",gson.toJson(questionGroupList[1]))
-            if (!validateCommonQuestions()){
-                return@setOnClickListener
+            if (commonAnswersEntity.did_the_met_person_allowed_for_data== AppConstants.yes.uppercase(
+                    Locale.ROOT)){
+                if (!validateCommonQuestions()){
+                    return@setOnClickListener
+                }
+                if (!validateDynamicQuestions()){
+                    return@setOnClickListener
+                }
             }
-            if (!validateDynamicQuestions()){
-                return@setOnClickListener
-            }
+
             lifecycleScope.launch {
 
                 val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
@@ -315,21 +321,49 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
 
     fun validateCommonQuestions():Boolean{
         if (commonAnswersEntity.date_and_time_of_visit==""){
-            UtilMethods.showToast(this,"Please add beneficiary name")
+            UtilMethods.showToast(this,"Please add date and time of visit")
             return false
         }
         if (commonAnswersEntity.did_the_met_person_allowed_for_data==""){
-            UtilMethods.showToast(this,"Please add beneficiary name")
+            UtilMethods.showToast(this,"Please Select person allowed for data")
             return false
         }
         if (commonAnswersEntity.gps_location==""){
-            UtilMethods.showToast(this,"Please add beneficiary name")
+            UtilMethods.showToast(this,"Please add GPS Location")
             return false
         }
         if (commonAnswersEntity.banficary_name==""){
             UtilMethods.showToast(this,"Please add beneficiary name")
             return false
         }
+
+        if (commonAnswersEntity.mobile_number==""){
+            UtilMethods.showToast(this,"Please add mobile number")
+            return false
+        }
+        if (commonAnswersEntity.mobile_number.length!=10){
+            UtilMethods.showToast(this,"Please enter valid mobile number")
+            return false
+        }
+
+
+        if (commonAnswersEntity.do_you_have_aadhar_card == "YES") {
+            if (commonAnswersEntity.aadhar_card=="" ){
+                UtilMethods.showToast(this,"Please add aadhar number")
+                return false
+            }
+
+            if (commonAnswersEntity.aadhar_card.length!=12){
+                UtilMethods.showToast(this,"Please enter valid aadhar number")
+                return false
+            }
+        }
+
+        if (commonAnswersEntity.do_you_have_aadhar_card==""){
+            UtilMethods.showToast(this,"Please select aadhar status")
+            return false
+        }
+
         if (commonAnswersEntity.mst_state_id==""){
             UtilMethods.showToast(this,"Please select state")
             return false
@@ -358,6 +392,16 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             UtilMethods.showToast(this,"Please add family size")
             return false
         }
+
+        if (commonAnswersEntity.family_member_above_15_year==""){
+            UtilMethods.showToast(this,"Please add family member below 15")
+            return false
+        }
+        if (commonAnswersEntity.family_member_below_15_year==""){
+            UtilMethods.showToast(this,"Please add family member above 15")
+            return false
+        }
+
         if (commonAnswersEntity.is_lpg_using==""){
             UtilMethods.showToast(this,"Please select is using LPG")
             return false
@@ -368,16 +412,16 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 return false
             }
         }
-        if (commonAnswersEntity.is_cow_dung==""){
+        /*if (commonAnswersEntity.is_cow_dung==""){
             UtilMethods.showToast(this,"Please select is cow dung is used")
             return false
-        }
-        if (commonAnswersEntity.is_cow_dung==getString(R.string.yes)){
+        }*/
+        /*if (commonAnswersEntity.is_cow_dung==getString(R.string.yes)){
             if (commonAnswersEntity.no_of_cow_dung_per_day==""){
                 UtilMethods.showToast(this,"Please add no of cow dung used")
                 return false
             }
-        }
+        }*/
         if (commonAnswersEntity.house_type==""){
             UtilMethods.showToast(this,"Please select house type")
             return false
@@ -390,10 +434,10 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             UtilMethods.showToast(this,"Please select weather he is willing to contribute to clean cooking")
             return false
         }
-        if (commonAnswersEntity.wood_use_per_day_in_kg==""){
+       /* if (commonAnswersEntity.wood_use_per_day_in_kg==""){
             UtilMethods.showToast(this,"Please select wood used per day")
             return false
-        }
+        }*/
         if (commonAnswersEntity.electricity_connection_available==""){
             UtilMethods.showToast(this,"Please select electricity connection is available or not")
             return false
@@ -402,38 +446,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             UtilMethods.showToast(this,"Please select no of cattle owned")
             return false
         }
-        if (commonAnswersEntity.mobile_number==""){
-            UtilMethods.showToast(this,"Please add mobile number")
-            return false
-        }
-        if (commonAnswersEntity.mobile_number.length!=10){
-            UtilMethods.showToast(this,"Please enter valid mobile number")
-            return false
-        }
-        if (commonAnswersEntity.aadhar_card==""){
-            UtilMethods.showToast(this,"Please add aadhar number")
-            return false
-        }
-        if (commonAnswersEntity.aadhar_card==""){
-            UtilMethods.showToast(this,"Please add aadhar number")
-            return false
-        }
-        if (commonAnswersEntity.do_you_have_aadhar_card==""){
-            UtilMethods.showToast(this,"Please select aadhar status")
-            return false
-        }
-        if (commonAnswersEntity.family_member_above_15_year==""){
-            UtilMethods.showToast(this,"Please add family member below 15")
-            return false
-        }
-        if (commonAnswersEntity.family_member_below_15_year==""){
-            UtilMethods.showToast(this,"Please add family member above 15")
-            return false
-        }
-        if (commonAnswersEntity.aadhar_card.length!=12){
-            UtilMethods.showToast(this,"Please enter valid aadhar number")
-            return false
-        }
+
+
         if (preferenceManager.getForm().tbl_forms_id==1){
             val totalFamily=commonAnswersEntity.family_member_above_15_year!!.toInt() + commonAnswersEntity.family_member_below_15_year!!.toInt()-commonAnswersEntity.family_size.toInt()
             if(totalFamily!=0){

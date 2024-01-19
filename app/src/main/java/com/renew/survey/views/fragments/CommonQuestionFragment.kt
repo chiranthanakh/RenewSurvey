@@ -88,7 +88,8 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
         preferenceManager= PreferenceManager(requireContext())
         Log.e("status","$status")
-
+        commonAnswersEntity.do_you_have_aadhar_card = "YES"
+        commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
         if (status==2||status==3||status==5||status==6){
             disableViews=true
         }
@@ -128,6 +129,10 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             binding.edtFamilySize.setText(commonAnswersEntity.family_size)
             binding.edtAbove15.setText(commonAnswersEntity.family_member_above_15_year)
             binding.edtBelow15.setText(commonAnswersEntity.family_member_below_15_year)
+            binding.edtGpsLocation.setText(commonAnswersEntity.gps_location)
+            binding.edtDateAndTime.setText(commonAnswersEntity.date_and_time_of_visit)
+            binding.edtCylinderCost.setText(commonAnswersEntity.cost_of_lpg_cyliner)
+
             when(commonAnswersEntity.gender.uppercase(Locale.ROOT)){
                 AppConstants.male.uppercase(Locale.ROOT) ->{
                     binding.rbMale.isChecked=true
@@ -164,7 +169,28 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }else{
                 binding.rbElectricityNo.isChecked=true
             }
+            if (commonAnswersEntity.did_the_met_person_allowed_for_data==AppConstants.yes.uppercase(Locale.ROOT)){
+                binding.rbDataYes.isChecked=true
+            }else{
+                binding.rbDataNo.isChecked=true
+            }
+            if (commonAnswersEntity.do_you_have_aadhar_card==AppConstants.yes.uppercase(Locale.ROOT)){
+                binding.rbAadharYes.isChecked=true
+            }else{
+                binding.rbAadharNo.isChecked=true
+            }
+            if (commonAnswersEntity.do_you_have_ration_or_aadhar==AppConstants.yes.uppercase(Locale.ROOT)){
+                binding.rbAOrRYes.isChecked=true
+            }else{
+                binding.rbAOrRNo.isChecked=true
+            }
             if (disableViews){
+                binding.rbAadharNo.isEnabled=false
+                binding.rbAadharYes.isEnabled=false
+                binding.rbDataYes.isEnabled=false
+                binding.rbDataNo.isEnabled=false
+                binding.rbAOrRYes.isEnabled=false
+                binding.rbAOrRNo.isEnabled=false
                 binding.rbMale.isEnabled=false
                 binding.rbFemale.isEnabled=false
                 binding.rbOther.isEnabled=false
@@ -224,25 +250,17 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         binding.llBillImage.setOnClickListener {
             openCamera(BILL_IMAGE)
         }
-       /* binding.edtGpsLocation.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                commonAnswersEntity.gps_location=p0.toString().trim()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })*/
         binding.rbData.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
             when (id) {
                 R.id.rb_data_no -> {
                     listener.dataAllowed(false)
+                    binding.llDataState.visibility = View.GONE
+                    commonAnswersEntity.did_the_met_person_allowed_for_data = "NO"
                 }
                 R.id.rb_data_yes -> {
                     listener.dataAllowed(true)
+                    binding.llDataState.visibility = View.VISIBLE
+                    commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
                 }
             }
         })
@@ -281,9 +299,11 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             when (id) {
                 R.id.rb_lpg_no -> {
                     binding.llNoOfCylinder.visibility=View.GONE
+                    binding.llCylinderCost.visibility = View.GONE
                 }
                 R.id.rb_lpg_yes -> {
                     binding.llNoOfCylinder.visibility=View.VISIBLE
+                    binding.llCylinderCost.visibility = View.VISIBLE
                 }
             }
         })
@@ -363,11 +383,16 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
                 commonAnswersEntity.is_lpg_using=AppConstants.yes
+                binding.llCylinderCost.visibility = View.VISIBLE
+                binding.llNoOfCylinder.visibility = View.VISIBLE
+
             }
         }
         binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
                 commonAnswersEntity.is_lpg_using=AppConstants.no
+                binding.llCylinderCost.visibility = View.GONE
+                binding.llNoOfCylinder.visibility = View.GONE
             }
         }
         binding.edtTotalEBill.addTextChangedListener(object  : TextWatcher{
@@ -755,6 +780,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri1)
         startActivityForResult(intent, from)
     }
+
     val AADHAR_BACK=345;
     val AADHAR_FRONT=565;
     val BILL_IMAGE=656;
