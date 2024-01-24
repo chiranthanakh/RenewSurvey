@@ -86,7 +86,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             status=3+a.tbl_forms_id!!
 
             commonAnswersEntity= CommonAnswersEntity(
-                null,a.aadhar_card,a.date_and_time_of_visit,a.did_the_met_person_allowed_for_data,a.gps_location,a.annual_family_income,a.banficary_name,a.do_you_have_aadhar_card,a.font_photo_of_aadar_card,a.back_photo_of_aadhar_card,a.electricity_connection_available,a.total_electricity_bill,"",a.photo_of_bill,a.family_size,a.gender,a.house_type,a.is_cow_dung,
+                null,a.aadhar_card,a.date_and_time_of_visit,a.did_the_met_person_allowed_for_data,a.gps_location,a.annual_family_income,a.banficary_name,a.do_you_have_aadhar_card,a.font_photo_of_aadar_card,a.back_photo_of_aadhar_card,a.electricity_connection_available,a.total_electricity_bill,a.frequency_of_bill_payment,a.photo_of_bill,a.family_size,a.gender,a.house_type,a.is_cow_dung,
                 a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cow_dung_per_day,a.no_of_cylinder_per_year,a.cost_of_lpg_cyliner,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,a.do_you_have_ration_or_aadhar,null
             )
         }
@@ -147,7 +147,11 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                         }
                     }
                 }
+                if (assigned!=null){
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().deleteAssigned(assigned!!.id!!)
+                }
             }
+
             UtilMethods.showToast(this, "Form saved in draft")
             finish()
         }
@@ -570,6 +574,9 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             if (status < 4){
                 status=3 + ans.tbl_forms_id.toInt()
                 preferenceManager.saveDraft(draftAnsId!!)
+            }
+            if (assigned!=null){
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().deleteAssigned(assigned!!.id!!)
             }
         }
     }

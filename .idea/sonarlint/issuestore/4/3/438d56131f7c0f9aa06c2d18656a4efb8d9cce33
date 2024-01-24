@@ -1,0 +1,30 @@
+
+Vkotlin:S1172N"7Use "_" instead of this unused lambda parameter "view".(¿úÔ‚8¢è…ÑÓ1
+rkotlin:S117—"SRename this local variable to match the regular expression ^`?[_a-z][a-zA-Z0-9]*`?$(ŠÙ¢ï8Ïè…ÑÓ1
+Nkotlin:S1481—".Remove this unused "user_type" local variable.(ŠÙ¢ï8•é…ÑÓ1
+>kotlin:S1128"Remove this unused import.(Í”òøÿÿÿÿ8­é…ÑÓ1
+Bkotlin:S1874c"#Deprecated code should not be used.(ğ°ìÁ8Àé…ÑÓ1
+Gkotlin:S1874w"#Deprecated code should not be used.(èìÆÖùÿÿÿÿ8Àé…ÑÓ1
+Ckotlin:S1874¯"#Deprecated code should not be used.(¼“‡ô8Àé…ÑÓ1
+Hkotlin:S1874°"#Deprecated code should not be used.(ÊşÚ¥üÿÿÿÿ8Àé…ÑÓ1
+Ckotlin:S1874±"#Deprecated code should not be used.(Ë¶ÃŠ8Àé…ÑÓ1
+Ckotlin:S1874²"#Deprecated code should not be used.(ˆÛ®É8Àé…ÑÓ1
+Hkotlin:S1874¸"#Deprecated code should not be used.(ü…ªúÿÿÿÿ8Àé…ÑÓ1
+Hkotlin:S1874¹"#Deprecated code should not be used.(¬²Ú÷ÿÿÿÿÿ8Áé…ÑÓ1
+Hkotlin:S1874¼"#Deprecated code should not be used.(º·£úÿÿÿÿ8Áé…ÑÓ1
+Hkotlin:S1874¾"#Deprecated code should not be used.(Ïï‰¡şÿÿÿÿ8Áé…ÑÓ1
+Hkotlin:S1874¿"#Deprecated code should not be used.(¸‰‚Íÿÿÿÿÿ8Áé…ÑÓ1
+rkotlin:S3776´"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(¶Ú€ï8Äé…ÑÓ1
+wkotlin:S3776‹"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(ƒäúúÿÿÿÿ8Æé…ÑÓ1
+wkotlin:S3776Ü"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(ë½Òùÿÿÿÿ8Çé…ÑÓ1
+rkotlin:S3776ù"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(§€ëá8Çé…ÑÓ1
+rkotlin:S3776–"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(»¨‘•8Çé…ÑÓ1
+wkotlin:S3776³"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(âò†óüÿÿÿÿ8Çé…ÑÓ1
+wkotlin:S3776Ğ"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(ÊÙ·Ğûÿÿÿÿ8Èé…ÑÓ1
+kotlin:S1186‰"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8ãé…ÑÓ1
+kotlin:S1186•"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8ãé…ÑÓ1
+kotlin:S1186¡"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8ãé…ÑÓ1
+kotlin:S1186­"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8ãé…ÑÓ1
+Jkotlin:S6518U",Replace function call with indexed accessor.(íÄ¶8ˆê…ÑÓ1
+Jkotlin:S6518U",Replace function call with indexed accessor.(íÄ¶8ˆê…ÑÓ1
+Jkotlin:S6518U",Replace function call with indexed accessor.(íÄ¶8ˆê…ÑÓ1

@@ -65,7 +65,7 @@ class DashboardActivity : BaseActivity() {
         bindingNav.llLogout.setOnClickListener {
             MyCustomDialog.showDialog(this,"Sign out?","Are you sure, you want to logout?","SIGN OUT","CANCEL",true,object :MyCustomDialog.ClickListener{
                 override fun onYes() {
-                    preferenceManager.clear()
+                    preferenceManager.saveToken("")
                     lifecycleScope.launch {
                         logout()
                     }

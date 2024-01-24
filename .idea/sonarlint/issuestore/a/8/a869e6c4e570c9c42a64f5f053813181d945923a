@@ -1,0 +1,32 @@
+
+`kotlin:S1172·";Use "_" instead of this unused lambda parameter "fragment".( …¢øÿÿÿÿ8Å¨áÒ1
+@kotlin:S6615¼" Remove this useless initializer.(§ñ™ÿ8Ğ¨áÒ1
+?kotlin:S6615x" Remove this useless initializer.(§ñ™ÿ8Ñ¨áÒ1
+>kotlin:S125Ÿ"Remove this commented out code.(Ï¶õˆ8é¨áÒ1
+Ckotlin:S125£"Remove this commented out code.(€÷Êåıÿÿÿÿ8ê¨áÒ1
+>kotlin:S125µ"Remove this commented out code.( ¯³¡8ì¨áÒ1
+Mkotlin:S108")Either remove or fill this block of code.(øƒçûÿÿÿÿ8Ö¨áÒ1
+>kotlin:S6531†"Remove this useless cast.(ÖÇëÿşÿÿÿÿ8§Ÿ¨áÒ1
+Rkotlin:S1481ú"-Remove this unused "response" local variable.(€òˆ¼şÿÿÿÿ8«Ÿ¨áÒ1
+9kotlin:S1128"Remove this unused import.(€ÛŠ×8ÙŸ¨áÒ1
+>kotlin:S1128"Remove this unused import.(«¸Ç®úÿÿÿÿ8ÙŸ¨áÒ1
+9kotlin:S1128"Remove this unused import.(ÈÁâØ8ÚŸ¨áÒ1
+xkotlin:S1192v"TDefine a constant instead of duplicating this literal "dd:MM:yyyy:HH:mm:ss" 3 times.(’¶åûÿÿÿÿ8äŸ¨áÒ1
+Hkotlin:S1874î"#Deprecated code should not be used.(š¹¬Ôıÿÿÿÿ8õŸ¨áÒ1
+Hkotlin:S1874ï"#Deprecated code should not be used.(Û¿İ¦øÿÿÿÿ8öŸ¨áÒ1
+Hkotlin:S1874ï"#Deprecated code should not be used.(Û¿İ¦øÿÿÿÿ8öŸ¨áÒ1
+Hkotlin:S1874ğ"#Deprecated code should not be used.(áæ„ùÿÿÿÿ8öŸ¨áÒ1
+Bkotlin:S1874ï"#Deprecated code should not be used.(ğ¸Ä,8öŸ¨áÒ1
+Hkotlin:S1874ğ"#Deprecated code should not be used.(¡İî¹ÿÿÿÿÿ8÷Ÿ¨áÒ1
+Hkotlin:S1874ğ"#Deprecated code should not be used.(¡İî¹ÿÿÿÿÿ8÷Ÿ¨áÒ1
+Hkotlin:S1874ñ"#Deprecated code should not be used.(Ä£ Ãúÿÿÿÿ8÷Ÿ¨áÒ1
+Hkotlin:S1874ò"#Deprecated code should not be used.(®®ç¸üÿÿÿÿ8÷Ÿ¨áÒ1
+Gkotlin:S1874"#Deprecated code should not be used.(üšÏØøÿÿÿÿ8øŸ¨áÒ1
+vkotlin:S3776D"RRefactor this method to reduce its Cognitive Complexity from 96 to the 15 allowed.(¶Á»¬şÿÿÿÿ8şŸ¨áÒ1
+rkotlin:S3776Â"RRefactor this method to reduce its Cognitive Complexity from 33 to the 15 allowed.(¼³Êâ8€ ¨áÒ1
+wkotlin:S3776Ğ"RRefactor this method to reduce its Cognitive Complexity from 34 to the 15 allowed.(®‚‹½úÿÿÿÿ8 ¨áÒ1
+rkotlin:S3776˜"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(ÈñóË8ƒ ¨áÒ1
+gkotlin:S6517Ì"BMake this interface functional or replace it with a function type.(ºšäÜøÿÿÿÿ8¬ ¨áÒ1
+Nkotlin:S1066™".Merge this "if" statement with the nested one.(ì‡…®8® ¨áÒ1
+Nkotlin:S1066Ü".Merge this "if" statement with the nested one.(Í±ÃÃ8° ¨áÒ1
+Skotlin:S1066İ".Merge this "if" statement with the nested one.(õÇ´–ûÿÿÿÿ8² ¨áÒ1

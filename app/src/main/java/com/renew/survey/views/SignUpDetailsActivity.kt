@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toFile
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.gson.reflect.TypeToken
 import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import com.renew.survey.R
@@ -98,6 +99,10 @@ class SignUpDetailsActivity : BaseActivity() {
             binding.tilPassword.isPasswordVisibilityToggleEnabled=false
             binding.edtAddress.setText(userInfo!!.address)
             binding.edtPincode.setText(userInfo!!.pincode)
+            Glide.with(this).load(userInfo!!.profile_photo).into(binding.ivProfileImage)
+            filePath = userInfo!!.profile_photo
+
+
             try {
                 binding.edtDob.setText(UtilMethods.getDisplayDateFormat(userInfo!!.date_of_birth))
             }catch (e:Exception){
@@ -202,11 +207,29 @@ class SignUpDetailsActivity : BaseActivity() {
                 UtilMethods.showToast(this,"Password should atlease 6 digits")
                 return
             }
-            if (binding.edtConfirmPassword.text!!.length!=binding.edtPassword.text!!.length){
+            if (binding.edtConfirmPassword.text.toString()!! != binding.edtPassword.text.toString()!!){
                 UtilMethods.showToast(this,"Password does not match")
                 return
             }
 
+        }
+        if (intent.getStringExtra("user_type")=="USER"){
+            if (binding.edtPassword.text.toString().isEmpty()){
+                UtilMethods.showToast(this,"Please enter password")
+                return
+            }
+            if (binding.edtPassword.text!!.length<6){
+                UtilMethods.showToast(this,"Password should atlease 6 digits")
+                return
+            }
+            if (binding.edtConfirmPassword.text!!.length<6){
+                UtilMethods.showToast(this,"Password should atlease 6 digits")
+                return
+            }
+            if (binding.edtConfirmPassword.text.toString() != binding.edtPassword.text.toString()){
+                UtilMethods.showToast(this,"Password does not match")
+                return
+            }
         }
         if (binding.edtAddress.text.toString().isEmpty()){
             UtilMethods.showToast(this,"Please enter full name")
@@ -278,12 +301,19 @@ class SignUpDetailsActivity : BaseActivity() {
                 }else{
                     if (intent.getStringExtra("user_type")=="USER"){
                         password = binding.edtPassword.text.toString()
+                    }else{
+                        password=""
                     }
                 }
-
+                var profilePhotoPart:MultipartBody.Part?  =null
+                if (imageUri1==null){
+                    val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "");
+                    profilePhotoPart = MultipartBody.Part.createFormData("profile_photo", "", requestFile)
+                }else{
                     val file = File(FileUtils.getPathFromUri(context, imageUri1))
                     val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                    val profilePhotoPart = MultipartBody.Part.createFormData("profile_photo", file.name, requestFile)
+                    profilePhotoPart = MultipartBody.Part.createFormData("profile_photo", file.name, requestFile)
+                }
                     Log.e(
                         "paramsss",
                         "premsssss  ${intent.getStringExtra("project_id")}   ${
@@ -314,8 +344,9 @@ class SignUpDetailsActivity : BaseActivity() {
                         RequestBody.create(MultipartBody.FORM, binding.edtDob.text.toString()),
                         RequestBody.create(MultipartBody.FORM, intent.getStringExtra("coordinator_id")!!,),
                         RequestBody.create(MultipartBody.FORM, intent.getStringExtra("user_type")!!,),
-                        profilePhotoPart,
+                        profilePhotoPart!!,
                     )
+                Log.e("FCMToken","token-->"+preferenceManager.getFCMToken())
 
                     binding.progressLayout.visibility = View.GONE
                     if (response.isSuccessful) {
@@ -332,6 +363,8 @@ class SignUpDetailsActivity : BaseActivity() {
                             ).apply {
                                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                preferenceManager.saveToken("")
+                                finishAffinity()
                                 startActivity(this)
                             }
                         }
@@ -515,7 +548,8 @@ class SignUpDetailsActivity : BaseActivity() {
                         this,
                         imageUri1
                     )
-                    binding.ivProfileImage.setImageURI(imageUri1)
+                    Glide.with(this).load(imageUri1).into(binding.ivProfileImage)
+                    //binding.ivProfileImage.setImageURI(imageUri1)
                 }
             }
 

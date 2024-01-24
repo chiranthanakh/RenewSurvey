@@ -88,34 +88,117 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
         preferenceManager= PreferenceManager(requireContext())
         Log.e("status","$status")
-        commonAnswersEntity.do_you_have_aadhar_card = "YES"
-        commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
         if (status==2||status==3||status==5||status==6){
             disableViews=true
         }
+        if (status==0){
+            commonAnswersEntity.do_you_have_aadhar_card = "YES"
+            commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
+            commonAnswersEntity.frequency_of_bill_payment = "YES"
+            commonAnswersEntity.electricity_connection_available = "YES"
+            commonAnswersEntity.is_lpg_using = "YES"
+        }
 
-        /*
-         binding.rbCowDungNo.setOnCheckedChangeListener { compoundButton, b ->
-             if (b){
-                 binding.llNoCowDung.visibility=View.VISIBLE
-             }else{
-                 binding.llNoCowDung.visibility=View.GONE
-             }
-         }
-         binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
-             if (b){
-                 binding.llNoOfCylinder.visibility=View.GONE
-             }else{
-                 binding.llNoOfCylinder.visibility=View.VISIBLE
-             }
-         }
-         binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
-             if (b){
-                 binding.llNoOfCylinder.visibility=View.VISIBLE
-             }else{
-                 binding.llNoOfCylinder.visibility=View.GONE
-             }
-         }*/
+        val calendar: Calendar = Calendar.getInstance()
+        val currentDate: Date = calendar.time
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+        val formattedDateTime: String = dateFormat.format(currentDate)
+        binding.edtDateAndTime.setText(formattedDateTime)
+        commonAnswersEntity.date_and_time_of_visit=UtilMethods.getFormattedDate(calendar.time,"dd-MM-yyyy HH:mm")
+
+
+        binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.is_lpg_using=AppConstants.yes
+                binding.llCylinderCost.visibility = View.VISIBLE
+                binding.llNoOfCylinder.visibility = View.VISIBLE
+
+            }
+        }
+        binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.is_lpg_using=AppConstants.no
+                binding.llCylinderCost.visibility = View.GONE
+                binding.llNoOfCylinder.visibility = View.GONE
+            }
+        }
+        binding.rbData.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_data_no -> {
+                    listener.dataAllowed(false)
+                    binding.llDataState.visibility = View.GONE
+                    commonAnswersEntity.did_the_met_person_allowed_for_data = "NO"
+                }
+                R.id.rb_data_yes -> {
+                    listener.dataAllowed(true)
+                    binding.llDataState.visibility = View.VISIBLE
+                    commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
+                }
+            }
+        })
+
+        binding.rbAadhar.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_aadhar_no -> {
+                    binding.edtAadharText.visibility = View.GONE
+                    binding.edtAadhaarCard.visibility = View.GONE
+                    binding.llABack.visibility = View.GONE
+                    binding.llAFront.visibility = View.GONE
+                    commonAnswersEntity.do_you_have_aadhar_card = "NO"
+                }
+                R.id.rb_aadhar_yes -> {
+                    binding.edtAadharText.visibility = View.VISIBLE
+                    binding.edtAadhaarCard.visibility = View.VISIBLE
+                    binding.llABack.visibility = View.VISIBLE
+                    binding.llAFront.visibility = View.VISIBLE
+                    commonAnswersEntity.do_you_have_aadhar_card = "YES"
+                }
+            }
+        })
+
+        binding.rbAadharOrRation.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_a_or_r_yes -> {
+                    commonAnswersEntity.do_you_have_ration_or_aadhar = "YES"
+                }
+                R.id.rb_a_or_r_no -> {
+                    commonAnswersEntity.do_you_have_ration_or_aadhar = "NO"
+                }
+            }
+        })
+        binding.rbElectricityYes.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.electricity_connection_available=AppConstants.yes
+                binding.llEBill.visibility = View.VISIBLE
+                binding.eConnectionBill.visibility = View.VISIBLE
+                binding.edtTotalEBill.visibility = View.VISIBLE
+                binding.tvEFrequancy.visibility = View.VISIBLE
+                binding.llFrequancy.visibility = View.VISIBLE
+            }
+        }
+        binding.rbElectricityNo.setOnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                commonAnswersEntity.electricity_connection_available=AppConstants.no
+                binding.llEBill.visibility = View.GONE
+                binding.eConnectionBill.visibility = View.GONE
+                binding.edtTotalEBill.visibility = View.GONE
+                binding.tvEFrequancy.visibility = View.GONE
+                binding.llFrequancy.visibility = View.GONE
+            }
+        }
+
+        binding.rgLpg.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_lpg_no -> {
+                    binding.llNoOfCylinder.visibility=View.GONE
+                    binding.llCylinderCost.visibility = View.GONE
+                }
+                R.id.rb_lpg_yes -> {
+                    binding.llNoOfCylinder.visibility=View.VISIBLE
+                    binding.llCylinderCost.visibility = View.VISIBLE
+                }
+            }
+        })
 
         if (status>0){
             binding.edtBeneficiaryName.setText(commonAnswersEntity.banficary_name)
@@ -132,6 +215,11 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             binding.edtGpsLocation.setText(commonAnswersEntity.gps_location)
             binding.edtDateAndTime.setText(commonAnswersEntity.date_and_time_of_visit)
             binding.edtCylinderCost.setText(commonAnswersEntity.cost_of_lpg_cyliner)
+            binding.edtTotalEBill.setText(commonAnswersEntity.total_electricity_bill)
+            binding.tvAadharBack.setText(commonAnswersEntity.back_photo_of_aadhar_card.substring(commonAnswersEntity.back_photo_of_aadhar_card.lastIndexOf("/")+1))
+            binding.tvAadharFront.setText(commonAnswersEntity.font_photo_of_aadar_card.substring(commonAnswersEntity.font_photo_of_aadar_card.lastIndexOf("/")+1))
+            binding.tvBillPhoto.setText(commonAnswersEntity.photo_of_bill.substring(commonAnswersEntity.photo_of_bill.lastIndexOf("/")+1))
+
 
             when(commonAnswersEntity.gender.uppercase(Locale.ROOT)){
                 AppConstants.male.uppercase(Locale.ROOT) ->{
@@ -250,63 +338,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         binding.llBillImage.setOnClickListener {
             openCamera(BILL_IMAGE)
         }
-        binding.rbData.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
-            when (id) {
-                R.id.rb_data_no -> {
-                    listener.dataAllowed(false)
-                    binding.llDataState.visibility = View.GONE
-                    commonAnswersEntity.did_the_met_person_allowed_for_data = "NO"
-                }
-                R.id.rb_data_yes -> {
-                    listener.dataAllowed(true)
-                    binding.llDataState.visibility = View.VISIBLE
-                    commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
-                }
-            }
-        })
 
-        binding.rbAadhar.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
-            when (id) {
-                R.id.rb_aadhar_no -> {
-                binding.edtAadharText.visibility = View.GONE
-                binding.edtAadhaarCard.visibility = View.GONE
-                binding.llABack.visibility = View.GONE
-                binding.llAFront.visibility = View.GONE
-                commonAnswersEntity.do_you_have_aadhar_card = "NO"
-                }
-                R.id.rb_aadhar_yes -> {
-                binding.edtAadharText.visibility = View.VISIBLE
-                binding.edtAadhaarCard.visibility = View.VISIBLE
-                binding.llABack.visibility = View.VISIBLE
-                binding.llAFront.visibility = View.VISIBLE
-                commonAnswersEntity.do_you_have_aadhar_card = "YES"
-                }
-            }
-        })
-
-        binding.rbAadharOrRation.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
-            when (id) {
-                R.id.rb_a_or_r_yes -> {
-                    commonAnswersEntity.do_you_have_ration_or_aadhar = "YES"
-                }
-                R.id.rb_a_or_r_no -> {
-                    commonAnswersEntity.do_you_have_ration_or_aadhar = "NO"
-                }
-            }
-        })
-
-        binding.rgLpg.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
-            when (id) {
-                R.id.rb_lpg_no -> {
-                    binding.llNoOfCylinder.visibility=View.GONE
-                    binding.llCylinderCost.visibility = View.GONE
-                }
-                R.id.rb_lpg_yes -> {
-                    binding.llNoOfCylinder.visibility=View.VISIBLE
-                    binding.llCylinderCost.visibility = View.VISIBLE
-                }
-            }
-        })
         binding.rgCowDung.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
             when (id) {
                 R.id.rb_cow_dung_no -> {
@@ -380,21 +412,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
 
             }
         })
-        binding.rbLpgYes.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                commonAnswersEntity.is_lpg_using=AppConstants.yes
-                binding.llCylinderCost.visibility = View.VISIBLE
-                binding.llNoOfCylinder.visibility = View.VISIBLE
 
-            }
-        }
-        binding.rbLpgNo.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                commonAnswersEntity.is_lpg_using=AppConstants.no
-                binding.llCylinderCost.visibility = View.GONE
-                binding.llNoOfCylinder.visibility = View.GONE
-            }
-        }
         binding.edtTotalEBill.addTextChangedListener(object  : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -498,16 +516,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
 
             }
         })
-        binding.rbElectricityYes.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                commonAnswersEntity.electricity_connection_available=AppConstants.yes
-            }
-        }
-        binding.rbElectricityNo.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                commonAnswersEntity.electricity_connection_available=AppConstants.no
-            }
-        }
+
 
         binding.edtCattleOwn.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -649,6 +658,19 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
 
             }
 
+        }
+        binding.spFrequancy.onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
+            val frequencyArray = resources.getStringArray(R.array.frequancy)
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                if (p2>0){
+                   // getDistrict(stateList[p2].mst_state_id.toInt())
+                    commonAnswersEntity.frequency_of_bill_payment = frequencyArray.get(p2)
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
         }
         binding.spDistrict.onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

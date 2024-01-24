@@ -66,6 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
+                android:focusable="false"
                 android:background="@drawable/spinner_background" />
 
         <LinearLayout
@@ -146,7 +147,7 @@
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/tv_aadhar_front"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/aadhar_front"
@@ -165,7 +166,7 @@
                         android:layout_height="@dimen/dp_25"
                         android:layout_marginStart="@dimen/dp_5"/>
                     <TextView
-                        android:id="@+id/tv_file"
+                        android:id="@+id/tv_aadhar_front"
                         android:layout_marginStart="@dimen/dp_5"
                         android:text="@string/attach_file"
                         android:drawablePadding="@dimen/dp_10"
@@ -182,7 +183,7 @@
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/tv_aadhar_back"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/aadhar_back"
@@ -200,6 +201,7 @@
                         android:layout_height="@dimen/dp_25"
                         android:layout_marginStart="@dimen/dp_5"/>
                     <TextView
+                        android:id="@+id/tv_aadhar_back"
                         android:layout_marginStart="@dimen/dp_5"
                         android:text="@string/attach_file"
                         android:drawablePadding="@dimen/dp_10"
@@ -368,6 +370,7 @@
                     android:id="@+id/rb_lpg_yes"
                     android:text="@string/yes"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <RadioButton
@@ -408,7 +411,7 @@
                     android:layout_marginTop="@dimen/dp_10"/>
                 <EditText
                     android:id="@+id/edt_cylinder_cost"
-                    android:maxLength="2"
+                    android:maxLength="4"
                     android:inputType="number"
                     android:background="@drawable/spinner_background"
                     android:layout_width="match_parent"
@@ -544,6 +547,7 @@
                     android:id="@+id/rb_electricity_yes"
                     android:text="@string/yes"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <RadioButton
@@ -558,6 +562,7 @@
                 android:text="@string/total_electricity_bill"
                 android:layout_marginTop="@dimen/dp_10"
                 android:layout_width="match_parent"
+                android:id="@+id/e_connection_bill"
                 android:layout_height="wrap_content"/>
             <EditText
                 android:id="@+id/edt_total_e_bill"
@@ -571,14 +576,16 @@
                 android:text="@string/frequancy_of_electricity_bill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/tv_e_frequancy"
                 android:layout_marginTop="@dimen/dp_10"/>
             <LinearLayout
+                android:id="@+id/ll_frequancy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/spinner_background">
                 <Spinner
-                    android:id="@+id/sp_state"
-                    android:entries="@array/state"
+                    android:id="@+id/sp_frequancy"
+                    android:entries="@array/frequancy"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 

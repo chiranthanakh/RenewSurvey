@@ -1,0 +1,76 @@
+
+akotlin:S1172ô"AUse "_" instead of this unused lambda parameter "compoundButton".(Ãà¡8ˆê½²Ó1
+fkotlin:S1172ù"AUse "_" instead of this unused lambda parameter "compoundButton".(êİ§Øıÿÿÿÿ8‰ê½²Ó1
+akotlin:S1172ş"AUse "_" instead of this unused lambda parameter "compoundButton".(‰Æ”ñ8‰ê½²Ó1
+fkotlin:S1172"AUse "_" instead of this unused lambda parameter "compoundButton".(¸ƒú†ùÿÿÿÿ8‰ê½²Ó1
+akotlin:S1172—"AUse "_" instead of this unused lambda parameter "compoundButton".(¨±æ8‰ê½²Ó1
+fkotlin:S1172Ã"AUse "_" instead of this unused lambda parameter "compoundButton".(ùÄ¯Ìşÿÿÿÿ8Šê½²Ó1
+fkotlin:S1172È"AUse "_" instead of this unused lambda parameter "compoundButton".(¿ß¬†ùÿÿÿÿ8Šê½²Ó1
+akotlin:S1172Ù"AUse "_" instead of this unused lambda parameter "compoundButton".(ˆÏ8Šê½²Ó1
+fkotlin:S1172Ş"AUse "_" instead of this unused lambda parameter "compoundButton".(´–•ìøÿÿÿÿ8Šê½²Ó1
+akotlin:S1172ï"AUse "_" instead of this unused lambda parameter "compoundButton".(®ñÊâ8Šê½²Ó1
+akotlin:S1172ô"AUse "_" instead of this unused lambda parameter "compoundButton".(µğáô8Šê½²Ó1
+akotlin:S1172…"AUse "_" instead of this unused lambda parameter "compoundButton".(Ü° ù8Šê½²Ó1
+akotlin:S1172"AUse "_" instead of this unused lambda parameter "compoundButton".(ãûÆ¸8‹ê½²Ó1
+Wkotlin:S1172"7Use "_" instead of this unused lambda parameter "arg0".(­ÁºŠ8‹ê½²Ó1
+Wkotlin:S1172œ"7Use "_" instead of this unused lambda parameter "arg0".(Ã£»‰8‹ê½²Ó1
+Wkotlin:S1172¯"7Use "_" instead of this unused lambda parameter "arg0".(¨•¶ó8Œê½²Ó1
+\kotlin:S1172º"7Use "_" instead of this unused lambda parameter "arg0".(ö¥Âùÿÿÿÿ8Œê½²Ó1
+\kotlin:S1172Æ"7Use "_" instead of this unused lambda parameter "arg0".(¡¹ôûÿÿÿÿ8Œê½²Ó1
+Rkotlin:S1172ë"2Use "_" instead of these unused lambda parameters.(§¿—‘8ê½²Ó1
+bkotlin:S1172ñ"=Use "_" instead of this unused lambda parameter "timePicker".(¬âÂ·úÿÿÿÿ8ê½²Ó1
+Zkotlin:S899¤";Do something with the "Boolean" value returned by "delete".(µÜÒ8’ê½²Ó1
+_kotlin:S899¦";Do something with the "Boolean" value returned by "delete".(€’™Ğşÿÿÿÿ8’ê½²Ó1
+=kotlin:S125l"Remove this commented out code.(–±Ù8ªê½²Ó1
+>kotlin:S125«"Remove this commented out code.(®Ç­Å8«ê½²Ó1
+>kotlin:S6531Ä"Remove this useless cast.(•¯Æïøÿÿÿÿ8„ë½²Ó1
+>kotlin:S6531Õ"Remove this useless cast.(çÓè¡ıÿÿÿÿ8„ë½²Ó1
+9kotlin:S6531æ"Remove this useless cast.(ğ™ü 8„ë½²Ó1
+9kotlin:S6531÷"Remove this useless cast.(±ô·8„ë½²Ó1
+9kotlin:S6531ˆ"Remove this useless cast.(ú°âô8„ë½²Ó1
+>kotlin:S1128"Remove this unused import.(Ë¦ïÜşÿÿÿÿ8Éë½²Ó1
+pkotlin:S1192f"QDefine a constant instead of duplicating this literal "dd-MM-yyyy HH:mm" 5 times.(‚‘èÇ8Íë½²Ó1
+ykotlin:S1192Ä"TDefine a constant instead of duplicating this literal "dd-MM-yyyy HH:mm:ss" 3 times.(ÜÁ£öûÿÿÿÿ8Íë½²Ó1
+Bkotlin:S1874£"#Deprecated code should not be used.(Îü‘H8üàúÎÓ1
+Hkotlin:S1874´"#Deprecated code should not be used.(‹†™Ëøÿÿÿÿ8Öë½²Ó1
+Ckotlin:S1874»"#Deprecated code should not be used.(‚´Ã¬8Öë½²Ó1
+qkotlin:S3776T"RRefactor this method to reduce its Cognitive Complexity from 73 to the 15 allowed.(©Àùè8İë½²Ó1
+kotlin:S1186¢"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8ûë½²Ó1
+kotlin:S1186°"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8‹ì½²Ó1
+kotlin:S1186¼"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8‹ì½²Ó1
+kotlin:S1186É"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8‹ì½²Ó1
+kotlin:S1186Ö"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8‹ì½²Ó1
+kotlin:S1186ã"ZAdd a nested comment explaining why this function is empty or complete the implementation.(»òª»úÿÿÿÿ8‹ì½²Ó1
+zkotlin:S1186Ñ"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8‹ì½²Ó1
+zkotlin:S1186Ø"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8‹ì½²Ó1
+zkotlin:S1186İ"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8‹ì½²Ó1
+zkotlin:S1186ä"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8‹ì½²Ó1
+zkotlin:S1186é"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8‹ì½²Ó1
+zkotlin:S1186ğ"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8‹ì½²Ó1
+zkotlin:S1186„"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8‹ì½²Ó1
+zkotlin:S1186‹"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8‹ì½²Ó1
+zkotlin:S1186Ÿ"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8‹ì½²Ó1
+zkotlin:S1186¦"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186¬"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186³"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186¸"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186¿"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186Î"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186Õ"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186ä"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186ë"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186ú"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186›"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186¢"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186§"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186®"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+zkotlin:S1186³"ZAdd a nested comment explaining why this function is empty or complete the implementation.(´„˜8Œì½²Ó1
+zkotlin:S1186º"ZAdd a nested comment explaining why this function is empty or complete the implementation.(öÊÌÆ8Œì½²Ó1
+Skotlin:S1066".Merge this "if" statement with the nested one.(¨ÙıÔûÿÿÿÿ8ì½²Ó1
+Pkotlin:S6518N",Replace function call with indexed accessor.(°Ñ³ûÿÿÿÿ8œì½²Ó1
+Pkotlin:S6518O",Replace function call with indexed accessor.(ç’™¿ùÿÿÿÿ8œì½²Ó1
+Pkotlin:S6518P",Replace function call with indexed accessor.(‡‘†‡ıÿÿÿÿ8œì½²Ó1
+Kkotlin:S6518Q",Replace function call with indexed accessor.(ºßÏ“8œì½²Ó1
+Kkotlin:S6518R",Replace function call with indexed accessor.(‹»¡ù8ì½²Ó1
+Qkotlin:S6518¬",Replace function call with indexed accessor.(‘µ‰×ıÿÿÿÿ8ì½²Ó1

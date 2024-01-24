@@ -34,7 +34,7 @@ class ChangePasswordActivity : BaseActivity() {
                 UtilMethods.showToast(this,"Password should atlease 6 digits")
                 return@setOnClickListener
             }
-            if (binding.edtNewPassword.text!!.length!=binding.edtPassword.text!!.length){
+            if (binding.edtNewPassword.text.toString()!! != binding.edtPassword.text.toString()!!){
                 UtilMethods.showToast(this,"Password does not match")
                 return@setOnClickListener
             }

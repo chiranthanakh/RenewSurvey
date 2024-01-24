@@ -15,5 +15,6 @@ data class UserInfo(
     val pincode: String,
     val gender: String,
     val username: String,
-    val date_of_birth: String
+    val date_of_birth: String,
+    val profile_photo: String
 )
