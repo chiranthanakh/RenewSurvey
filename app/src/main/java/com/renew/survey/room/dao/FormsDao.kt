@@ -55,18 +55,18 @@ interface FormsDao {
     suspend fun insertAllForms(formList: List<FormEntity>)
 
     @Query("Select fm.tbl_forms_id,mst_form_language_id,title,pp.tbl_project_phase_id,pp.version from FormEntity as fm " +
-            "inner join ProjectsPhase pp on fm.id=pp.tbl_forms_id inner join FormLanguageEntity as fl on fm.tbl_forms_id=fl.module_id where fl.module='tbl_forms' and fl.mst_language_id=:language order by fm.tbl_forms_id")
-    suspend fun getAllFormsWithLanguage(language:Int):List<FormWithLanguage>
+            "inner join ProjectsPhase pp on fm.id=pp.tbl_forms_id and pp.tbl_projects_id=:projectId inner join FormLanguageEntity as fl on fm.tbl_forms_id=fl.module_id where fl.module='tbl_forms' and fl.mst_language_id=:language order by fm.tbl_forms_id")
+    suspend fun getAllFormsWithLanguage(language:Int,projectId:Int):List<FormWithLanguage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllFormsQuestions(formQuestions: List<FormQuestionEntity>)
 
     @Query("SELECT l.title,q.* from \n" +
             "ProjectPhaseQuestionEntity as p inner join\n" +
-            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id\n" +
+            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id and p.tbl_projects_id=:project \n" +
             "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
             "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId order by q.order_by")
-    suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int):List<FormQuestionLanguage>
+    suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int,project: Int):List<FormQuestionLanguage>
 
     @Query("SELECT mfl.title, tq.* from" +
             " TestQuestionsEntry as tq LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_test_questions' AND mfl.module_id = tbl_test_questions_id " +

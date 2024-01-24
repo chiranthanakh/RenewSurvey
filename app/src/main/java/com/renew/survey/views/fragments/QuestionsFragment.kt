@@ -112,7 +112,7 @@ class QuestionsFragment(
     fun getQuestions(){
         lifecycleScope.launch {
             if (questionGroupList[fragPos].questions.isEmpty()){
-                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id)
+                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,prefsManager.getProject().tbl_projects_id)
                 //questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
             }
             val questionList=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
