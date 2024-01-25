@@ -24,7 +24,12 @@ class ForgotPasswordActivity : BaseActivity() {
         binding=ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.tvSubmitDetails.setOnClickListener {
-            validationAPI()
+            if (binding.edtMobile.text.toString().length == 10) {
+                Toast.makeText(this@ForgotPasswordActivity,"please enter valid mobile number", Toast.LENGTH_LONG).show()
+
+            } else {
+                validationAPI()
+            }
         }
     }
 
@@ -52,13 +57,6 @@ class ForgotPasswordActivity : BaseActivity() {
                             startActivity(this)
                         }
                     }else{
-                        Intent(this@ForgotPasswordActivity, VerifyOTPActivity::class.java).apply {
-                            putExtra("forgotPassword",true)
-                            putExtra("mobile",binding.edtMobile.text.toString())
-                            putExtra("project_id",8)//data.project_info.tbl_projects_id)
-                            putExtra("otp","3421")//data.otp)
-                            startActivity(this)
-                        }
                         UtilMethods.showToast(this@ForgotPasswordActivity,jsonObject.getString("message"))
                     }
                 }

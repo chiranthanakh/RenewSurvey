@@ -6,9 +6,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.MediaController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -40,7 +40,7 @@ class TrainingActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val testDetails = AppDatabase.getInstance(this@TrainingActivity).formDao().getTest(preferenceManager.getLanguage(), preferenceManager.getForm().tbl_forms_id)
             val testquestionList = AppDatabase.getInstance(this@TrainingActivity).formDao().getAllTestQuestions(preferenceManager.getLanguage(), preferenceManager.getForm().tbl_forms_id)
-             tutorials = AppDatabase.getInstance(this@TrainingActivity).formDao().getTutorial( preferenceManager.getForm().tbl_forms_id)
+            tutorials = AppDatabase.getInstance(this@TrainingActivity).formDao().getTutorial( preferenceManager.getForm().tbl_forms_id)
 
             Log.d("testtutorialsdetail",tutorials.toString()+"--"+preferenceManager.getForm().tbl_forms_id)
 
@@ -71,7 +71,8 @@ class TrainingActivity : AppCompatActivity() {
                     if(it.toString().endsWith(it1.tutorial_file,true) ) {
                         if(it1.tutorial_file.endsWith(".mp4",true)) {
                             Log.d("videoUri",it.toString()+"--"+it.path)
-                            openVideo(it)
+                            // openVideo(it)
+                            playDownloadedVideo(it)
                         } else {
                             openPdf(it)
                         }
@@ -108,9 +109,10 @@ class TrainingActivity : AppCompatActivity() {
         }
     }
 
-    private fun playDownloadedVideo() {
-        val videoUri = Uri.parse(getExternalFilesDir(Environment.DIRECTORY_MOVIES)?.absolutePath + "/training_video.mp4")
-        binding.videoView.setVideoURI(videoUri)
+    private fun playDownloadedVideo(uri: Uri) {
+        binding.videoView.visibility = View.VISIBLE
+        binding.llDrivingLic.visibility = View.GONE
+        binding.videoView.setVideoURI(uri)
         binding.videoView.start()
     }
 
