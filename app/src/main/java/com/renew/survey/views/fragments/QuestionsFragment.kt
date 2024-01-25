@@ -139,7 +139,7 @@ class QuestionsFragment(
         lifecycleScope.launch {
             //Log.e("OptionsDraft","draftAnswer=${prefsManager.getDraft()}   language=${prefsManager.getLanguage()} formId=${prefsManager.getForm().tbl_forms_id} group=${group}")
             if (questionGroupList[fragPos].questions.isEmpty()){
-                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestionsWithDraftAnswer(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,prefsManager.getDraft())
+                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestionsWithDraftAnswer(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,prefsManager.getDraft(),prefsManager.getProject().tbl_projects_id)
             }
             Log.e("DraftAnswer","${questionGroupList[fragPos].questions}")
             //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)

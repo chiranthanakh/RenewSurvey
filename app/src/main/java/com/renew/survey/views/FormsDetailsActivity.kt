@@ -150,10 +150,10 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 if (assigned!=null){
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().deleteAssigned(assigned!!.id!!)
                 }
+                UtilMethods.showToast(this@FormsDetailsActivity, "Form saved in draft")
+                finish()
             }
 
-            UtilMethods.showToast(this, "Form saved in draft")
-            finish()
         }
         binding.btnNext.setOnClickListener {
             if (!validateCommonQuestions()){
@@ -273,7 +273,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                     if (questionGroupWithLanguage.mst_question_group_id==0){
                         val fragment=CommonQuestionFragment(commonAnswersEntity,status,this@FormsDetailsActivity)
                         listOfFragment.add(fragment)
-                        supportFragmentManager.beginTransaction().add(R.id.container,fragment ).commit()
+                        supportFragmentManager.beginTransaction().add(R.id.container,fragment).commit()
                     }else{
                         val fragment=QuestionsFragment(
                             questionGroupWithLanguage.mst_question_group_id,

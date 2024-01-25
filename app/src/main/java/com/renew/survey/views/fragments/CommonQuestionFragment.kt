@@ -298,6 +298,13 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                     val child: View = binding.llLayout.getChildAt(i)
                     child.isEnabled = false
                 }
+                for (i in 0 until binding.llDataState.getChildCount()) {
+                    val child: View = binding.llDataState.getChildAt(i)
+                    child.isEnabled = false
+                }
+                binding.edtNoCylinderYear.isEnabled=false
+                binding.edtCylinderCost.isEnabled=false
+                binding.spFrequancy.isEnabled=false
             }
         }
         getStateData()
@@ -330,13 +337,16 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }
         }
         binding.llAadharBack.setOnClickListener {
-            openCamera(AADHAR_BACK)
+            if (!disableViews)
+                openCamera(AADHAR_BACK)
         }
         binding.llAadharFront.setOnClickListener {
-            openCamera(AADHAR_FRONT)
+            if (!disableViews)
+                openCamera(AADHAR_FRONT)
         }
         binding.llBillImage.setOnClickListener {
-            openCamera(BILL_IMAGE)
+            if (!disableViews)
+                openCamera(BILL_IMAGE)
         }
 
         binding.rgCowDung.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->

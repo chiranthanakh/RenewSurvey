@@ -85,11 +85,11 @@ interface FormsDao {
 
     @Query("SELECT l.title,d.answer,q.id,q.allowed_file_type,q.format,q.is_mandatory,q.is_special_char_allowed,q.is_validation_required,q.max_file_size,q.max_length,q.min_length,q.mst_question_group_id,q.order_by,q.question_type,q.tbl_form_questions_id,q.tbl_forms_id from \n" +
             "ProjectPhaseQuestionEntity as p inner join\n" +
-            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id\n" +
+            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id and p.tbl_projects_id=:project\n" +
             "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
             "inner join DynamicAnswersEntity as d on d.tbl_form_questions_id=q.tbl_form_questions_id "+
             "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId and d.answer_id=:answerId order by q.order_by")
-    suspend fun getAllFormsQuestionsWithDraftAnswer(language: Int,group:Int,formId:Int,answerId:Int):List<FormQuestionLanguage>
+    suspend fun getAllFormsQuestionsWithDraftAnswer(language: Int,group:Int,formId:Int,answerId:Int,project: Int):List<FormQuestionLanguage>
 
 
     @Query("SELECT title,tbl_project_phase_id,version,mqg.* FROM ProjectPhaseQuestionEntity pq " +

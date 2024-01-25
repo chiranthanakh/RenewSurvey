@@ -9,7 +9,7 @@
     <include
         layout="@layout/toolbar_auth"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,6 +18,8 @@
         android:weightSum="10">
 
         <LinearLayout
+            android:id="@+id/title_bar"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/demo_state_foreground_color"
@@ -34,101 +36,100 @@
                 android:textColor="@color/white"
                 android:textSize="28sp" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_driving_lic"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/title_bar"
+            android:background="@drawable/spinner_background"
+            android:layout_marginTop="10dp"
+            android:visibility="visible"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:layout_height="match_parent"/>
+                <LinearLayout
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/margin_10dp"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:id="@+id/pdfView"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginStart="@dimen/dp_20"
+                        android:layout_marginEnd="@dimen/dp_20"
+                        android:background="@drawable/image_place_holder">
+                        <TextView
+                            android:layout_centerInParent="true"
+                            android:layout_margin="@dimen/dp_3"
+                            android:text="PDF / Video"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_25"/>
+
+                        <TextView
+                            android:id="@+id/select_driving_licence"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop" />
+
+                    </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="Click Here to View PDF / Video"
+                            android:textColor="@color/red"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+        <VideoView
+            android:id="@+id/videoView"
+            app:layout_constraintTop_toBottomOf="@id/title_bar"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="250dp" />
 
 
         <RelativeLayout
+            app:layout_constraintTop_toBottomOf="@id/ll_driving_lic"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:context=".MainActivity">
-
-            <LinearLayout
-                android:id="@+id/ll_driving_lic"
-                android:layout_width="match_parent"
-                android:background="@drawable/spinner_background"
-                android:layout_marginTop="10dp"
-                android:visibility="visible"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="@dimen/margin_10dp"
-                        android:textSize="14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/black"
-                        android:layout_height="match_parent"/>
-                    <LinearLayout
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/dp_5"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="@dimen/margin_10dp"
-                        android:layout_height="wrap_content">
-                        <RelativeLayout
-                            android:id="@+id/pdfView"
-                            android:layout_width="90dp"
-                            android:layout_height="90dp"
-                            android:layout_marginStart="@dimen/dp_20"
-                            android:layout_marginEnd="@dimen/dp_20"
-                            android:background="@drawable/image_place_holder">
-                            <TextView
-                                android:layout_centerInParent="true"
-                                android:layout_margin="@dimen/dp_3"
-                                android:text="PDF / Video"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/dp_25"/>
-
-                            <TextView
-                                android:id="@+id/select_driving_licence"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true"
-                                android:scaleType="centerCrop" />
-
-                        </RelativeLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="35dp"
-                            android:gravity="center_horizontal"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center_vertical"
-                                android:text="Click Here to View PDF / Video"
-                                android:textColor="@color/red"
-                                android:textSize="20sp" />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <VideoView
-                android:id="@+id/videoView"
-                android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="250dp" />
 
             <TextView
                 android:id="@+id/test_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/videoView"
                 android:textSize="20dp"
-                android:layout_marginTop="250dp"
+                android:layout_marginTop="@dimen/dp_20"
                 android:gravity="center_horizontal"
                 android:fontFamily="@font/proxima_nova_bold"
                 android:text="Test name : "/>
@@ -165,6 +166,6 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

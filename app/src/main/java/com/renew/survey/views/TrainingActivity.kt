@@ -25,7 +25,6 @@ class TrainingActivity : AppCompatActivity() {
     lateinit var binding: ActivityTrainingBinding
     private var downloadId: Long = 0
     private val handler = Handler()
-    private lateinit var mediaController: MediaController
     lateinit var preferenceManager: PreferenceManager
     var PassingMarks:Int? = 0
     var tutorials: TutorialsDetailsEntry? = null
@@ -80,10 +79,6 @@ class TrainingActivity : AppCompatActivity() {
                 }
             }
         }
-        mediaController = MediaController(this)
-        mediaController.setAnchorView(binding.videoView)
-        mediaController.setMediaPlayer(binding.videoView)
-        binding.videoView.setMediaController(mediaController)
     }
 
     private fun openVideo(it: Uri) {
@@ -110,10 +105,14 @@ class TrainingActivity : AppCompatActivity() {
     }
 
     private fun playDownloadedVideo(uri: Uri) {
-        binding.videoView.visibility = View.VISIBLE
-        binding.llDrivingLic.visibility = View.GONE
+        Intent(this,VideoActivity::class.java).apply {
+            putExtra("data",uri.toString())
+            startActivity(this)
+        }
+       /* binding.videoView.visibility = View.VISIBLE
+        binding.llDrivingLic.visibility = View.VISIBLE
         binding.videoView.setVideoURI(uri)
-        binding.videoView.start()
+        binding.videoView.start()*/
     }
 
     private val progressChecker = object : Runnable {

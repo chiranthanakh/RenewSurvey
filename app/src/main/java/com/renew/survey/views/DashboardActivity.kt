@@ -1,12 +1,15 @@
 package com.renew.survey.views
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.google.android.datatransport.BuildConfig
+import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import com.renew.survey.databinding.ActivityDashboardBinding
 import com.renew.survey.databinding.NaviagationLayoutBinding
 import com.renew.survey.request.MediaSyncReqItem
@@ -21,6 +24,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
 import java.io.File
+
 
 class DashboardActivity : BaseActivity() {
     lateinit var binding: ActivityDashboardBinding
@@ -44,6 +48,14 @@ class DashboardActivity : BaseActivity() {
                 startActivity(this)
             }
         }
+        try {
+            val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            val version = pInfo.versionName
+            bindingNav.tvVersion.setText("Version $version")
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+
         Log.e("userdata",gson.toJson(preferenceManager.getUserdata()))
         bindingNav.name.setText(preferenceManager.getUserdata().full_name)
         bindingNav.mobile.setText(preferenceManager.getUserdata().mobile)
