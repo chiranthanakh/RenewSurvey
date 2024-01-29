@@ -305,6 +305,8 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 binding.edtNoCylinderYear.isEnabled=false
                 binding.edtCylinderCost.isEnabled=false
                 binding.spFrequancy.isEnabled=false
+                binding.edtGpsLocation.isEnabled = true
+                binding.edtDateAndTime.isEnabled = true
             }
         }
         getStateData()

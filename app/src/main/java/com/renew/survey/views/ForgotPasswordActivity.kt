@@ -24,9 +24,8 @@ class ForgotPasswordActivity : BaseActivity() {
         binding=ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.tvSubmitDetails.setOnClickListener {
-            if (binding.edtMobile.text.toString().length == 10) {
+            if (binding.edtMobile.text?.length != 10) {
                 Toast.makeText(this@ForgotPasswordActivity,"please enter valid mobile number", Toast.LENGTH_LONG).show()
-
             } else {
                 validationAPI()
             }
