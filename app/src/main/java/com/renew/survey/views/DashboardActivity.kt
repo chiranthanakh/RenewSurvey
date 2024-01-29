@@ -48,6 +48,9 @@ class DashboardActivity : BaseActivity() {
                 startActivity(this)
             }
         }
+        if (preferenceManager.getUserdata().user_type=="USER"){
+            bindingNav.llProject1.visibility=View.GONE
+        }
         try {
             val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             val version = pInfo.versionName
@@ -219,12 +222,19 @@ class DashboardActivity : BaseActivity() {
             }
             val surveyImagesParts: Array<MultipartBody.Part?> = arrayOfNulls<MultipartBody.Part>(mediaList.size)
             if (mediaList.size>0) {
-                for (i in mediaList.indices) {
-                    val file = File(mediaList[i].path)
-                    val mimeType = UtilMethods.getMimeType(file)
-                    val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
-                    surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
+                try {
+                    for (i in mediaList.indices) {
+                        val file = File(mediaList[i].path)
+                        if (file.exists()){
+                            val mimeType = UtilMethods.getMimeType(file)
+                            val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
+                            surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
+                        }
+                    }
+                }catch (e:Exception){
+                    e.printStackTrace()
                 }
+
                 val jsonData=gson.toJson(mediaList)
                 Log.e("params",jsonData.toString())
                 binding.llProgress.visibility=View.VISIBLE

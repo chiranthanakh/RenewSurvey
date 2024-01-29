@@ -21,7 +21,7 @@
     <string name="contractor">Sub Contractor/ Firm Name<font color='#EA0C27'>*</font></string>
     <string name="contractor_num">Contractor Contact Number<font color='#EA0C27'>*</font></string>
     <string name="status">Status<font color='#EA0C27'>*</font></string>
-    <string name="if_you_reject_this_permission" translatable="false"><![CDATA[If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]]]></string>
+    <string name="if_you_reject_this_permission" translatable="false">Please allow all permissions to proceed</string>
 
     <string name="driving">Driving licence no<font color='#EA0C27'>*</font></string>
     <string name="induction_state">Induction Status<font color='#EA0C27'>*</font></string>

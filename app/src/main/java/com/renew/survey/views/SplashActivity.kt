@@ -74,7 +74,7 @@ class SplashActivity:BaseActivity() {
             override fun onPermissionDenied(deniedPermissions: List<String>) {
                 Toast.makeText(
                     this@SplashActivity,
-                    "Permission Denied\n$deniedPermissions", Toast.LENGTH_SHORT
+                    "Permission Denied. Please enable all the permission to proceed.", Toast.LENGTH_SHORT
                 ).show()
             }
         }
