@@ -73,6 +73,7 @@
     <string name="other">Other</string>
 
     <string-array name="frequancy">
+        <item>" "</item>
         <item>Once/Month</item>
         <item>Once/2Month</item>
         <item>Once/3Month</item>
@@ -104,6 +105,5 @@
     <string name="above_15_year_family_members">16.1 Above 15 Year Family Members<font color='#EA0C27'>*</font></string>
     <string name="below_15_year_family_members">16.2 Below 15 Year Family Members<font color='#EA0C27'>*</font></string>
     <string name="aadhar_or_ration">27. Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
-
 
 </resources>
