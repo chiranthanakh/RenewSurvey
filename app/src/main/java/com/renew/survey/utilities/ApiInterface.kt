@@ -56,6 +56,7 @@ interface ApiInterface {
         @Field("tbl_users_id")tbl_users_id:String,
         @Field("new_password")new_password:String,
         @Field("confirm_password")confirm_password:String,
+        @Header("Authorization") headers: String
         ) : Response<JsonElement>
 
     @FormUrlEncoded

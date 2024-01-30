@@ -73,7 +73,6 @@
     <string name="other">Other</string>
 
     <string-array name="frequancy">
-        <item>" "</item>
         <item>Once/Month</item>
         <item>Once/2Month</item>
         <item>Once/3Month</item>

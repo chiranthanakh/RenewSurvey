@@ -92,11 +92,11 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             disableViews=true
         }
         if (status==0){
-            commonAnswersEntity.do_you_have_aadhar_card = "YES"
-            commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
-            commonAnswersEntity.frequency_of_bill_payment = "YES"
-            commonAnswersEntity.electricity_connection_available = "YES"
-            commonAnswersEntity.is_lpg_using = "YES"
+            //commonAnswersEntity.do_you_have_aadhar_card = "YES"
+            //commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
+           // commonAnswersEntity.frequency_of_bill_payment = "YES"
+            //commonAnswersEntity.electricity_connection_available = "YES"
+            //commonAnswersEntity.is_lpg_using = "YES"
         }
 
         val calendar: Calendar = Calendar.getInstance()
@@ -587,6 +587,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }
         }
     }
+
     fun getDistrict(state: Int){
         lifecycleScope.launch {
             districtList=AppDatabase.getInstance(requireContext()).placesDao().getAllDistricts(state).transformDistrict() as ArrayList<DistrictModel>

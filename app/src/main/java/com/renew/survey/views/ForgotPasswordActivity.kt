@@ -53,6 +53,7 @@ class ForgotPasswordActivity : BaseActivity() {
                             putExtra("mobile",binding.edtMobile.text.toString())
                             putExtra("project_id",data.tbl_users_id)
                             putExtra("otp",data.otp)
+                            preferenceManager.saveToken(data.access_token)
                             startActivity(this)
                         }
                     }else{
