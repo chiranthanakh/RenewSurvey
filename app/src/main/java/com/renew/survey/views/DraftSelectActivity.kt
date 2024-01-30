@@ -25,7 +25,7 @@ class DraftSelectActivity : BaseActivity() ,DraftSurveyAdapter.ClickListener{
     }
     fun getData(){
         lifecycleScope.launch {
-            val list= AppDatabase.getInstance(this@DraftSelectActivity).formDao().getAllDraftSurvey(preferenceManager.getForm().tbl_forms_id)
+            val list= AppDatabase.getInstance(this@DraftSelectActivity).formDao().getAllDraftSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
             binding.recyclerView.adapter= DraftSurveyAdapter(this@DraftSelectActivity,list,this@DraftSelectActivity)
         }
     }

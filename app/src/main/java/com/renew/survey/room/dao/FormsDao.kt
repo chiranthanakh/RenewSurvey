@@ -38,17 +38,17 @@ import com.renew.survey.room.entities.TutorialsDetailsEntry
 @Dao
 interface FormsDao {
 
-    @Query("SELECT COUNT(id) FROM AnswerEntity where tbl_forms_id=:formId and draft=0")
-    suspend fun getTotalSurvey(formId: Int): Int
+    @Query("SELECT COUNT(id) FROM AnswerEntity where tbl_forms_id=:formId and draft=0 and tbl_projects_id=:project")
+    suspend fun getTotalSurvey(formId: Int,project: Int): Int
 
-    @Query("SELECT COUNT(id) FROM AnswerEntity where sync=0 and tbl_forms_id=:formId and draft=0")
-    suspend fun getTotalPendingSurvey(formId: Int): Int
+    @Query("SELECT COUNT(id) FROM AnswerEntity where sync=0 and tbl_forms_id=:formId and draft=0 and tbl_projects_id=:project")
+    suspend fun getTotalPendingSurvey(formId: Int,project: Int): Int
 
-    @Query("SELECT COUNT(id) FROM AnswerEntity where sync=1 and tbl_forms_id=:formId and draft=0")
-    suspend fun getTotalDoneSurvey(formId: Int): Int
+    @Query("SELECT COUNT(id) FROM AnswerEntity where sync=1 and tbl_forms_id=:formId and draft=0 and tbl_projects_id=:project")
+    suspend fun getTotalDoneSurvey(formId: Int,project: Int): Int
 
-    @Query("SELECT COUNT(id) FROM AnswerEntity where draft=1 and tbl_forms_id=:formId")
-    suspend fun getDraftSurvey(formId: Int): Int
+    @Query("SELECT COUNT(id) FROM AnswerEntity where draft=1 and tbl_forms_id=:formId and tbl_projects_id=:project")
+    suspend fun getDraftSurvey(formId: Int,project: Int): Int
     @Query("SELECT COUNT(id) FROM AnswerEntity where draft=1")
     suspend fun getAllDraftSurveyCount(): Int
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -191,8 +191,8 @@ interface FormsDao {
     @Query("Select * from AssignedSurveyEntity where status=0 and next_form_id=:formId")
     suspend fun getAllAssignedSurvey(formId: Int): List<AssignedSurveyEntity>
 
-    @Query("Select tbl_forms_id,ca.*  from AnswerEntity as a inner join CommonAnswersEntity ca on a.id=ca.answer_id where a.draft=1 and a.tbl_forms_id=:formId")
-    suspend fun getAllDraftSurvey(formId: Int): List<DraftCommonAnswer>
+    @Query("Select tbl_forms_id,ca.*  from AnswerEntity as a inner join CommonAnswersEntity ca on a.id=ca.answer_id where a.draft=1 and a.tbl_forms_id=:formId and tbl_projects_id=:project")
+    suspend fun getAllDraftSurvey(formId: Int, project: Int): List<DraftCommonAnswer>
 
     @Query("UPDATE DynamicAnswersEntity set answer=:answer where mst_question_group_id=:group and tbl_form_questions_id=:question and answer_id=:answer_id")
     suspend fun updateDynamicAnswer(answer:String,group: Int,question: Int,answer_id: Int)

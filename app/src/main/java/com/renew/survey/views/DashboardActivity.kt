@@ -267,10 +267,10 @@ class DashboardActivity : BaseActivity() {
     var draftCount=0
     fun getCounts(){
         lifecycleScope.launch {
-            val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey(preferenceManager.getForm().tbl_forms_id)
-            val pendingCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalPendingSurvey(preferenceManager.getForm().tbl_forms_id)
-            val doneCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalDoneSurvey(preferenceManager.getForm().tbl_forms_id)
-            draftCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getDraftSurvey(preferenceManager.getForm().tbl_forms_id)
+            val totalCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
+            val pendingCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalPendingSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
+            val doneCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getTotalDoneSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
+            draftCount=AppDatabase.getInstance(this@DashboardActivity).formDao().getDraftSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
 
             binding.tvTotalSurvey.text = "$totalCount"
             binding.tvPendingSurvey.text = "$pendingCount"
