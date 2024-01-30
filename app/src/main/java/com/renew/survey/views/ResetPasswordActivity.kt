@@ -48,6 +48,7 @@ class ResetPasswordActivity : BaseActivity() {
                     intent.getStringExtra("project_id")!!,
                     binding.edtNewPassword.text.toString(),
                     binding.edtPassword.text.toString(),
+                    preferenceManager.getToken()!!
                 )
                 binding.progressLayout.visibility= View.GONE
                 if (response.isSuccessful){
