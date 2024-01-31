@@ -68,6 +68,7 @@ import kotlin.math.roundToInt
 class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersEntity,val status:Int,val listener:DataAllowMetPerson) : Fragment() {
     lateinit var binding:FragmentCommonQuestionBinding
     var stateList= arrayListOf<StateModel>();
+    var frequancy= arrayListOf<String>();
     var districtList= arrayListOf<DistrictModel>()
     var tehsilList= arrayListOf<TehsilModel>()
     var panchayathList= arrayListOf<PanchayathModel>()
@@ -92,11 +93,11 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             disableViews=true
         }
         if (status==0){
-            //commonAnswersEntity.do_you_have_aadhar_card = "YES"
-            //commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
+            commonAnswersEntity.do_you_have_aadhar_card = "YES"
+            commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
            // commonAnswersEntity.frequency_of_bill_payment = "YES"
-            //commonAnswersEntity.electricity_connection_available = "YES"
-            //commonAnswersEntity.is_lpg_using = "YES"
+            commonAnswersEntity.electricity_connection_available = "YES"
+            commonAnswersEntity.is_lpg_using = "YES"
         }
 
         val calendar: Calendar = Calendar.getInstance()
@@ -182,6 +183,9 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 binding.llEBill.visibility = View.GONE
                 binding.eConnectionBill.visibility = View.GONE
                 binding.edtTotalEBill.visibility = View.GONE
+                binding.tvEFrequancy.visibility = View.GONE
+                binding.llFrequancy.visibility = View.GONE
+                binding.edtTotalEBill.setText("")
                 binding.tvEFrequancy.visibility = View.GONE
                 binding.llFrequancy.visibility = View.GONE
             }
@@ -310,6 +314,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }
         }
         getStateData()
+        geFrequancyData()
         spinnerSelectors()
 
         binding.edtDateAndTime.setOnClickListener {
@@ -569,6 +574,27 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
 
 
         return binding.root
+    }
+
+    fun geFrequancyData(){
+        frequancy.add("Once/Month")
+        frequancy.add("Once/2Month")
+        frequancy.add("Once/3Month")
+        frequancy.add("Once/4Month")
+        frequancy.add("Annualy")
+
+        lifecycleScope.launch {
+            if (status>0){
+                frequancy.forEachIndexed { index, stateModel ->
+                    if (frequancy.get(index) == commonAnswersEntity.frequency_of_bill_payment){
+                        binding.spFrequancy.setSelection(index)
+                        return@forEachIndexed
+                    }
+                }
+                if (disableViews)
+                    binding.spFrequancy.isEnabled=false
+            }
+        }
     }
     fun getStateData(){
         lifecycleScope.launch {
