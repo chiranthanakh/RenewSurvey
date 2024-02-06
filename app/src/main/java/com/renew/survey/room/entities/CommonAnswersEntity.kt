@@ -34,7 +34,6 @@ data class CommonAnswersEntity(
     var mst_panchayat_id: String,
     var mst_village_id: String,
     var no_of_cattles_own: String,
-    var no_of_cow_dung_per_day: String,
     var no_of_cylinder_per_year: String,
     var cost_of_lpg_cyliner: String,
     var willing_to_contribute_clean_cooking: String,

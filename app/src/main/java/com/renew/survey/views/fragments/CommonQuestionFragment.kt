@@ -212,7 +212,6 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             binding.edtWoodUsed.setText(commonAnswersEntity.wood_use_per_day_in_kg)
             binding.edtNoCylinderYear.setText(commonAnswersEntity.no_of_cylinder_per_year)
             binding.edtAnnualFamilyIncome.setText(commonAnswersEntity.annual_family_income)
-            binding.edtNoCowDungPerDay.setText(commonAnswersEntity.no_of_cow_dung_per_day)
             binding.edtFamilySize.setText(commonAnswersEntity.family_size)
             binding.edtAbove15.setText(commonAnswersEntity.family_member_above_15_year)
             binding.edtBelow15.setText(commonAnswersEntity.family_member_below_15_year)
@@ -482,7 +481,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                commonAnswersEntity.no_of_cow_dung_per_day=p0.toString().trim()
+                //commonAnswersEntity.no_of_cow_dung_per_day=p0.toString().trim()
             }
 
             override fun afterTextChanged(p0: Editable?) {
