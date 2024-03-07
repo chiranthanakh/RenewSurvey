@@ -78,6 +78,21 @@ class PreferenceManager constructor(context: Context){
         return gson.fromJson(json, type)
     }
 
+    fun saveProjOtpVerification(key: String, value: List<String>) {
+        val editor = sharedPreferences.edit()
+        val gson = Gson()
+        val json = gson.toJson(value)
+        editor.putString(key, json)
+        editor.apply()
+    }
+
+    fun getProjOtpVerification(key: String): List<String>? {
+        val json = sharedPreferences.getString(key, null)
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
     fun saveUrl(key: String, value: ArrayList<String>) {
         val editor = sharedPreferences.edit()
         val gson = Gson()

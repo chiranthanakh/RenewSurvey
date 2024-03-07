@@ -95,6 +95,12 @@ interface ApiInterface {
         @Field("app_key")appKey:String,
     ) : Response<JsonElement>
     @FormUrlEncoded
+    @POST("ProjectMaster/send_verification_code")
+    suspend fun sendOtpForDistrubution(
+        @Header("Authorization") headers: String,
+        @Field("tbl_users_id")tbl_users_id:String,
+    ) : Response<JsonElement>
+    @FormUrlEncoded
     @POST("Common/get_villages")
     suspend fun getVillage(
         @Field("mst_panchayat_id")mst_panchayat_id:String,
@@ -164,11 +170,10 @@ interface ApiInterface {
     ) : Response<JsonElement>
 
 
-
     companion object {
         var retrofitService: ApiInterface?=null
-        //val BASE_URL="https://devrenewsms.proteam.co.in/api/v1/"
-        val BASE_URL="https://renewsms.proteam.co.in/api/v1/"
+        val BASE_URL="https://devrenewsms.proteam.co.in/api/v1/"
+        //val BASE_URL="https://renewsms.proteam.co.in/api/v1/"
         fun getInstance() : ApiInterface? {
 
             val loggingInterceptor = HttpLoggingInterceptor()

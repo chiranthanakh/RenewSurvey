@@ -300,6 +300,20 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         loadFragment(pos)
     }
     fun loadFragment(pos:Int){
+        if (preferenceManager.getForm().tbl_forms_id == 2 && pos != 0) {
+            val retrievedList = preferenceManager.getProjOtpVerification("projectVerify")
+            if (retrievedList?.contains(preferenceManager.getProject().id.toString() ?: "") == false) {
+            UtilMethods.showToast(this,"Please complete OTP verification")
+            } else {
+                loadScreen(pos)
+            }
+        } else {
+            loadScreen(pos)
+        }
+
+    }
+
+    fun loadScreen(pos:Int) {
         binding.recyclerView.post(Runnable { binding.recyclerView.scrollToPosition(pos) })
         if (pos==questionGroupList.size-1){
             binding.btnNext.visibility= View.GONE
@@ -308,6 +322,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             binding.btnNext.visibility= View.VISIBLE
             binding.btnContinue.visibility= View.GONE
         }
+        Log.d("checkscroll",pos.toString())
         questionGroupList[previouslySelected].selected=false
         adapterQuestionGroup.notifyItemChanged(previouslySelected)
         previouslySelected=pos
@@ -320,9 +335,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 supportFragmentManager.beginTransaction().hide(listOfFragment[index]).commit()
             }
         }
-
     }
-
 
     fun validateCommonQuestions():Boolean{
         if (commonAnswersEntity.date_and_time_of_visit==""){

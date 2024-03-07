@@ -14,6 +14,7 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -29,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.renew.survey.R
 import com.renew.survey.adapter.DistrictSpinnerAdapter
 import com.renew.survey.adapter.PanchayatSpinnerAdapter
@@ -37,7 +39,9 @@ import com.renew.survey.adapter.TehsilSpinnerAdapter
 import com.renew.survey.adapter.VillageSpinnerAdapter
 import com.renew.survey.databinding.FragmentCommonQuestionBinding
 import com.renew.survey.helper.compressor.Compressor
+import com.renew.survey.response.Data
 import com.renew.survey.response.DistrictModel
+import com.renew.survey.response.DistrubutionOtpValidation
 import com.renew.survey.response.PanchayathModel
 import com.renew.survey.response.StateModel
 import com.renew.survey.response.TehsilModel
@@ -49,12 +53,14 @@ import com.renew.survey.room.entities.PanchayathEntity
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
 import com.renew.survey.room.entities.VillageEntity
+import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.AppConstants
 import com.renew.survey.utilities.DataAllowMetPerson
 import com.renew.survey.utilities.FileUtils
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -81,6 +87,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     val day = c.get(Calendar.DAY_OF_MONTH)
     val hour = c.get(Calendar.HOUR)
     val minute = c.get(Calendar.MINUTE)
+    private var otp: Int? = null
+    private lateinit var countDownTimer: CountDownTimer
+    private var timerRunning = false
+    private val totalTimeInMillis: Long = 60000 // 1 minute
+    val gson= Gson()
+    var listOfFragment= arrayListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,6 +110,35 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
            // commonAnswersEntity.frequency_of_bill_payment = "YES"
             commonAnswersEntity.electricity_connection_available = "YES"
             commonAnswersEntity.is_lpg_using = "YES"
+        }
+
+        if (preferenceManager.getForm().tbl_forms_id == 2) {
+            listOfFragment.clear()
+            val retrievedList = preferenceManager.getProjOtpVerification("projectVerify")
+            retrievedList?.forEach {
+                listOfFragment.add(it)
+            }
+            Log.d("checkOtpver",listOfFragment.toString() +"--"+ preferenceManager.getProject().id)
+            if (listOfFragment.contains(preferenceManager.getProject().id.toString() ?: "")) {
+                binding.llOtp.visibility = View.GONE
+            } else {
+                binding.llOtp.visibility = View.VISIBLE
+            }
+        }
+
+        binding.btnSend.setOnClickListener {
+            if (UtilMethods.isNetworkAvailable(requireContext())){
+                callVerifyOtp()
+                startTimer()
+                binding.btnVerify.visibility = View.VISIBLE
+                binding.btnSend.visibility = View.GONE
+            }else{
+                UtilMethods.showToast(requireContext(),"Please check your internet connection")
+            }
+        }
+
+        binding.btnVerify.setOnClickListener {
+            verifyOtp()
         }
 
         val calendar: Calendar = Calendar.getInstance()
@@ -571,6 +612,19 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }
         })
 
+        countDownTimer = object : CountDownTimer(totalTimeInMillis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                updateTimerText(millisUntilFinished)
+            }
+
+            override fun onFinish() {
+                timerRunning = false
+                updateTimerText(0)
+                binding.btnSend.visibility = View.VISIBLE
+                binding.btnSend.setText("Resend OTP")
+            }
+        }
+
 
         return binding.root
     }
@@ -594,6 +648,57 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                     binding.spFrequancy.isEnabled=false
             }
         }
+    }
+
+    private fun callVerifyOtp() {
+        ApiInterface.getInstance()?.apply {
+            lifecycleScope.launch {
+                val responce = sendOtpForDistrubution(
+                    preferenceManager.getToken()!!,
+                    preferenceManager.getUserId()!!
+                )
+                if (responce.isSuccessful) {
+                    val jsonObject= JSONObject(responce.body().toString())
+                    if (jsonObject.getString("success")=="1") {
+                        val data = gson.fromJson(
+                            jsonObject.getString("data").toString(),
+                            Data::class.java
+                        )
+                        otp = data.otp
+                        UtilMethods.showToast(requireContext(),"OTP: " + data.otp)
+                        Log.e("response", data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun verifyOtp() {
+        if (otp == binding.edtVerifyOtp.text.toString().toInt()) {
+            listOfFragment.add(preferenceManager.getProject().id.toString())
+            Log.d("checkOtpver",listOfFragment.size.toString())
+            preferenceManager.saveProjOtpVerification("projectVerify",listOfFragment)
+            UtilMethods.showToast(requireContext(),"OTP Verification Successful" )
+            binding.btnVerify.visibility = View.GONE
+            binding.btnSend.visibility = View.GONE
+            binding.tvTimmer.visibility = View.GONE
+            binding.edtVerifyOtp.isEnabled = false
+        } else {
+            UtilMethods.showToast(requireContext(),"OTP Verification Failed, please enter proper OTP")
+        }
+    }
+
+    private fun startTimer() {
+        countDownTimer.start()
+        timerRunning = true
+    }
+
+    private fun updateTimerText(timeInMillis: Long) {
+        val minutes = (timeInMillis / 1000) / 60
+        val seconds = (timeInMillis / 1000) % 60
+
+        val timeLeftFormatted = String.format("%02d:%02d", minutes, seconds)
+        binding.tvTimmer?.text = "Resend OTP in : " + timeLeftFormatted + " sec"
     }
     fun getStateData(){
         lifecycleScope.launch {
