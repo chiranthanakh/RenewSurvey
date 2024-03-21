@@ -302,7 +302,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
     fun loadFragment(pos:Int){
         if (preferenceManager.getForm().tbl_forms_id == 2 && pos != 0) {
             val retrievedList = preferenceManager.getProjOtpVerification("projectVerify")
-            if (retrievedList?.contains(preferenceManager.getProject().id.toString() ?: "") == false) {
+            if (retrievedList?.contains(preferenceManager.getProject().id.toString() ?: "") == false || retrievedList.isNullOrEmpty()) {
             UtilMethods.showToast(this,"Please complete OTP verification")
             } else {
                 loadScreen(pos)
