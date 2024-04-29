@@ -418,7 +418,6 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-
             <TextView
                 android:text="@string/cow_dung_cake_using"
                 android:layout_marginTop="@dimen/dp_10"
@@ -664,6 +663,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/ll_device_serial_number">
+                <TextView
+                    android:text="@string/device_Serial_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"/>
+                <EditText
+                    android:id="@+id/edt_device_serial_number"
+                    android:inputType="number"
+                    android:background="@drawable/spinner_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/ll_otp"

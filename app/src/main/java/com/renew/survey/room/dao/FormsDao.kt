@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.renew.survey.room.entities.DraftCommonAnswer
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AssignedFilterSurveyEntity
 import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.CommonAnswersEntity
@@ -190,6 +191,9 @@ interface FormsDao {
 
     @Query("Select * from AssignedSurveyEntity where status=0 and next_form_id=:formId")
     suspend fun getAllAssignedSurvey(formId: Int): List<AssignedSurveyEntity>
+
+    @Query("Select * from AssignedSurveyEntity where status=0 and next_form_id=:formId and tbl_projects_id=:project")
+    suspend fun getAllFilteredAssignedSurvey(formId: Int, project: Int): List<AssignedFilterSurveyEntity>
 
     @Query("Select tbl_forms_id,ca.*  from AnswerEntity as a inner join CommonAnswersEntity ca on a.id=ca.answer_id where a.draft=1 and a.tbl_forms_id=:formId and tbl_projects_id=:project")
     suspend fun getAllDraftSurvey(formId: Int, project: Int): List<DraftCommonAnswer>

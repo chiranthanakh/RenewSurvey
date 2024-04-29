@@ -52,6 +52,7 @@ class SyncDataActivity : BaseActivity() {
     lateinit var binding:ActivitySyncDataBinding
     private var downloadManager: DownloadManager? = null
     private var downloadReference: Long = 0
+    private var navigate : Boolean = true
     val trainingList = arrayListOf<Uri>()
     //var str = List<String>()
 
@@ -83,6 +84,7 @@ class SyncDataActivity : BaseActivity() {
         }
     }
     fun syncAPI(){
+       // preferenceManager.saveTrainingState("trainingState", emptyList())
         lifecycleScope.launch {
             ApiInterface.getInstance()?.apply {
                 Log.e("param","UserId=${preferenceManager.getUserId()}")
@@ -153,152 +155,299 @@ class SyncDataActivity : BaseActivity() {
                     "mst_language"->{
                         val languageList= arrayListOf<LanguageEntity>()
                         for (d in s.data){
-                            val languageEntity=LanguageEntity(d.mst_language_id.toInt(),d.title,d.symbol,d.mst_language_id.toInt())
-                            languageList.add(languageEntity)
+                            if (!d.mst_language_id.isNullOrEmpty() && !d.title.isNullOrEmpty() && !d.symbol.isNullOrEmpty() && !d.mst_language_id.isNullOrEmpty()) {
+                                val languageEntity = LanguageEntity(
+                                    d.mst_language_id.toInt(),
+                                    d.title,
+                                    d.symbol,
+                                    d.mst_language_id.toInt()
+                                )
+                                languageList.add(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(this@SyncDataActivity,"Some Data is Missing in mst_language, Please Correct it and Try Again")
+                            }
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertAllLanguage(languageList)
                     }
                     "mst_state"->{
                         val statesEntities= arrayListOf<StatesEntity>()
-                        for (d in s.data){
-                            val statesEntity=StatesEntity(d.mst_state_id.toInt(),d.state_name,d.state_code,d.mst_state_id.toInt(),d.mst_country_id.toInt())
-                            statesEntities.add(statesEntity)
-                            //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                        for (d in s.data) {
+
+                            if (!d.mst_state_id.isNullOrEmpty() && !d.state_name.isNullOrEmpty() && !d.state_code.isNullOrEmpty() && !d.mst_state_id.isNullOrEmpty() && !d.mst_country_id.isNullOrEmpty()) {
+                                val statesEntity = StatesEntity(
+                                    d.mst_state_id.toInt(),
+                                    d.state_name,
+                                    d.state_code,
+                                    d.mst_state_id.toInt(),
+                                    d.mst_country_id.toInt()
+                                )
+                                statesEntities.add(statesEntity)
+                                //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(this@SyncDataActivity,"Some Data is Missing in mst_state, Please Correct it and Try Again")
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).placesDao().insertAllStates(statesEntities)
                     }
                     "mst_district"->{
                         val districtEntityList= arrayListOf<DistrictEntity>()
                         for (d in s.data){
+                            if (!d.mst_district_id.isNullOrEmpty() && !d.district_name.isNullOrEmpty() && !d.mst_district_id.isNullOrEmpty() && !d.mst_country_id.isNullOrEmpty() && !d.mst_state_id.isNullOrEmpty()) {
+                               // Log.d("districtIdTest", d.mst_district_id.toInt().toString()+" "+d.district_name+" "+d.mst_district_id+" "+d.mst_country_id.toInt()+" "+d.mst_state_id.toInt())
                             val districtEntity=DistrictEntity(d.mst_district_id.toInt(),d.district_name,d.mst_district_id.toInt(),d.mst_country_id.toInt(),d.mst_state_id.toInt())
                             districtEntityList.add(districtEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
-                        }
+                            } else {
+                                UtilMethods.showToast(this@SyncDataActivity,"Some Data is Missing in mst_district, Please Correct it and Try Again")
+                            }
+                          }
                         AppDatabase.getInstance(this@SyncDataActivity).placesDao().insertAllDistricts(districtEntityList)
                     }
                     "mst_tehsil"->{
                         val tehsilEntities= arrayListOf<TehsilEntity>()
                         for (d in s.data){
-                            val tehsilEntity=TehsilEntity(d.mst_tehsil_id.toInt(),d.tehsil_name,d.mst_tehsil_id.toInt(),d.mst_district_id.toInt(),d.mst_country_id.toInt(),d.mst_state_id.toInt())
+                            if (!d.mst_tehsil_id.isNullOrEmpty() && !d.tehsil_name.isNullOrEmpty() && !d.mst_tehsil_id.isNullOrEmpty() && !d.mst_district_id.isNullOrEmpty() && !d.mst_country_id.isNullOrEmpty()&& !d.mst_state_id.isNullOrEmpty()) {
+                                val tehsilEntity=TehsilEntity(d.mst_tehsil_id.toInt(),d.tehsil_name,d.mst_tehsil_id.toInt(),d.mst_district_id.toInt(),d.mst_country_id.toInt(),d.mst_state_id.toInt())
                             tehsilEntities.add(tehsilEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(this@SyncDataActivity,"Some Data is Missing in mst_tehsil, Please Correct it and Try Again")
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).placesDao().insertAllTehsils(tehsilEntities)
                     }
                     "mst_panchayat"->{
                         val panchayathEntities= arrayListOf<PanchayathEntity>()
-                        for (d in s.data){
-                            val panchayathEntity=PanchayathEntity(d.mst_panchayat_id.toInt(),d.panchayat_name,d.mst_panchayat_id.toInt(),d.mst_tehsil_id.toInt(),d.mst_district_id.toInt(),d.mst_country_id.toInt(),d.mst_state_id.toInt())
-                            panchayathEntities.add(panchayathEntity)
-                            //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                        for (d in s.data) {
+                            if (!d.mst_panchayat_id.isNullOrEmpty() && !d.panchayat_name.isNullOrEmpty() && !d.mst_panchayat_id.isNullOrEmpty() && !d.mst_tehsil_id.isNullOrEmpty() && !d.mst_district_id.isNullOrEmpty() && !d.mst_country_id.isNullOrEmpty() && !d.mst_state_id.isNullOrEmpty()) {
+                                val panchayathEntity = PanchayathEntity(
+                                    d.mst_panchayat_id.toInt(),
+                                    d.panchayat_name,
+                                    d.mst_panchayat_id.toInt(),
+                                    d.mst_tehsil_id.toInt(),
+                                    d.mst_district_id.toInt(),
+                                    d.mst_country_id.toInt(),
+                                    d.mst_state_id.toInt()
+                                )
+                                panchayathEntities.add(panchayathEntity)
+                                //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in mst_panchayat, Please Correct it and Try Again"
+                                )
+                            }
                         }
+
                         AppDatabase.getInstance(this@SyncDataActivity).placesDao().insertAllPanchayaths(panchayathEntities)
                     }
                     "mst_village"->{
-                        val villageEntities= arrayListOf<VillageEntity>()
+                        var villageEntities= arrayListOf<VillageEntity>()
                         for (d in s.data){
+                            if (!d.mst_village_id.isNullOrEmpty() && !d.village_name.isNullOrEmpty() && !d.mst_village_id.isNullOrEmpty() && !d.mst_panchayat_id.isNullOrEmpty() && !d.mst_tehsil_id.isNullOrEmpty() && !d.mst_district_id.isNullOrEmpty() && !d.mst_country_id.isNullOrEmpty() && !d.mst_state_id.isNullOrEmpty()) {
                             val villageEntity=VillageEntity(d.mst_village_id.toInt(),d.village_name,d.mst_village_id.toInt(),d.mst_panchayat_id.toInt(),d.mst_tehsil_id.toInt(),d.mst_district_id.toInt(),d.mst_country_id.toInt(),d.mst_state_id.toInt())
                             villageEntities.add(villageEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
-                        }
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in mst_village, Please Correct it and Try Again"
+                                )
+                            }
+                         }
                         AppDatabase.getInstance(this@SyncDataActivity).placesDao().insertAllVillages(villageEntities)
                     }
                     "tbl_forms"->{
                         val formEntityList= arrayListOf<FormEntity>()
                         for (d in s.data){
-                            val formEntity=FormEntity(d.tbl_forms_id.toInt(),d.mst_categories_id.toInt(),d.mst_divisions_id.toInt(),d.tbl_forms_id.toInt())
+                            if (!d.tbl_forms_id.isNullOrEmpty() && !d.mst_categories_id.isNullOrEmpty() && !d.mst_divisions_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty()) {
+                                val formEntity=FormEntity(d.tbl_forms_id.toInt(),d.mst_categories_id.toInt(),d.mst_divisions_id.toInt(),d.tbl_forms_id.toInt())
                             formEntityList.add(formEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in tbl_forms, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllForms(formEntityList)
                     }
                     "mst_question_group"->{
                         val formQuestionGroups= arrayListOf<FormQuestionGroupEntity>()
                         for (d in s.data){
-                            val formQuestionGroup=FormQuestionGroupEntity(d.mst_question_group_id.toInt(),d.mst_question_group_id.toInt(),d.order_by.toInt())
+                            if (!d.mst_question_group_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.order_by.isNullOrEmpty()) {
+                                val formQuestionGroup=FormQuestionGroupEntity(d.mst_question_group_id.toInt(),d.mst_question_group_id.toInt(),d.order_by.toInt())
                             formQuestionGroups.add(formQuestionGroup)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in mst_question_group, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsQuestionGroup(formQuestionGroups)
                     }
                     "tbl_form_questions"->{
                         val formQuestions= arrayListOf<FormQuestionEntity>()
                         for (d in s.data){
-                            val formQuestion=FormQuestionEntity(d.tbl_form_questions_id.toInt(),d.allowed_file_type,d.format,d.is_mandatory,d.is_special_char_allowed,d.is_validation_required,d.max_file_size,d.max_length,d.min_length,d.mst_question_group_id.toInt(),d.order_by.toInt(),d.question_type,d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt())
+                            if (!d.tbl_form_questions_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.question_type.isNullOrEmpty() && !d.tbl_form_questions_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty()) {
+                                val formQuestion=FormQuestionEntity(d.tbl_form_questions_id.toInt(),d.allowed_file_type,d.format,d.is_mandatory,d.is_special_char_allowed,d.is_validation_required,d.max_file_size,d.max_length,d.min_length,d.mst_question_group_id.toInt(),d.order_by.toInt(),d.question_type,d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt())
                             formQuestions.add(formQuestion)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in tbl_form_questions, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsQuestions(formQuestions)
                     }
                     "tbl_form_questions_option"->{
                         val formQuestionOptions= arrayListOf<FormQuestionOptionsEntity>()
                         for (d in s.data){
-                            val formQuestionOption=FormQuestionOptionsEntity(d.tbl_form_questions_option_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_form_questions_option_id.toInt(),d.tbl_forms_id.toInt())
+                            if (!d.tbl_form_questions_option_id.isNullOrEmpty() && !d.tbl_form_questions_id.isNullOrEmpty() && !d.tbl_form_questions_option_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty()) {
+                                val formQuestionOption=FormQuestionOptionsEntity(d.tbl_form_questions_option_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_form_questions_option_id.toInt(),d.tbl_forms_id.toInt())
                             formQuestionOptions.add(formQuestionOption)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in tbl_form_questions_option, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsQuestionOptions(formQuestionOptions)
                     }
                     "mst_form_language"->{
                         val formLanguages= arrayListOf<FormLanguageEntity>()
                         for (d in s.data){
-                            val formLanguage=FormLanguageEntity(d.mst_form_language_id.toInt(),d.module,d.module_id.toInt(),d.mst_form_language_id.toInt(),d.mst_language_id.toInt(),d.title)
+                            if (!d.mst_form_language_id.isNullOrEmpty()  /*&& !d.mst_form_language_id.isNullOrEmpty() && !d.mst_language_id.isNullOrEmpty() && !d.title.isNullOrEmpty()*/) {
+                                val formLanguage=FormLanguageEntity(d.mst_form_language_id.toInt(),d.module,d.module_id.toInt(),d.mst_form_language_id.toInt(),d.mst_language_id.toInt(),d.title)
                             formLanguages.add(formLanguage)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in mst_form_language, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFormsLanguages(formLanguages)
                     }
                     "mst_file_types"->{
                         val fileTypeEntityList= arrayListOf<FileTypeEntity>()
                         for (d in s.data){
-                            val fileTypeEntity=FileTypeEntity(d.mst_file_types_id.toInt(),d.extension,d.mst_file_types_id.toInt())
+                            if (!d.mst_file_types_id.isNullOrEmpty() && !d.extension.isNullOrEmpty() && !d.mst_file_types_id.isNullOrEmpty()) {
+
+                                val fileTypeEntity=FileTypeEntity(d.mst_file_types_id.toInt(),d.extension,d.mst_file_types_id.toInt())
                             fileTypeEntityList.add(fileTypeEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in mst_file_types, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllFileTypes(fileTypeEntityList)
                     }
                     "tbl_project_phase"->{
                         val projectsPhaseList= arrayListOf<ProjectsPhase>()
                         for (d in s.data){
-                            val projectsPhase=ProjectsPhase(d.tbl_project_phase_id.toInt(),d.phase.toInt(),d.version.toString(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_projects_id.toInt(),d.version.toInt())
+                            if (!d.tbl_project_phase_id.isNullOrEmpty() && !d.phase.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty() && !d.tbl_project_phase_id.isNullOrEmpty() && !d.tbl_projects_id.isNullOrEmpty() && !d.version.isNullOrEmpty()) {
+
+                                val projectsPhase=ProjectsPhase(d.tbl_project_phase_id.toInt(),d.phase.toInt(),d.version.toString(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_projects_id.toInt(),d.version.toInt())
                             projectsPhaseList.add(projectsPhase)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing in tbl_project_phase, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllProjectPhase(projectsPhaseList)
                     }
                     "tbl_projects"->{
                         val projectEntities= arrayListOf<ProjectEntity>()
                         for (d in s.data){
-                            val projectEntity=ProjectEntity(d.tbl_projects_id.toInt(),d.mst_categories_id.toInt(),d.mst_country_id.toInt(),d.mst_divisions_id.toInt(),d.mst_language_id,d.mst_state_id.toInt(),d.project_co_ordinator,d.project_code,d.project_manager,d.tbl_projects_id.toInt())
+                            if (!d.tbl_projects_id.isNullOrEmpty() && !d.mst_categories_id.isNullOrEmpty() /*&& !d.mst_country_id.isNullOrEmpty() && !d.mst_divisions_id.isNullOrEmpty() && !d.mst_language_id.isNullOrEmpty() && !d.mst_state_id.isNullOrEmpty()  && !d.project_code.isNullOrEmpty() && !d.project_manager.isNullOrEmpty() && !d.tbl_projects_id.isNullOrEmpty()*/) {
+                                val projectEntity=ProjectEntity(d.tbl_projects_id.toInt(),d.mst_categories_id.toInt(),d.mst_country_id.toInt(),d.mst_divisions_id.toInt(),d.mst_language_id,d.mst_state_id.toInt(),d.project_co_ordinator,d.project_code,d.project_manager,d.tbl_projects_id.toInt())
                             projectEntities.add(projectEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                        } else {
+                            navigate = false
+                            UtilMethods.showToast(
+                                this@SyncDataActivity,
+                                "Some Data is Missing in tbl_projects, Please Correct it and Try Again"
+                            )
                         }
+                      }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllProjects(projectEntities)
                     }
                     "tbl_project_phase_question"->{
                         val projectsPhaseQuestionEntity= arrayListOf<ProjectPhaseQuestionEntity>()
                         for (d in s.data){
-                            val projectEntity=ProjectPhaseQuestionEntity(d.tbl_project_phase_question_id.toInt(),d.mst_question_group_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_project_phase_question_id.toInt(),d.tbl_projects_id.toInt(),d.version)
+                            if (!d.tbl_project_phase_question_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.tbl_form_questions_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty() && !d.tbl_project_phase_id.isNullOrEmpty() && !d.tbl_project_phase_question_id.isNullOrEmpty()&& !d.tbl_projects_id.isNullOrEmpty() && !d.version.isNullOrEmpty()) {
+                                val projectEntity=ProjectPhaseQuestionEntity(d.tbl_project_phase_question_id.toInt(),d.mst_question_group_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_project_phase_question_id.toInt(),d.tbl_projects_id.toInt(),d.version)
                             projectsPhaseQuestionEntity.add(projectEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllProjectPhaseQuestionEntities(projectsPhaseQuestionEntity)
                     }
                     "mst_divisions"->{
                         val divisionEntities= arrayListOf<DivisionEntity>()
                         for (d in s.data){
-                            val divisionEntity=DivisionEntity(d.mst_divisions_id.toInt(),d.division_code,d.division_name,d.mst_divisions_id.toInt())
+                            if (!d.mst_divisions_id.isNullOrEmpty() && !d.division_code.isNullOrEmpty() && !d.division_name.isNullOrEmpty() && !d.mst_divisions_id.isNullOrEmpty()) {
+                                val divisionEntity=DivisionEntity(d.mst_divisions_id.toInt(),d.division_code,d.division_name,d.mst_divisions_id.toInt())
                             divisionEntities.add(divisionEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing, Please Correct it and Try Again"
+                                )
+                            }
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllDivisions(divisionEntities)
                     }
                     "mst_categories"->{
                         val categoryEntities= arrayListOf<CategoryEntity>()
                         for (d in s.data){
-                            val divisionEntity=CategoryEntity(d.mst_categories_id.toInt(),d.category_name,d.mst_categories_id.toInt(),d.mst_divisions_id.toInt())
+                            if (!d.mst_categories_id.isNullOrEmpty() && !d.category_name.isNullOrEmpty() && !d.mst_categories_id.isNullOrEmpty() && !d.mst_divisions_id.isNullOrEmpty()) {
+                                val divisionEntity=CategoryEntity(d.mst_categories_id.toInt(),d.category_name,d.mst_categories_id.toInt(),d.mst_divisions_id.toInt())
                             categoryEntities.add(divisionEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing, Please Correct it and Try Again"
+                                )
+                            }
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllCategories(categoryEntities)
@@ -360,7 +509,7 @@ class SyncDataActivity : BaseActivity() {
                 }
                 try {
                     val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),
-                        d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cylinder_per_year,d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,above15,below15,
+                        d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cylinder_per_year,d.device_serial_number, d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,above15,below15,
                         d.wood_use_per_day_in_kg,
                         d.date_and_time_of_visit!!,d.did_the_met_person_allowed_for_data!!,d.gps_location!!,d.do_you_have_aadhar_card,d.font_photo_of_aadar_card,d.back_photo_of_aadhar_card,d.total_electricity_bill,d.frequency_of_bill_payment,d.photo_of_bill,d.cost_of_lpg_cyliner,d.do_you_have_ration_or_aadhar)
                     assignedSurveyList.add(assigned)
@@ -377,8 +526,10 @@ class SyncDataActivity : BaseActivity() {
             }catch (e:Exception){
                 e.toString()
             }
-            navigateToNext()
-            preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)
+            if (navigate == true) {
+                navigateToNext()
+                preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)
+            }
         }
     }
     var answers= listOf<AnswerEntity>()

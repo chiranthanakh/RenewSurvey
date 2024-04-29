@@ -41,5 +41,18 @@ interface PlacesDao {
     @Query("select * from VillageEntity where mst_panchayat_id=:panchyath")
     suspend fun getAllVillages(panchyath:Int):List<VillageEntity>
 
+    @Query("select village_name from VillageEntity where mst_village_id=:village")
+    suspend fun getVillage(village:Int):String?
 
+    @Query("select panchayat_name from PanchayathEntity where mst_panchayat_id =:panchayat")
+    suspend fun getPanchayath(panchayat:Int):String?
+
+    @Query("select tehsil_name from TehsilEntity where mst_tehsil_id = :tasil")
+    suspend fun getTehsils(tasil:Int):String?
+
+    @Query("select district_name from DistrictEntity where mst_district_id=:district")
+    suspend fun getDistricts(district:Int):String?
+
+    @Query("select state_name from StatesEntity where mst_state_id = :state ")
+    suspend fun getStates(state : Int):String?
 }

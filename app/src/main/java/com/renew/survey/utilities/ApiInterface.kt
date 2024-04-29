@@ -38,6 +38,7 @@ interface ApiInterface {
         @Field("mobile")mobile:String,
         @Field("project_code")projectCode:String,
         @Field("aadhar_card")aadharCard:String,
+        @Field("device_serial_number")serialNumber:String,
         @Field("app_key")appKey:String,
         @Field("user_type")userType:String,
     ) : Response<JsonElement>
@@ -172,8 +173,8 @@ interface ApiInterface {
 
     companion object {
         var retrofitService: ApiInterface?=null
-        //val BASE_URL="https://devrenewsms.proteam.co.in/api/v1/"
-        val BASE_URL="https://renewsms.proteam.co.in/api/v1/"
+        val BASE_URL="https://devrenewsms.proteam.co.in/api/v2/"
+        //val BASE_URL="https://renewsms.proteam.co.in/api/v2/"
         fun getInstance() : ApiInterface? {
 
             val loggingInterceptor = HttpLoggingInterceptor()
@@ -181,8 +182,8 @@ interface ApiInterface {
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
-                .connectTimeout(60,TimeUnit.SECONDS)
-                .readTimeout(60,TimeUnit.SECONDS)
+                .connectTimeout(90,TimeUnit.SECONDS)
+                .readTimeout(90,TimeUnit.SECONDS)
                 .build()
 
             if (retrofitService == null) {

@@ -21,6 +21,7 @@ data class AssignedSurvey(
     val no_of_cattles_own: String,
     val no_of_cow_dung_per_day: String,
     val no_of_cylinder_per_year: String,
+    var device_serial_number: String,
     val parent_survey_id: String,
     val reason: String,
     val system_approval: String,

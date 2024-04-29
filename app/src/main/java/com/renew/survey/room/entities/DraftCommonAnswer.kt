@@ -19,6 +19,7 @@ data class DraftCommonAnswer(
     var mst_village_id: String,
     var no_of_cattles_own: String,
     var no_of_cylinder_per_year: String,
+    var device_serial_number: String? = "",
     var willing_to_contribute_clean_cooking: String,
     var wood_use_per_day_in_kg: String,
     var parent_survey_id: String,

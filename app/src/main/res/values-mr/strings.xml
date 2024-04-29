@@ -93,5 +93,6 @@
     <string name="aadhar_front">6.2 आधार कार्डचा पुढचा फोटो घ्या<font color='#EA0C27'>*</font></string>
     <string name="aadhar_back">6.3 आधार कार्डचा मागील फोटो घ्या<font color='#EA0C27'>*</font></string>
     <string name="aadhar_or_ration">20. Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
+    <string name="device_Serial_number">21. Device Serial number<font color='#EA0C27'>*</font></string>
 
 </resources>

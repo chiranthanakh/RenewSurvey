@@ -8,7 +8,7 @@ data class VillageEntity (
     @PrimaryKey
     val id: Int? = null,
     val village_name: String,
-    val mst_village_id: Int,
+    var mst_village_id: Int,
     val mst_panchayat_id: Int,
     val mst_tehsil_id: Int,
     val mst_district_id: Int,

@@ -16,5 +16,7 @@ data class UserInfo(
     val gender: String,
     val username: String,
     val date_of_birth: String,
-    val profile_photo: String
+    val profile_photo: String,
+    val access_token: String,
+    val tbl_users_id: String
 )

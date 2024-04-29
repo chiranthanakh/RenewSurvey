@@ -48,17 +48,24 @@ class VerifyOTPActivity : BaseActivity() {
                         startActivity(this)
                     }
                 } else {
-                    Intent(this,SignUpDetailsActivity::class.java).apply {
-                        putExtra("mobile",intent.getStringExtra("mobile"))
-                        putExtra("aadhar",intent.getStringExtra("aadhar"))
-                        putExtra("project",intent.getStringExtra("project"))
-                        putExtra("project_id",intent.getStringExtra("project_id"))
-                        putExtra("state_name",intent.getStringExtra("state_name"))
-                        putExtra("project_name",intent.getStringExtra("project_name"))
-                        putExtra("coordinator_id",intent.getStringExtra("coordinator_id"))
-                        putExtra("user_type",intent.getStringExtra("user_type"))
-                        putExtra("user_info",intent.getStringExtra("user_info"))
-                        startActivity(this)
+                    if (intent.getStringExtra("user_type") == "USER") {
+                        Intent(this@VerifyOTPActivity,SyncDataActivity::class.java).apply {
+                            startActivity(this)
+                            finish()
+                        }
+                    } else {
+                        Intent(this,SignUpDetailsActivity::class.java).apply {
+                            putExtra("mobile",intent.getStringExtra("mobile"))
+                            putExtra("aadhar",intent.getStringExtra("aadhar"))
+                            putExtra("project",intent.getStringExtra("project"))
+                            putExtra("project_id",intent.getStringExtra("project_id"))
+                            putExtra("state_name",intent.getStringExtra("state_name"))
+                            putExtra("project_name",intent.getStringExtra("project_name"))
+                            putExtra("coordinator_id",intent.getStringExtra("coordinator_id"))
+                            putExtra("user_type",intent.getStringExtra("user_type"))
+                            putExtra("user_info",intent.getStringExtra("user_info"))
+                            startActivity(this)
+                        }
                     }
                 }
             }else{
@@ -208,6 +215,7 @@ class VerifyOTPActivity : BaseActivity() {
                     intent.getStringExtra("mobile")!!,
                     intent.getStringExtra("project_code")!!,
                     intent.getStringExtra("aadhar")!!,
+                    intent.getStringExtra("serial_number")!!,
                     AppConstants.AppKey,
                     user_type
                 )

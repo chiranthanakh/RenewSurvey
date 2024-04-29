@@ -76,7 +76,9 @@ class QuestionsFragment(
             testquestionsAdapter= TestQuestionsAdapter(requireContext(),testquestionList)
             binding.recyclerView.adapter=testquestionsAdapter
         } else {
-            if (status==4||status==5||status==6) {
+            Log.d("QuestionQuairy", status.toString())
+
+            if (status==4||status==5||status==6||status==8) {
                 getQuestionsWithDraftAnswer()
             } else {
                 getQuestions()
@@ -116,7 +118,7 @@ class QuestionsFragment(
                 //questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
             }
             val questionList=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
-            Log.d("TestQuestionQuairy", questionList.toString())
+            Log.d("QuestionQuairy", questionGroupList[fragPos].questions.toString())
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
                 if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
                     val options= formQuestionLanguage?.tbl_form_questions_id?.let {

@@ -9,7 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <include layout="@layout/toolbar_auth"/>
+
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_nav_view"
+                android:layout_width="150dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:background="?selectableItemBackground"
+                android:src="@drawable/header_logo" />
+
+            <ImageView
+                android:id="@+id/iv_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="160dp"
+                android:src="@drawable/ic_filter" />
+
+        </LinearLayout>
+
         <TextView
             android:text="Assigned List"
             android:textSize="@dimen/text_size_18sp"
@@ -19,6 +43,36 @@
             android:padding="@dimen/dp_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:id="@+id/ll_search_business"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/edt_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/dp_20"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="@dimen/margin_10dp"
+                    android:background="@color/gray"
+                    android:textSize="18sp"
+                    app:queryHint="Search here..."
+                    app:defaultQueryHint="Search here..."
+                    app:iconifiedByDefault="false"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+
+            </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:paddingBottom="@dimen/margin_100dp"

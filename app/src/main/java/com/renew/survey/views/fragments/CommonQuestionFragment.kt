@@ -80,6 +80,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
     var panchayathList= arrayListOf<PanchayathModel>()
     var villageList= arrayListOf<VillageModel>()
     var disableViews=false
+    var serialNumber : String? = ""
     lateinit var preferenceManager:PreferenceManager
     val c = Calendar.getInstance()
     val year = c.get(Calendar.YEAR)
@@ -101,7 +102,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         binding= FragmentCommonQuestionBinding.inflate(inflater,container,false)
         preferenceManager= PreferenceManager(requireContext())
         Log.e("status","$status")
-        if (status==2||status==3||status==5||status==6){
+        if (status==2||status==3||status==5||status==6||status==7||status==8){
             disableViews=true
         }
         if (status==0){
@@ -112,14 +113,23 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             commonAnswersEntity.is_lpg_using = "YES"
         }
 
+        if(preferenceManager.getForm().tbl_forms_id == 1) {
+            binding.llDeviceSerialNumber.visibility = View.GONE
+        }
+        if(preferenceManager.getForm().tbl_forms_id == 3) {
+            Log.d("serialNumberTest6",commonAnswersEntity.device_serial_number)
+
+            serialNumber = commonAnswersEntity.device_serial_number
+            commonAnswersEntity.device_serial_number = ""
+        }
         if (preferenceManager.getForm().tbl_forms_id == 2) {
             listOfFragment.clear()
             val retrievedList = preferenceManager.getProjOtpVerification("projectVerify")
             retrievedList?.forEach {
                 listOfFragment.add(it)
             }
-            Log.d("checkOtpver",listOfFragment.toString() +"--"+ preferenceManager.getProject().id)
-            if (listOfFragment.contains(preferenceManager.getProject().id.toString() ?: "")) {
+            Log.d("checkOtpver",listOfFragment.toString() +"--"+ commonAnswersEntity.aadhar_card)
+            if (listOfFragment.contains(commonAnswersEntity.aadhar_card ?: "")) {
                 binding.llOtp.visibility = View.GONE
             } else {
                 binding.llOtp.visibility = View.VISIBLE
@@ -138,7 +148,11 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         }
 
         binding.btnVerify.setOnClickListener {
-            verifyOtp()
+            if (!binding.edtVerifyOtp.text.toString().isNullOrBlank()) {
+                verifyOtp()
+            } else {
+                UtilMethods.showToast(requireContext(),"Please enter OTP")
+            }
         }
 
         val calendar: Calendar = Calendar.getInstance()
@@ -263,7 +277,11 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             binding.tvAadharBack.setText(commonAnswersEntity.back_photo_of_aadhar_card.substring(commonAnswersEntity.back_photo_of_aadhar_card.lastIndexOf("/")+1))
             binding.tvAadharFront.setText(commonAnswersEntity.font_photo_of_aadar_card.substring(commonAnswersEntity.font_photo_of_aadar_card.lastIndexOf("/")+1))
             binding.tvBillPhoto.setText(commonAnswersEntity.photo_of_bill.substring(commonAnswersEntity.photo_of_bill.lastIndexOf("/")+1))
-
+            if (commonAnswersEntity.device_serial_number.equals("null")) {
+                binding.edtDeviceSerialNumber.setText(" ")
+            } else {
+                binding.edtDeviceSerialNumber.setText(commonAnswersEntity.device_serial_number)
+            }
 
             when(commonAnswersEntity.gender.uppercase(Locale.ROOT)){
                 AppConstants.male.uppercase(Locale.ROOT) ->{
@@ -349,8 +367,14 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 binding.edtNoCylinderYear.isEnabled=false
                 binding.edtCylinderCost.isEnabled=false
                 binding.spFrequancy.isEnabled=false
-                binding.edtGpsLocation.isEnabled = true
-                binding.edtDateAndTime.isEnabled = true
+                if (preferenceManager.getForm().tbl_forms_id == 4){
+                    binding.edtGpsLocation.isEnabled = false
+                    binding.edtDateAndTime.isEnabled = false
+                    binding.edtDeviceSerialNumber.isEnabled = false
+                } else {
+                    binding.edtGpsLocation.isEnabled = true
+                    binding.edtDateAndTime.isEnabled = true
+                }
             }
         }
         getStateData()
@@ -442,6 +466,30 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
 
             }
         })
+
+        binding.edtDeviceSerialNumber.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                Log.d("serialNumberTest1",serialNumber.toString()+"  "+ preferenceManager.getForm().tbl_forms_id)
+                if (preferenceManager.getForm().tbl_forms_id == 3) {
+                    Log.d("serialNumberTest2",p0.toString())
+
+                    if (serialNumber.equals(p0.toString())) {
+                        Log.d("serialNumberTest3",p0.toString())
+                        commonAnswersEntity.device_serial_number=p0.toString().trim()
+                    }
+                } else {
+                    commonAnswersEntity.device_serial_number=p0.toString().trim()
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
         binding.rbMale.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
                 commonAnswersEntity.gender=AppConstants.male
@@ -675,7 +723,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
 
     private fun verifyOtp() {
         if (otp == binding.edtVerifyOtp.text.toString().toInt()) {
-            listOfFragment.add(preferenceManager.getProject().id.toString())
+            listOfFragment.add(commonAnswersEntity.aadhar_card)
             Log.d("checkOtpver",listOfFragment.size.toString())
             preferenceManager.saveProjOtpVerification("projectVerify",listOfFragment)
             UtilMethods.showToast(requireContext(),"OTP Verification Successful" )

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class AssignedSurveyEntity(
+data class AssignedFilterSurveyEntity(
     @PrimaryKey
     val id:Int?,
     val status:Int?,
@@ -24,6 +24,11 @@ data class AssignedSurveyEntity(
     val mst_state_id: Int,
     val mst_tehsil_id: Int,
     val mst_village_id: Int,
+    var mst_district_name: String? = "",
+    var mst_panchayat_name: String? = "",
+    var mst_state_name: String? = "",
+    var mst_tehsil_name: String? = "",
+    var mst_village_name: String? = "",
     val next_form_id: Int,
     val no_of_cattles_own: String,
     val no_of_cylinder_per_year: String,

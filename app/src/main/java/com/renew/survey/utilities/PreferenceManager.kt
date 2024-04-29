@@ -71,6 +71,12 @@ class PreferenceManager constructor(context: Context){
         editor.apply()
     }
 
+    fun clearTrainingState() {
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
+    }
+
     fun getTrainingState(key: String): List<String>? {
         val json = sharedPreferences.getString(key, null)
         val gson = Gson()

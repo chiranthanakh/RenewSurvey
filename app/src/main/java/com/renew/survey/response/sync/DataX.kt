@@ -38,7 +38,7 @@ data class DataX(
     val mst_question_group_id: String,
     val mst_state_id: String,
     val mst_tehsil_id: String,
-    val mst_village_id: String,
+    var mst_village_id: String,
     val order_by: String,
     val panchayat_name: String,
     val phase: String,

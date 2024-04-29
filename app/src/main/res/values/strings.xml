@@ -104,5 +104,6 @@
     <string name="above_15_year_family_members">13.1 Above 15 Year Family Members<font color='#EA0C27'>*</font></string>
     <string name="below_15_year_family_members">13.2 Below 15 Year Family Members<font color='#EA0C27'>*</font></string>
     <string name="aadhar_or_ration">20. Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
+    <string name="device_Serial_number">21. Device Serial number<font color='#EA0C27'>*</font></string>
 
 </resources>

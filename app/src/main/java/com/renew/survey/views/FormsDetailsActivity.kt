@@ -32,6 +32,7 @@ import com.renew.survey.adapter.QuestionGroupAdapter
 import com.renew.survey.databinding.ActivityFormsDetailsBinding
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AssignedFilterSurveyEntity
 import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DraftCommonAnswer
@@ -61,10 +62,10 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
     var previouslySelected=0
     lateinit var adapterQuestionGroup:QuestionGroupAdapter
     var tbl_project_survey_common_data_id=""
-    var assigned:AssignedSurveyEntity?=null
+    var assigned: AssignedFilterSurveyEntity?=null
     var draftAnsId:Int?=null
     var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(null,"","","","","","","","","","","","","","","","","","","","","","","","","","",
-        "","","","","","","","",0)
+        "","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
@@ -72,23 +73,32 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         setContentView(binding.root)
         if (intent.hasExtra("assigned")){
 
-            assigned=gson.fromJson(intent.getStringExtra("assigned"),AssignedSurveyEntity::class.java)
+            assigned=gson.fromJson(intent.getStringExtra("assigned"),AssignedFilterSurveyEntity::class.java)
             commonAnswersEntity= CommonAnswersEntity(
                 null,assigned!!.aadhar_card,assigned!!.date_and_time_of_visit,assigned!!.did_the_met_person_allowed_for_data,assigned!!.gps_location,assigned!!.annual_family_income,assigned!!.banficary_name,assigned!!.do_you_have_aadhar_card,assigned!!.font_photo_of_aadar_card,assigned!!.back_photo_of_aadhar_card,assigned!!.electricity_connection_available,assigned!!.total_electricity_bill,assigned!!.frequency_of_bill_payment,assigned!!.photo_of_bill,assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
-                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cylinder_per_year,assigned!!.cost_of_lpg_cyliner,assigned!!.willing_to_contribute_clean_cooking,
+                assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cylinder_per_year,assigned!!.device_serial_number.toString(),assigned!!.cost_of_lpg_cyliner,assigned!!.willing_to_contribute_clean_cooking,
                 assigned?.wood_use_per_day_in_kg!!,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),assigned!!.family_member_below_15_year,
                 assigned?.family_member_above_15_year,assigned!!.do_you_have_ration_or_aadhar,null
             )
             tbl_project_survey_common_data_id=assigned!!.tbl_project_survey_common_data_id.toString()
-            status=assigned!!.next_form_id
+            if (assigned!!.next_form_id == 4) {
+                status=assigned!!.next_form_id-1
+            } else {
+                status=assigned!!.next_form_id
+            }
         }else if (intent.hasExtra("draft")){
 
             val a=gson.fromJson(intent.getStringExtra("draft"),DraftCommonAnswer::class.java)
-            status=3+a.tbl_forms_id!!
+            if(a.tbl_forms_id==4) {
+                status=4+a.tbl_forms_id!!
+            } else {
+                status=3+a.tbl_forms_id!!
+            }
+
 
             commonAnswersEntity= CommonAnswersEntity(
                 null,a.aadhar_card,a.date_and_time_of_visit,a.did_the_met_person_allowed_for_data,a.gps_location,a.annual_family_income,a.banficary_name,a.do_you_have_aadhar_card,a.font_photo_of_aadar_card,a.back_photo_of_aadhar_card,a.electricity_connection_available,a.total_electricity_bill,a.frequency_of_bill_payment,a.photo_of_bill,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cylinder_per_year,a.cost_of_lpg_cyliner,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,a.do_you_have_ration_or_aadhar,null
+                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cylinder_per_year,a.device_serial_number.toString(), a.cost_of_lpg_cyliner,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,a.do_you_have_ration_or_aadhar,null
             )
         }
         if (intent.getBooleanExtra("training",false)) {
@@ -302,7 +312,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
     fun loadFragment(pos:Int){
         if (preferenceManager.getForm().tbl_forms_id == 2 && pos != 0) {
             val retrievedList = preferenceManager.getProjOtpVerification("projectVerify")
-            if (retrievedList?.contains(preferenceManager.getProject().id.toString() ?: "") == false || retrievedList.isNullOrEmpty()) {
+            if (retrievedList?.contains(commonAnswersEntity.aadhar_card ?: "") == false || retrievedList.isNullOrEmpty()) {
             UtilMethods.showToast(this,"Please complete OTP verification")
             } else {
                 loadScreen(pos)
@@ -473,6 +483,15 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 return false
             }
         }
+
+        if (preferenceManager.getForm().tbl_forms_id==2 || preferenceManager.getForm().tbl_forms_id==3 ) {
+            Log.d("testSerial",commonAnswersEntity.device_serial_number)
+            if (commonAnswersEntity.device_serial_number == "" || commonAnswersEntity.device_serial_number.isNullOrEmpty()) {
+                UtilMethods.showToast(this,"Please enter serial number")
+                return false
+            }
+        }
+
         return true
     }
     interface ClickListener{

@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.renew.survey.databinding.ItemAssignedSurveyBinding
 import com.renew.survey.databinding.ItemProjectSelectBinding
 import com.renew.survey.response.Project
+import com.renew.survey.room.entities.AssignedFilterSurveyEntity
 import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectWithLanguage
 
-class AssignedSurveyAdapter(val context:Context, private var list: List<AssignedSurveyEntity>, var clickListener: ClickListener) :
+class AssignedSurveyAdapter(val context:Context, private var list: List<AssignedFilterSurveyEntity>, var clickListener: ClickListener) :
     RecyclerView.Adapter<AssignedSurveyAdapter.ViewHolder>() {
 
     class ViewHolder (val binding: ItemAssignedSurveyBinding):RecyclerView.ViewHolder(binding.root)
@@ -34,6 +35,6 @@ class AssignedSurveyAdapter(val context:Context, private var list: List<Assigned
         }
     }
     interface ClickListener{
-        fun onProjectSelect(assignedSurveyEntity: AssignedSurveyEntity)
+        fun onProjectSelect(assignedSurveyEntity: AssignedFilterSurveyEntity)
     }
 }
