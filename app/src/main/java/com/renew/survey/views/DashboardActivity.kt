@@ -136,8 +136,15 @@ class DashboardActivity : BaseActivity() {
                         a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
                     }
                 }
+                for (a in answers){
+                    for (d in a.dynamicAnswersList){
+                        if (d.answer!!.startsWith("/")){
+                            d.answer = d.answer!!.substring(d.answer!!.lastIndexOf("/")+1)
+                        }
+                    }
+                }
                 val jsonData=gson.toJson(answers)
-                Log.e("data",jsonData)
+                Log.e("dataAnswers",answers.toString())
                 if(answers.size>0){
                    // syncMedia()
                     binding.llProgress.visibility=View.VISIBLE
@@ -273,6 +280,7 @@ class DashboardActivity : BaseActivity() {
                 }
             }
             val surveyImagesParts: Array<MultipartBody.Part?> = arrayOfNulls<MultipartBody.Part>(mediaList.size)
+           // Log.d("mediaListcheck",mediaList)
             if (mediaList.size>0) {
                 try {
                     for (i in mediaList.indices) {

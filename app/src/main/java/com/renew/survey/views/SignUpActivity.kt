@@ -90,38 +90,76 @@ class SignUpActivity : BaseActivity() {
                 binding.progressLayout.visibility=View.GONE
                 if (response.isSuccessful){
                     val jsonObject=JSONObject(response.body().toString())
-                        if (jsonObject.getString("success")=="1"){
+                        if (jsonObject.getString("success")=="1") {
 
-                            val data=gson.fromJson(jsonObject.getString("data").toString(),ValidationModel::class.java)
-                            Log.e("response",data.toString())
-                            Toast.makeText(this@SignUpActivity,data.otp,Toast.LENGTH_LONG).show()
+                            val data = gson.fromJson(
+                                jsonObject.getString("data").toString(),
+                                ValidationModel::class.java
+                            )
+                            Log.e("response", data.toString())
                             if (user_type == "USER") {
                                 data.user_info.access_token.let {
                                     preferenceManager.saveToken(data.user_info.access_token)
                                 }
                                 data.user_info.tbl_users_id.let { preferenceManager.saveUserId(data.user_info.tbl_users_id) }
 
-                                var data3 = UserData(data.user_info.aadhar_card,data.user_info.access_token,data.user_info.address,
-                                    data.user_info.alt_moile,data.user_info.email,data.user_info.full_name,"",data.user_info.mobile,"",data.user_info.pincode,
-                                    data.user_info.profile_photo,false,data.user_info.tbl_users_id,data.user_type,data.user_info.username)
+                                var data3 = UserData(
+                                    data.user_info.aadhar_card,
+                                    data.user_info.access_token,
+                                    data.user_info.address,
+                                    data.user_info.alt_moile,
+                                    data.user_info.email,
+                                    data.user_info.full_name,
+                                    "",
+                                    data.user_info.mobile,
+                                    "",
+                                    data.user_info.pincode,
+                                    data.user_info.profile_photo,
+                                    false,
+                                    data.user_info.tbl_users_id,
+                                    "USER",
+                                    data.user_info.username
+                                )
                                 preferenceManager.saveUserData(data3)
-                            }
+
+                                Intent(this@SignUpActivity, SyncDataActivity::class.java).apply {
+                                    putExtra("mobile", binding.edtMobile.text.toString())
+                                    putExtra("aadhar", binding.edtAadhaarCard.text.toString())
+                                    putExtra(
+                                        "serial_number",
+                                        binding.edtAadhaarCard.text.toString()
+                                    )
+                                    putExtra("project", data.project_info.project_code)
+                                    putExtra("state_name", data.project_info.state_name)
+                                    putExtra("project_name", data.project_info.title)
+                                    putExtra("project_code", binding.edtUniqueCode.text.toString())
+                                    putExtra("project_id", data.project_info.tbl_projects_id)
+                                    putExtra("coordinator_id", data.project_info.co_ordinator_id)
+                                    putExtra("user_type", user_type)
+                                    putExtra("otp", data.otp)
+                                    putExtra("user_info", gson.toJson(data.user_info))
+                                    startActivity(this)
+                                }
+                            } else {
+                                Toast.makeText(this@SignUpActivity, data.otp, Toast.LENGTH_LONG)
+                                    .show()
 
                             Intent(this@SignUpActivity, VerifyOTPActivity::class.java).apply {
-                                putExtra("mobile",binding.edtMobile.text.toString())
-                                putExtra("aadhar",binding.edtAadhaarCard.text.toString())
-                                putExtra("serial_number",binding.edtAadhaarCard.text.toString())
-                                putExtra("project",data.project_info.project_code)
-                                putExtra("state_name",data.project_info.state_name)
-                                putExtra("project_name",data.project_info.title)
-                                putExtra("project_code",binding.edtUniqueCode.text.toString())
-                                putExtra("project_id",data.project_info.tbl_projects_id)
-                                putExtra("coordinator_id",data.project_info.co_ordinator_id)
-                                putExtra("user_type",user_type)
-                                putExtra("otp",data.otp)
-                                putExtra("user_info",gson.toJson(data.user_info))
+                                putExtra("mobile", binding.edtMobile.text.toString())
+                                putExtra("aadhar", binding.edtAadhaarCard.text.toString())
+                                putExtra("serial_number", binding.edtAadhaarCard.text.toString())
+                                putExtra("project", data.project_info.project_code)
+                                putExtra("state_name", data.project_info.state_name)
+                                putExtra("project_name", data.project_info.title)
+                                putExtra("project_code", binding.edtUniqueCode.text.toString())
+                                putExtra("project_id", data.project_info.tbl_projects_id)
+                                putExtra("coordinator_id", data.project_info.co_ordinator_id)
+                                putExtra("user_type", user_type)
+                                putExtra("otp", data.otp)
+                                putExtra("user_info", gson.toJson(data.user_info))
                                 startActivity(this)
                             }
+                        }
                         }else{
                             UtilMethods.showToast(this@SignUpActivity,jsonObject.getString("message"))
                         }

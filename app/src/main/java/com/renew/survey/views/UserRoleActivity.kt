@@ -39,7 +39,16 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
     }
     fun getAllForms(){
         lifecycleScope.launch {
-            val forms=AppDatabase.getInstance(this@UserRoleActivity).formDao().getAllFormsWithLanguage(preferenceManager.getLanguage(),preferenceManager.getProject().id!!)
+            Log.d("checkUser",preferenceManager.getUserdata().user_type)
+            val forms = if (preferenceManager.getUserdata().user_type=="USER") {
+                AppDatabase.getInstance(this@UserRoleActivity).formDao().getAllFormsWithLanguage(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,)
+            } else {
+                AppDatabase.getInstance(this@UserRoleActivity).formDao()
+                    .getAssignedFormsWithLanguage(
+                        preferenceManager.getLanguage(), preferenceManager.getProject().id!!,
+                        preferenceManager.getUserId()?.toInt()!!
+                    )
+            }
             binding.recyclerView.adapter=FormTypeAdapter(this@UserRoleActivity,forms,this@UserRoleActivity)
             Log.d("formDetails123",preferenceManager.getLanguage().toString()+"--"+ preferenceManager.getProject().id)
         }
@@ -67,7 +76,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         } else {
             val retrievedList = preferenceManager.getTrainingState("trainingState")
                // Log.d("trainingtestlist",retrievedList.toString())
-            if (retrievedList?.contains("${form.tbl_forms_id}-${preferenceManager.getProject().id}") != true && form.tbl_forms_id != 4) {
+            if (retrievedList?.contains("${form.tbl_forms_id}-${preferenceManager.getProject().id}-${preferenceManager.getUserId()}") != true && form.tbl_forms_id != 4) {
                 Log.d("trainingtestlist2",retrievedList.toString())
                 Intent(this, TrainingActivity::class.java).apply {
                     putExtra(

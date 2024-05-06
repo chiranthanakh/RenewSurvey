@@ -11,5 +11,6 @@ data class ProjectsPhase(
     val tbl_forms_id: Int,
     val tbl_project_phase_id: Int,
     val tbl_projects_id: Int,
-    val version: Int
+    val version: Int,
+    val is_released: String
 )

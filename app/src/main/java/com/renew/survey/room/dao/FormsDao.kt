@@ -8,6 +8,7 @@ import androidx.room.Update
 import com.renew.survey.room.entities.DraftCommonAnswer
 import com.renew.survey.room.entities.AnswerEntity
 import com.renew.survey.room.entities.AssignedFilterSurveyEntity
+import com.renew.survey.room.entities.AssignedFormEntry
 import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.CommonAnswersEntity
@@ -59,12 +60,18 @@ interface FormsDao {
             "inner join ProjectsPhase pp on fm.id=pp.tbl_forms_id and pp.tbl_projects_id=:projectId inner join FormLanguageEntity as fl on fm.tbl_forms_id=fl.module_id where fl.module='tbl_forms' and fl.mst_language_id=:language order by fm.tbl_forms_id")
     suspend fun getAllFormsWithLanguage(language:Int,projectId:Int):List<FormWithLanguage>
 
+    @Query("Select  ap.tbl_forms_id, mfl.title, tpp.tbl_project_phase_id,tpp.version FROM AssignedFormEntry as ap " +
+            " inner JOIN ProjectEntity tp ON tp.tbl_projects_id = ap.tbl_projects_id inner JOIN ProjectsPhase tpp ON tpp.tbl_projects_id = ap.tbl_projects_id AND tpp.tbl_forms_id = ap.tbl_forms_id AND tpp.is_released = 'Y'" +
+            " inner JOIN FormEntity tf ON tf.tbl_forms_id = ap.tbl_forms_id inner JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_forms' AND mfl.module_id = tf.tbl_forms_id /*AND mfl.is_active = 1 AND mfl.is_delete = 0*/ AND mfl.mst_language_id = :language" +
+            " inner JOIN FormLanguageEntity mfl1 ON mfl1.module = 'tbl_projects' AND mfl1.module_id = tp.tbl_projects_id /*AND mfl1.is_active = 1 AND mfl1.is_delete = 0*/ AND mfl1.mst_language_id =:language WHERE ap.tbl_users_id = :userid AND ap.tbl_projects_id =:projectId")
+    suspend fun getAssignedFormsWithLanguage(language:Int,projectId:Int,userid:Int):List<FormWithLanguage>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllFormsQuestions(formQuestions: List<FormQuestionEntity>)
 
     @Query("SELECT l.title,q.* from \n" +
             "ProjectPhaseQuestionEntity as p inner join\n" +
-            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id and p.tbl_projects_id=:project \n" +
+            "FormQuestionEntity as q  on q.tbl_form_questions_id = p.tbl_form_questions_id and p.tbl_projects_id=:project \n" +
             "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
             "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId order by q.order_by")
     suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int,project: Int):List<FormQuestionLanguage>
@@ -135,6 +142,9 @@ interface FormsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllProjectPhaseQuestionEntities(formList: List<ProjectPhaseQuestionEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertassignedforms(formList: List<AssignedFormEntry>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllDivisions(formList: List<DivisionEntity>)

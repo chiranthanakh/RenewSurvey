@@ -193,6 +193,7 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
             Panchayath.setSelection(0)
             Village.setSelection(0)
             villageid = null
+            getData()
         }
 
         state.onItemSelectedListener=object : AdapterView.OnItemSelectedListener {

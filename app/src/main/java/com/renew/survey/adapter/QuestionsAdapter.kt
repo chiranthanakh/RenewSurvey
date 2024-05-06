@@ -341,6 +341,7 @@ class QuestionsAdapter(
                             binding.tvFile.setText(this.answer!!.substring(this.answer!!.lastIndexOf("/")+1))
                         }
                         binding.tvFile.setOnClickListener {
+                            Log.d("captureImageCheck",this.question_type)
                             clickListener.onFileSelect(this,position, this.allowed_file_type!!,this.question_type)
                         }
                     }

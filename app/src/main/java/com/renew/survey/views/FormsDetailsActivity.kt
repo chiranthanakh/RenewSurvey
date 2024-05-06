@@ -257,6 +257,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
+                    Log.e("roomData12",location?.latitude.toString())
                     if (location != null) {
                         preferenceManager.saveLocation("${location.latitude},${location.longitude}")
                     }
@@ -265,6 +266,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         }
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
+                Log.e("roomData123",location?.latitude.toString())
                 if (location != null) {
                     preferenceManager.saveLocation("${location.latitude},${location.longitude}")
                 }

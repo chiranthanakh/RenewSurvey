@@ -118,7 +118,7 @@ class QuestionsFragment(
                 //questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
             }
             val questionList=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
-            Log.d("QuestionQuairy", questionGroupList[fragPos].questions.toString())
+            Log.d("QuestionQuairy", prefsManager.getLanguage().toString()+"--"+group.toString()+"--"+prefsManager.getForm().tbl_forms_id.toString()+"--"+prefsManager.getProject().tbl_projects_id.toString())
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
                 if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
                     val options= formQuestionLanguage?.tbl_form_questions_id?.let {
@@ -189,6 +189,8 @@ class QuestionsFragment(
                 if (data != null) {
                     val uri = data.data
                     filePath = FileUtils.getPathFromUri(context, uri)
+                    var test = filePath.split("/")
+                    Log.d("filePickPath",test.get(test.size-1))
                     questionGroupList[fragPos].questions[position].answer=filePath
                     questionsAdapter.notifyItemChanged(position)
                 }

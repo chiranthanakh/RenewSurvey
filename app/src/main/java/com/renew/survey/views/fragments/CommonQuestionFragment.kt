@@ -111,6 +111,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
            // commonAnswersEntity.frequency_of_bill_payment = "YES"
             commonAnswersEntity.electricity_connection_available = "YES"
             commonAnswersEntity.is_lpg_using = "YES"
+            commonAnswersEntity.frequency_of_bill_payment = "Once/Month"
         }
 
         if(preferenceManager.getForm().tbl_forms_id == 1) {
@@ -225,6 +226,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         binding.rbElectricityYes.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
                 commonAnswersEntity.electricity_connection_available=AppConstants.yes
+                commonAnswersEntity.frequency_of_bill_payment = "Once/Month"
                 binding.llEBill.visibility = View.VISIBLE
                 binding.eConnectionBill.visibility = View.VISIBLE
                 binding.edtTotalEBill.visibility = View.VISIBLE
@@ -281,6 +283,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 binding.edtDeviceSerialNumber.setText(" ")
             } else {
                 binding.edtDeviceSerialNumber.setText(commonAnswersEntity.device_serial_number)
+               // binding.edtDeviceSerialNumber.isEnabled = false
             }
 
             when(commonAnswersEntity.gender.uppercase(Locale.ROOT)){

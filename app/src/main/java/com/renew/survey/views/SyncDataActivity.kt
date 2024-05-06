@@ -15,6 +15,7 @@ import com.renew.survey.request.MediaSyncReqItem
 import com.renew.survey.response.sync.SyncData
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AssignedFormEntry
 import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.DistrictEntity
@@ -40,6 +41,7 @@ import com.renew.survey.room.entities.VillageEntity
 import com.renew.survey.utilities.ApiInterface
 import com.renew.survey.utilities.MyCustomDialog
 import com.renew.survey.utilities.UtilMethods
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -84,6 +86,9 @@ class SyncDataActivity : BaseActivity() {
         }
     }
     fun syncAPI(){
+        lifecycleScope.launch (Dispatchers.IO){
+            AppDatabase.getInstance(this@SyncDataActivity).clearAllTables()
+        }
        // preferenceManager.saveTrainingState("trainingState", emptyList())
         lifecycleScope.launch {
             ApiInterface.getInstance()?.apply {
@@ -371,7 +376,7 @@ class SyncDataActivity : BaseActivity() {
                         for (d in s.data){
                             if (!d.tbl_project_phase_id.isNullOrEmpty() && !d.phase.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty() && !d.tbl_project_phase_id.isNullOrEmpty() && !d.tbl_projects_id.isNullOrEmpty() && !d.version.isNullOrEmpty()) {
 
-                                val projectsPhase=ProjectsPhase(d.tbl_project_phase_id.toInt(),d.phase.toInt(),d.version.toString(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_projects_id.toInt(),d.version.toInt())
+                                val projectsPhase=ProjectsPhase(d.tbl_project_phase_id.toInt(),d.phase.toInt(),d.version.toString(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_projects_id.toInt(),d.version.toInt(),d.is_released)
                             projectsPhaseList.add(projectsPhase)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                             } else {
@@ -407,6 +412,7 @@ class SyncDataActivity : BaseActivity() {
                             if (!d.tbl_project_phase_question_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.tbl_form_questions_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty() && !d.tbl_project_phase_id.isNullOrEmpty() && !d.tbl_project_phase_question_id.isNullOrEmpty()&& !d.tbl_projects_id.isNullOrEmpty() && !d.version.isNullOrEmpty()) {
                                 val projectEntity=ProjectPhaseQuestionEntity(d.tbl_project_phase_question_id.toInt(),d.mst_question_group_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_project_phase_question_id.toInt(),d.tbl_projects_id.toInt(),d.version)
                             projectsPhaseQuestionEntity.add(projectEntity)
+                                Log.d("printprojectentry",projectEntity.toString())
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                             } else {
                                 navigate = false
@@ -418,6 +424,26 @@ class SyncDataActivity : BaseActivity() {
                         }
                         AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllProjectPhaseQuestionEntities(projectsPhaseQuestionEntity)
                     }
+
+                    "tbl_users_assigned_projects"->{
+                        val assignedProjects= arrayListOf<AssignedFormEntry>()
+                        for (d in s.data){
+                            if (!d.tbl_users_assigned_projects_id.isNullOrEmpty() && !d.tbl_users_assigned_projects_id.isNullOrEmpty() && !d.tbl_projects_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty() && !d.tbl_users_id.isNullOrEmpty() && !d.tbl_project_phase_id.isNullOrEmpty()) {
+                                val formEntity=AssignedFormEntry(d.tbl_users_assigned_projects_id.toInt(),d.tbl_users_assigned_projects_id.toInt(),d.tbl_projects_id.toInt(),d.tbl_forms_id.toInt(),d.tbl_users_id.toInt(),d.tbl_project_phase_id.toInt(),/*d.mst_country_id.toInt(),d.mst_state_id.toInt(),d.mst_district_id.toInt(),d.mst_tehsil_id.toInt(),d.mst_panchayat_id.toInt(),d.mst_village_id.toInt()d.created_by*/d.create_date,d.is_active.toInt(),d.is_delete)
+                            assignedProjects.add(formEntity)
+                                //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else {
+                                navigate = false
+                                UtilMethods.showToast(
+                                    this@SyncDataActivity,
+                                    "Some Data is Missing, Please Correct it and Try Again"
+                                )
+                            }
+                        }
+                        AppDatabase.getInstance(this@SyncDataActivity).formDao().insertassignedforms(assignedProjects)
+                    }
+
+
                     "mst_divisions"->{
                         val divisionEntities= arrayListOf<DivisionEntity>()
                         for (d in s.data){
@@ -494,6 +520,7 @@ class SyncDataActivity : BaseActivity() {
                 }
             }
             val assignedSurveyList= arrayListOf<AssignedSurveyEntity>()
+            Log.d("assignedSurvaytest",data.assigned_survey.toString())
             for (d in data.assigned_survey){
                 var panchayathId=0
                 var above15=""

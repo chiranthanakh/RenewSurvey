@@ -676,7 +676,6 @@
                     android:layout_marginTop="@dimen/dp_10"/>
                 <EditText
                     android:id="@+id/edt_device_serial_number"
-                    android:inputType="number"
                     android:background="@drawable/spinner_background"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

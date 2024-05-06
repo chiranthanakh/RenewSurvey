@@ -70,4 +70,6 @@ data class DataX(
     val answer: String,
     val is_answer: String,
     val tbl_test_questions_option_id: String,
+    val tbl_users_assigned_projects_id: String,
+    val tbl_users_id: String
     )
