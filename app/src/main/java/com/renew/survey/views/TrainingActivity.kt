@@ -27,6 +27,8 @@ class TrainingActivity : AppCompatActivity() {
     private val handler = Handler()
     lateinit var preferenceManager: PreferenceManager
     var PassingMarks:Int? = 0
+    var testId:Int? = 0
+
     var tutorials: TutorialsDetailsEntry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +39,10 @@ class TrainingActivity : AppCompatActivity() {
 
         val pdfuri = preferenceManager.loadUriList()
         lifecycleScope.launch {
-            val testDetails = AppDatabase.getInstance(this@TrainingActivity).formDao().getTest(preferenceManager.getLanguage(), preferenceManager.getForm().tbl_forms_id)
-            val testquestionList = AppDatabase.getInstance(this@TrainingActivity).formDao().getAllTestQuestions(preferenceManager.getLanguage(), preferenceManager.getForm().tbl_forms_id)
+            val testDetails = AppDatabase.getInstance(this@TrainingActivity).formDao().getTest(preferenceManager.getLanguage(), preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().mst_categories_id)
+            val testquestionList = AppDatabase.getInstance(this@TrainingActivity).formDao().getAllTestQuestions(preferenceManager.getLanguage(), testDetails!!.tbl_tests_id)
             tutorials = AppDatabase.getInstance(this@TrainingActivity).formDao().getTutorial( preferenceManager.getForm().tbl_forms_id)
-
-            Log.d("testtutorialsdetail",tutorials.toString()+"--"+preferenceManager.getForm().tbl_forms_id)
-
+            testId = testDetails?.tbl_tests_id
             if (testDetails?.title != null && testDetails?.passing_marks != null ) {
                 preferenceManager.savePassingMarks(testDetails.passing_marks.toInt())
                 binding.testName.setText("Test name :  "+testDetails.title)
@@ -55,6 +55,7 @@ class TrainingActivity : AppCompatActivity() {
                 putExtra("training",true)
                 putExtra("trainingInfo",intent.getStringExtra("trainingInfo"))
                 putExtra("passingMarks",PassingMarks)
+                putExtra("testId",testId)
                 startActivity(this)
             }
             /*Intent(this,FormsDetailsActivity::class.java).apply {

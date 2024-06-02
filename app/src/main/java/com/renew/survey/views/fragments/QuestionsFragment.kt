@@ -132,7 +132,7 @@ class QuestionsFragment(
                 }
             }
             val json= Gson().toJson(questionGroupList[fragPos])
-            Log.e("Options","data=$json")
+            Log.e("Options123",questionGroupList[1].questions.toString())
             questionsAdapter.setData(questionGroupList[fragPos].questions)
         }
 

@@ -44,5 +44,7 @@ data class CommonAnswersEntity(
     var family_member_below_15_year: String?,
     var family_member_above_15_year: String?,
     var do_you_have_ration_or_aadhar: String,
+    var farmland_is_owned_by_benficary: String,
+    var if_5m_area_is_available_near_by: String,
     var answer_id:Int?,
 )

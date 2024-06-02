@@ -16,4 +16,5 @@ data class TestEntry(
     val is_active : String,
     val is_delete : String,
     val last_update: String? = "",
+    val mst_categories_id: String
     )

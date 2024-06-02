@@ -45,8 +45,8 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
     var list = arrayListOf<AssignedFilterSurveyEntity>()
     var filteredlist = arrayListOf<AssignedFilterSurveyEntity>()
 
-    var stateList= arrayListOf<StateModel>();
-    var frequancy= arrayListOf<String>();
+    var stateList= arrayListOf<StateModel>()
+    var frequancy= arrayListOf<String>()
     var districtList= arrayListOf<DistrictModel>()
     var tehsilList= arrayListOf<TehsilModel>()
     var panchayathList= arrayListOf<PanchayathModel>()

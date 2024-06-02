@@ -223,6 +223,28 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
                 }
             }
         })
+
+        binding.rbFarmlandIsOwnedBy.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_farmland_yes -> {
+                    commonAnswersEntity.farmland_is_owned_by_benficary = "YES"
+                }
+                R.id.rb_farmland_no -> {
+                    commonAnswersEntity.farmland_is_owned_by_benficary = "NO"
+                }
+            }
+        })
+
+        binding.rbAreaIsAvailableNearBy.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { arg0, id ->
+            when (id) {
+                R.id.rb_available_near_yes -> {
+                    commonAnswersEntity.if_5m_area_is_available_near_by = "YES"
+                }
+                R.id.rb_available_near_no -> {
+                    commonAnswersEntity.if_5m_area_is_available_near_by = "NO"
+                }
+            }
+        })
         binding.rbElectricityYes.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
                 commonAnswersEntity.electricity_connection_available=AppConstants.yes
@@ -337,7 +359,21 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }else{
                 binding.rbAOrRNo.isChecked=true
             }
+            if (commonAnswersEntity.farmland_is_owned_by_benficary==AppConstants.yes.uppercase(Locale.ROOT)){
+                binding.rbFarmlandYes.isChecked=true
+            }else{
+                binding.rbFarmlandNo.isChecked=true
+            }
+            if (commonAnswersEntity.if_5m_area_is_available_near_by==AppConstants.yes.uppercase(Locale.ROOT)){
+                binding.rbAvailableNearYes.isChecked=true
+            }else{
+                binding.rbAvailableNearNo.isChecked=true
+            }
             if (disableViews){
+                binding.rbFarmlandYes.isEnabled=false
+                binding.rbFarmlandNo.isEnabled=false
+                binding.rbAvailableNearYes.isEnabled=false
+                binding.rbAvailableNearNo.isEnabled=false
                 binding.rbAadharNo.isEnabled=false
                 binding.rbAadharYes.isEnabled=false
                 binding.rbDataYes.isEnabled=false

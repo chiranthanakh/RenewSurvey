@@ -92,6 +92,8 @@
     <string name="aadhar_front">6.2. आधार कार्ड का सामने का फोटो खींचिए<font color='#EA0C27'>*</font></string>
     <string name="aadhar_back">6.3. आधार कार्ड का पिछला फोटो खींचिए<font color='#EA0C27'>*</font></string>
     <string name="aadhar_or_ration">20. Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
-    <string name="device_Serial_number">21. Device Serial number<font color='#EA0C27'>*</font></string>
+    <string name="farmland_is_owned_by_benficary">21. कृषि भूमि लाभार्थी के स्वामित्व में है और कृषि भूमि घर के निकट/निकट (50 मीटर से कम) है??<font color='#EA0C27'>*</font></string>
+    <string name="if_5m_area_is_available_near_by">22. यदि बायो-गैस डाइजेस्टर इकाई स्थापित करने के लिए रसोई के पास 5 वर्ग मीटर क्षेत्र उपलब्ध है?<font color='#EA0C27'>*</font></string>
+    <string name="device_Serial_number">23. Device Serial number<font color='#EA0C27'>*</font></string>
 
 </resources>

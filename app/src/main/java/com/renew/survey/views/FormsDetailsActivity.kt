@@ -65,7 +65,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
     var assigned: AssignedFilterSurveyEntity?=null
     var draftAnsId:Int?=null
     var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(null,"","","","","","","","","","","","","","","","","","","","","","","","","","",
-        "","","","","","","","","",0)
+        "","","","","","","","","","","",0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
@@ -78,7 +78,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 null,assigned!!.aadhar_card,assigned!!.date_and_time_of_visit,assigned!!.did_the_met_person_allowed_for_data,assigned!!.gps_location,assigned!!.annual_family_income,assigned!!.banficary_name,assigned!!.do_you_have_aadhar_card,assigned!!.font_photo_of_aadar_card,assigned!!.back_photo_of_aadhar_card,assigned!!.electricity_connection_available,assigned!!.total_electricity_bill,assigned!!.frequency_of_bill_payment,assigned!!.photo_of_bill,assigned!!.family_size,assigned!!.gender,assigned!!.house_type,assigned!!.is_cow_dung,
                 assigned!!.is_lpg_using,assigned!!.mobile_number,assigned!!.mst_district_id.toString(),assigned!!.mst_state_id.toString(),assigned!!.mst_tehsil_id.toString(),assigned!!.mst_panchayat_id.toString(),assigned!!.mst_village_id.toString(),assigned!!.no_of_cattles_own,assigned!!.no_of_cylinder_per_year,assigned!!.device_serial_number.toString(),assigned!!.cost_of_lpg_cyliner,assigned!!.willing_to_contribute_clean_cooking,
                 assigned?.wood_use_per_day_in_kg!!,assigned!!.parent_survey_id,assigned!!.tbl_project_survey_common_data_id.toString(),assigned!!.family_member_below_15_year,
-                assigned?.family_member_above_15_year,assigned!!.do_you_have_ration_or_aadhar,null
+                assigned?.family_member_above_15_year,assigned!!.do_you_have_ration_or_aadhar,assigned!!.farmland_is_owned_by_benficary,assigned!!.if_5m_area_is_available_near_by,null
             )
             tbl_project_survey_common_data_id=assigned!!.tbl_project_survey_common_data_id.toString()
             if (assigned!!.next_form_id == 4) {
@@ -98,7 +98,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
 
             commonAnswersEntity= CommonAnswersEntity(
                 null,a.aadhar_card,a.date_and_time_of_visit,a.did_the_met_person_allowed_for_data,a.gps_location,a.annual_family_income,a.banficary_name,a.do_you_have_aadhar_card,a.font_photo_of_aadar_card,a.back_photo_of_aadhar_card,a.electricity_connection_available,a.total_electricity_bill,a.frequency_of_bill_payment,a.photo_of_bill,a.family_size,a.gender,a.house_type,a.is_cow_dung,
-                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cylinder_per_year,a.device_serial_number.toString(), a.cost_of_lpg_cyliner,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,a.do_you_have_ration_or_aadhar,null
+                a.is_lpg_using,a.mobile_number,a.mst_district_id.toString(),a.mst_state_id.toString(),a.mst_tehsil_id.toString(),a.mst_panchayat_id.toString(),a.mst_village_id.toString(),a.no_of_cattles_own,a.no_of_cylinder_per_year,a.device_serial_number.toString(), a.cost_of_lpg_cyliner,a.willing_to_contribute_clean_cooking,a.wood_use_per_day_in_kg,a.parent_survey_id,a.tbl_project_survey_common_data_id.toString(),a.family_member_below_15_year,a.family_member_above_15_year,a.do_you_have_ration_or_aadhar,a.farmland_is_owned_by_benficary,a.if_5m_area_is_available_near_by,null
             )
         }
         if (intent.getBooleanExtra("training",false)) {
@@ -334,7 +334,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             binding.btnNext.visibility= View.VISIBLE
             binding.btnContinue.visibility= View.GONE
         }
-        Log.d("checkscroll",pos.toString())
+        Log.d("checkscroll",questionGroupList[pos].toString())
         questionGroupList[previouslySelected].selected=false
         adapterQuestionGroup.notifyItemChanged(previouslySelected)
         previouslySelected=pos
@@ -458,6 +458,14 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         }
         if (commonAnswersEntity.annual_family_income==""){
             UtilMethods.showToast(this,"Please select annual family income")
+            return false
+        }
+        if (commonAnswersEntity.farmland_is_owned_by_benficary==""){
+            UtilMethods.showToast(this,"Please select farmland details")
+            return false
+        }
+        if (commonAnswersEntity.if_5m_area_is_available_near_by==""){
+            UtilMethods.showToast(this,"Please answer if area available near by")
             return false
         }
         if (commonAnswersEntity.willing_to_contribute_clean_cooking==""){

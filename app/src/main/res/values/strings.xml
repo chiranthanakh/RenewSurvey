@@ -104,6 +104,8 @@
     <string name="above_15_year_family_members">13.1 Above 15 Year Family Members<font color='#EA0C27'>*</font></string>
     <string name="below_15_year_family_members">13.2 Below 15 Year Family Members<font color='#EA0C27'>*</font></string>
     <string name="aadhar_or_ration">20. Do you have either Aadhar Or Ration Card?<font color='#EA0C27'>*</font></string>
-    <string name="device_Serial_number">21. Device Serial number<font color='#EA0C27'>*</font></string>
+    <string name="farmland_is_owned_by_benficary">21. Farmland is owned by beneficiary and farmland is adjacent/close (less than 50 meter) to house?<font color='#EA0C27'>*</font></string>
+    <string name="if_5m_area_is_available_near_by">22. If 5 m2 area is available nearby to kitchen for setting Bio-gas digestor unit?<font color='#EA0C27'>*</font></string>
+    <string name="device_Serial_number">23. Device Serial number<font color='#EA0C27'>*</font></string>
 
 </resources>

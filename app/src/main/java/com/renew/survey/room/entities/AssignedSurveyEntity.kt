@@ -47,5 +47,7 @@ data class AssignedSurveyEntity(
     var frequency_of_bill_payment: String,
     var photo_of_bill: String,
     var cost_of_lpg_cyliner: String,
-    var do_you_have_ration_or_aadhar: String
+    var do_you_have_ration_or_aadhar: String,
+    var farmland_is_owned_by_benficary: String,
+    var if_5m_area_is_available_near_by: String
 )

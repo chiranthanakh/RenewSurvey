@@ -24,18 +24,6 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         getAllForms()
         binding.recyclerView.layoutManager=LinearLayoutManager(this)
 
-        /*binding.llSurvey.setOnClickListener{
-            val intent = Intent(this@UserRoleActivity, DashboardActivity::class.java)
-            startActivity(intent)
-        }
-        binding.llDistrubutor.setOnClickListener{
-            val intent = Intent(this@UserRoleActivity, DashboardActivity::class.java)
-            startActivity(intent)
-        }
-        binding.llMonitoring.setOnClickListener{
-            val intent = Intent(this@UserRoleActivity, DashboardActivity::class.java)
-            startActivity(intent)
-        }*/
     }
     fun getAllForms(){
         lifecycleScope.launch {
@@ -43,6 +31,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
             val forms = if (preferenceManager.getUserdata().user_type=="USER") {
                 AppDatabase.getInstance(this@UserRoleActivity).formDao().getAllFormsWithLanguage(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,)
             } else {
+                Log.d("testprojectid",preferenceManager.getProject().id.toString())
                 AppDatabase.getInstance(this@UserRoleActivity).formDao()
                     .getAssignedFormsWithLanguage(
                         preferenceManager.getLanguage(), preferenceManager.getProject().id!!,
@@ -51,33 +40,29 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
             }
             binding.recyclerView.adapter=FormTypeAdapter(this@UserRoleActivity,forms,this@UserRoleActivity)
             Log.d("formDetails123",preferenceManager.getLanguage().toString()+"--"+ preferenceManager.getProject().id)
+
         }
     }
 
     override fun onFormSelected(form: FormWithLanguage) {
-        // Log.d("formDetails",form.toString()+"${form.tbl_forms_id}-${preferenceManager.getProject().id}")
         preferenceManager.saveForm(form)
         val job = lifecycleScope.launch {
-            testquestionList = AppDatabase.getInstance(this@UserRoleActivity).formDao()
-                .getAllTestQuestions(preferenceManager.getLanguage(), form.tbl_forms_id)
-            //Log.d("formDetails1", form.toString())
+            val testDetails = AppDatabase.getInstance(this@UserRoleActivity).formDao().getTest(preferenceManager.getLanguage(),form.tbl_forms_id,preferenceManager.getProject().mst_categories_id)
+            Log.d("checktestdata",testDetails.toString())
+            if(testDetails?.equals(null) == false){
+                testquestionList = AppDatabase.getInstance(this@UserRoleActivity).formDao()
+                    .getAllTestQuestions(preferenceManager.getLanguage(), testDetails.tbl_tests_id)
+            }
         }
 
-        Log.d("formDetails", form.toString() + "${form.tbl_forms_id}-${preferenceManager.getProject().id}-${testquestionList}")
-
         job.invokeOnCompletion {
-            Log.d("formDetails2", testquestionList.toString())
-
        if (testquestionList.isEmpty()) {
-           Log.d("trainingtestlist1","listpresent")
             Intent(this, DashboardActivity::class.java).apply {
                 startActivity(this)
             }
         } else {
             val retrievedList = preferenceManager.getTrainingState("trainingState")
-               // Log.d("trainingtestlist",retrievedList.toString())
             if (retrievedList?.contains("${form.tbl_forms_id}-${preferenceManager.getProject().id}-${preferenceManager.getUserId()}") != true && form.tbl_forms_id != 4) {
-                Log.d("trainingtestlist2",retrievedList.toString())
                 Intent(this, TrainingActivity::class.java).apply {
                     putExtra(
                         "trainingInfo",
@@ -90,7 +75,6 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
                     val cm = AppDatabase.getInstance(this@UserRoleActivity).formDao()
                         .getTrainings(form.tbl_forms_id)
                 }
-                Log.d("trainingtestlist3",retrievedList.toString())
                 Intent(this, DashboardActivity::class.java).apply {
                     startActivity(this)
                 }

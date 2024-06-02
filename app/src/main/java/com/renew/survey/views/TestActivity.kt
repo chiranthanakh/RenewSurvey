@@ -30,6 +30,7 @@ class TestActivity : BaseActivity() {
         testquestionsAdapter= TestQuestionsAdapter(this,testquestionList)
         binding.recyclerView.adapter=testquestionsAdapter
         getTestQuestions()
+        val data=intent.getStringExtra("testId")
         binding.btnContinue.setOnClickListener {
             var count=0
 
@@ -82,7 +83,8 @@ class TestActivity : BaseActivity() {
     private fun getTestQuestions() {
         lifecycleScope.launch {
             if (testquestionList.isEmpty()) {
-                testquestionList = AppDatabase.getInstance(this@TestActivity).formDao().getAllTestQuestions(preferenceManager.getLanguage(), preferenceManager.getForm().tbl_forms_id)
+                Log.d("testId123",intent.getIntExtra("testId",0).toString())
+                testquestionList = AppDatabase.getInstance(this@TestActivity).formDao().getAllTestQuestions(preferenceManager.getLanguage(), intent.getIntExtra("testId",0))
             }
             testquestionList.forEachIndexed { index, testQuestionLanguage ->
                 if (testQuestionLanguage.question_type=="CHECKBOX"||testQuestionLanguage.question_type=="SINGLE_SELECT"||testQuestionLanguage.question_type=="MULTI_SELECT"||testQuestionLanguage.question_type=="RADIO"){

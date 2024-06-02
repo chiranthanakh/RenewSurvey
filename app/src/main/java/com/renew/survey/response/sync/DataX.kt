@@ -20,7 +20,7 @@ data class DataX(
     val is_special_char_allowed: String,
     val is_validation_required: String,
     val is_visible_column: String,
-    val last_update: String,
+    val last_update: String? = "",
     val max_file_size: String,
     val max_length: String,
     val min_length: String,
@@ -71,5 +71,5 @@ data class DataX(
     val is_answer: String,
     val tbl_test_questions_option_id: String,
     val tbl_users_assigned_projects_id: String,
-    val tbl_users_id: String
+    val tbl_users_id: String,
     )
