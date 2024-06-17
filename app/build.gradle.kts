@@ -74,4 +74,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation ("com.mapbox.mapboxsdk:mapbox-android-sdk:9.3.0")
+    implementation ("com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6")
+
 }

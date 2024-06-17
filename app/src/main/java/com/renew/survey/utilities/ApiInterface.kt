@@ -159,8 +159,6 @@ interface ApiInterface {
         @Body data: List<AnswerEntity>,
     ) : Response<JsonElement>
 
-
-
     @Multipart
     @POST("ProjectMaster/sync_media")
     suspend fun syncMediaFiles(
@@ -169,7 +167,6 @@ interface ApiInterface {
         //@Part("post_data") generalPaymentRequest:List<MediaSyncReqItem>,
         @Part file: Array<MultipartBody.Part?>?
     ) : Response<JsonElement>
-
 
     companion object {
         var retrofitService: ApiInterface?=null
