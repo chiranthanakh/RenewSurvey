@@ -57,8 +57,11 @@ interface FormsDao {
     suspend fun insertAllForms(formList: List<FormEntity>)
 
     @Query("Select fm.tbl_forms_id,mst_form_language_id,title,pp.tbl_project_phase_id,pp.version from FormEntity as fm " +
-            "inner join ProjectsPhase pp on fm.id=pp.tbl_forms_id and pp.tbl_projects_id=:projectId inner join FormLanguageEntity as fl on fm.tbl_forms_id=fl.module_id where fl.module='tbl_forms' and fl.mst_language_id=:language order by fm.tbl_forms_id")
-    suspend fun getAllFormsWithLanguage(language:Int,projectId:Int):List<FormWithLanguage>
+            "inner join ProjectsPhase pp on fm.id=pp.tbl_forms_id and pp.tbl_projects_id=:projectId " +
+            "inner join FormLanguageEntity as fl on fm.tbl_forms_id=fl.module_id " +
+            "inner join ProjectEntity pe on pe.tbl_projects_id = pp.tbl_projects_id "+
+            "where fm.mst_divisions_id =:divisionId and fm.mst_categories_id =:categoryId  and fl.module='tbl_forms' and fl.mst_language_id=:language order by fm.tbl_forms_id")
+    suspend fun getAllFormsWithLanguage(language:Int,projectId:Int,divisionId:Int,categoryId:Int):List<FormWithLanguage>
 
     @Query("Select  ap.tbl_forms_id, mfl.title, tpp.tbl_project_phase_id,tpp.version FROM AssignedFormEntry as ap " +
             " inner JOIN ProjectEntity tp ON tp.tbl_projects_id = ap.tbl_projects_id " +
@@ -66,8 +69,8 @@ interface FormsDao {
             " inner JOIN FormEntity tf ON tf.tbl_forms_id = ap.tbl_forms_id " +
             "inner JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_forms' AND mfl.module_id = tf.tbl_forms_id AND mfl.mst_language_id = :language" +
             " inner JOIN FormLanguageEntity mfl1 ON mfl1.module = 'tbl_projects' AND mfl1.module_id = tp.tbl_projects_id AND mfl1.mst_language_id =:language " +
-            "WHERE ap.tbl_users_id = :userid AND ap.tbl_projects_id =:projectId  AND tpp.is_released = 'Y'")
-    suspend fun getAssignedFormsWithLanguage(language:Int,projectId:Int,userid:Int):List<FormWithLanguage>
+            "WHERE tf.mst_divisions_id =:divisionId and tf.mst_categories_id =:categoryId and ap.tbl_users_id = :userid AND ap.tbl_projects_id =:projectId  AND tpp.is_released = 'Y'")
+    suspend fun getAssignedFormsWithLanguage(language:Int,projectId:Int,userid:Int,divisionId:Int,categoryId:Int):List<FormWithLanguage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllFormsQuestions(formQuestions: List<FormQuestionEntity>)

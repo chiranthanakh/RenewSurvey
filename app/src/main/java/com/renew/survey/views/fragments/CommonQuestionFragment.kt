@@ -59,6 +59,9 @@ import com.renew.survey.utilities.DataAllowMetPerson
 import com.renew.survey.utilities.FileUtils
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
+import com.renew.survey.views.LoginActivity
+import com.renew.survey.views.MapManagerActivity
+import com.renew.survey.views.ProjectActivity
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File
@@ -439,12 +442,15 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             dpd.show()
         }
         binding.edtGpsLocation.setOnClickListener {
-            binding.edtGpsLocation.setText(preferenceManager.getLocation())
+            Intent(requireContext(), MapManagerActivity::class.java).apply {
+                startActivity(this)
+            }
+            /*binding.edtGpsLocation.setText(preferenceManager.getLocation())
             if (preferenceManager.getLocation()==""){
                 UtilMethods.showToast(requireContext(),"Location not available. Please make sure that you enabled the location and internet in your device")
             }else{
                 commonAnswersEntity.gps_location = preferenceManager.getLocation().toString()
-            }
+            }*/
         }
         binding.llAadharBack.setOnClickListener {
             if (!disableViews)

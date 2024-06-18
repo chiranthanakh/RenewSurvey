@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="vertical">
         <TextView
             android:text="@string/induction_state"
             android:id="@+id/tv_name"
@@ -17,20 +18,47 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/btn_continue"
-            android:text="Start"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_15_dp"/>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/black20per"/>
 
- 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:text="Survey code"
+            android:id="@+id/tv_survey_code"
+            android:textColor="@color/black"
+            android:layout_marginStart="@dimen/margin_15_dp"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/induction_state"
+            android:id="@+id/tv_survey_village"
+            android:textColor="@color/black"
+            android:layout_marginStart="@dimen/margin_15_dp"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:background="@color/black"/>
+
+    <Button
+        android:id="@+id/btn_continue"
+        android:text="Start"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_15_dp"/>
 
 </LinearLayout>

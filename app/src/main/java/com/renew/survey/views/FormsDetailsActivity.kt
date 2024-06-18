@@ -118,7 +118,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             }
         } else {
         getAllQuestionGroup()
-        binding.tvProject.text=preferenceManager.getForm().title
+        binding.tvProject.text=preferenceManager.getForm().title+"("+preferenceManager.getForm().version+"-"+preferenceManager.getProject().project_code+")"
         binding.recyclerView.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         binding.btnSaveDraft.setOnClickListener {
             if (!validateCommonQuestions()){
@@ -322,7 +322,6 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         } else {
             loadScreen(pos)
         }
-
     }
 
     fun loadScreen(pos:Int) {

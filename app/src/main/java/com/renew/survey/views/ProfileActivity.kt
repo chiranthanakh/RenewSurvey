@@ -15,7 +15,6 @@ class ProfileActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         Glide.with(this).load(preferenceManager.getUserdata().profile_photo).into(binding.profileImage)
         binding.usernameText.setText(preferenceManager.getUserdata().full_name)
         binding.phonenumber.setText("Mobile Number : "+preferenceManager.getUserdata().mobile)
@@ -27,7 +26,5 @@ class ProfileActivity : BaseActivity() {
         binding.UserType.visibility = View.GONE
         binding.pincode.setText("Pincode : "+preferenceManager.getUserdata().pincode)
         binding.address.setText("Address : "+preferenceManager.getUserdata().address)
-
-
     }
 }

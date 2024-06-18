@@ -170,8 +170,9 @@ interface ApiInterface {
 
     companion object {
         var retrofitService: ApiInterface?=null
-        val BASE_URL="https://devrenewsms.proteam.co.in/api/v2/"
+        //val BASE_URL="https://devrenewsms.proteam.co.in/api/v2/"
          //val BASE_URL="https://renewsms.proteam.co.in/api/v2/"
+        val BASE_URL ="https://devnbs.proteam.co.in/api/v3/"
         fun getInstance() : ApiInterface? {
 
             val loggingInterceptor = HttpLoggingInterceptor()
