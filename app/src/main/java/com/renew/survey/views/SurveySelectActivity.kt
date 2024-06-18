@@ -58,6 +58,7 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
         preferenceManager = PreferenceManager(this)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.tvProjectName.text = preferenceManager.getProject().project_code+"-"+preferenceManager.getProject().title
         binding.ivFilter.setOnClickListener {
             ShowFilter()
         }

@@ -31,21 +31,6 @@ class LanguageActivity : BaseActivity() ,LanguageAdapter.ClickListener{
         lifecycleScope.launch {
             val languages=AppDatabase.getInstance(this@LanguageActivity).languageDao().getAll()
             binding.recyclerView.adapter=LanguageAdapter(this@LanguageActivity,languages,this@LanguageActivity)
-
-           /* ApiInterface.getInstance()?.apply {
-                val response= preferenceManager.getToken()?.let { getLanguage(it) }
-                binding.progressLayout.visibility= View.GONE
-                if (response!!.isSuccessful){
-                    val jsonObject= JSONObject(response.body().toString())
-                    if (jsonObject.getString("success")=="1"){
-                        val itemType = object : TypeToken<List<Language>>() {}.type
-                        val itemList = gson.fromJson<List<Language>>(jsonObject.getJSONArray("data").toString(), itemType)
-                        binding.recyclerView.adapter=LanguageAdapter(this@LanguageActivity,itemList,this@LanguageActivity)
-                    }else{
-                        Toast.makeText(this@LanguageActivity,jsonObject.getString("message"), Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }*/
         }
     }
 

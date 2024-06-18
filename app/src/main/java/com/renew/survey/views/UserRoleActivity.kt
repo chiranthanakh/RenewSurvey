@@ -22,25 +22,35 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         binding= ActivityUserRoleBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getAllForms()
+        initilize()
         binding.recyclerView.layoutManager=LinearLayoutManager(this)
-
     }
+
+    private fun initilize() {
+        binding.tvProjectName.text = preferenceManager.getProject().title
+        binding.tvProjectCode.text = "Project Code : "+preferenceManager.getProject().project_code
+        binding.tvProjectDivision.text = "Division : "+preferenceManager.getProject().mst_divisions_id.toString()
+        binding.tvProjectCategory.text = "Category : " + preferenceManager.getProject().mst_categories_id.toString()
+        lifecycleScope.launch {
+            binding.tvProjectSate.text = "State : " +AppDatabase.getInstance(this@UserRoleActivity).placesDao()
+                .getStates(preferenceManager.getProject().mst_state_id)?.lowercase()
+        }
+    }
+
     fun getAllForms(){
         lifecycleScope.launch {
-            Log.d("checkUser",preferenceManager.getUserdata().user_type)
             val forms = if (preferenceManager.getUserdata().user_type=="USER") {
-                AppDatabase.getInstance(this@UserRoleActivity).formDao().getAllFormsWithLanguage(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,)
+                AppDatabase.getInstance(this@UserRoleActivity).formDao().getAllFormsWithLanguage(preferenceManager.getLanguage(),
+                    preferenceManager.getProject().id!!,preferenceManager.getProject().mst_divisions_id,preferenceManager.getProject().mst_categories_id)
             } else {
-                Log.d("testprojectid",preferenceManager.getProject().id.toString())
                 AppDatabase.getInstance(this@UserRoleActivity).formDao()
                     .getAssignedFormsWithLanguage(
                         preferenceManager.getLanguage(), preferenceManager.getProject().id!!,
-                        preferenceManager.getUserId()?.toInt()!!
+                        preferenceManager.getUserId()?.toInt()!!,preferenceManager.getProject().mst_divisions_id,
+                        preferenceManager.getProject().mst_categories_id
                     )
             }
             binding.recyclerView.adapter=FormTypeAdapter(this@UserRoleActivity,forms,this@UserRoleActivity)
-            Log.d("formDetails123",preferenceManager.getLanguage().toString()+"--"+ preferenceManager.getProject().id)
-
         }
     }
 
@@ -48,7 +58,6 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         preferenceManager.saveForm(form)
         val job = lifecycleScope.launch {
             val testDetails = AppDatabase.getInstance(this@UserRoleActivity).formDao().getTest(preferenceManager.getLanguage(),form.tbl_forms_id,preferenceManager.getProject().mst_categories_id)
-            Log.d("checktestdata",testDetails.toString())
             if(testDetails?.equals(null) == false){
                 testquestionList = AppDatabase.getInstance(this@UserRoleActivity).formDao()
                     .getAllTestQuestions(preferenceManager.getLanguage(), testDetails.tbl_tests_id)
