@@ -5,7 +5,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
-data class FormQuestionLanguage(
+data class FormQuestionLanguage (
     @PrimaryKey
     val id: Int? = null,
     val allowed_file_type: String,
@@ -19,9 +19,11 @@ data class FormQuestionLanguage(
     val mst_question_group_id: Int,
     val order_by: Int,
     val question_type: String,
-    val tbl_form_questions_id: Int,
+    var tbl_form_questions_id: Int,
     val title: String,
     var answer:String?,
+    val has_dependancy_question:String,
+    val parent_question_id: Int?,
     @Ignore
     var options: List<Options>
 ) {
@@ -40,7 +42,9 @@ data class FormQuestionLanguage(
         question_type: String,
         tbl_form_questions_id: Int,
         title: String,
-        answer: String?
+        answer: String?,
+        has_dependancy_question: String,
+        parent_question_id: Int,
     )
             : this(
         id,
@@ -58,6 +62,8 @@ data class FormQuestionLanguage(
         tbl_form_questions_id,
         title,
         answer,
+        has_dependancy_question,
+        parent_question_id,
         listOf()
     )
 }

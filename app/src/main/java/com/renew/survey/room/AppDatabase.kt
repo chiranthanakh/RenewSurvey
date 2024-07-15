@@ -22,6 +22,8 @@ import com.renew.survey.room.entities.FormQuestionEntity
 import com.renew.survey.room.entities.FormQuestionGroupEntity
 import com.renew.survey.room.entities.FormQuestionOptionsEntity
 import com.renew.survey.room.entities.LanguageEntity
+import com.renew.survey.room.entities.NbsAssignedSurveyEntity
+import com.renew.survey.room.entities.NbsCommonAnswersEntity
 import com.renew.survey.room.entities.PanchayathEntity
 import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
@@ -38,7 +40,7 @@ import com.renew.survey.room.entities.VillageEntity
     VillageEntity::class,FileTypeEntity::class,FormLanguageEntity::class,FormEntity::class,FormQuestionEntity::class,
     FormQuestionGroupEntity::class,FormQuestionOptionsEntity::class, ProjectEntity::class,ProjectsPhase::class,
     ProjectPhaseQuestionEntity::class,DivisionEntity::class,CategoryEntity::class, AnswerEntity::class, TestEntry::class, TutorialEntity::class,
-    TestQuestionsEntry::class, CommonAnswersEntity::class,DynamicAnswersEntity::class,AssignedSurveyEntity::class, TestOptionsEntity::class, AssignedFormEntry::class], version = 1)
+    TestQuestionsEntry::class, CommonAnswersEntity::class,DynamicAnswersEntity::class,AssignedSurveyEntity::class, NbsAssignedSurveyEntity::class, TestOptionsEntity::class, AssignedFormEntry::class, NbsCommonAnswersEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun languageDao(): LanguageDao
     abstract fun placesDao(): PlacesDao

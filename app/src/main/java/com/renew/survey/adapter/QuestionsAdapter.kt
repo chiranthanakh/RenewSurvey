@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.icu.lang.UProperty.INT_START
@@ -37,6 +38,7 @@ import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.Options
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
+import com.renew.survey.views.MapManagerActivity
 import java.util.Calendar
 
 
@@ -51,6 +53,9 @@ class QuestionsAdapter(
     val day = c.get(Calendar.DAY_OF_MONTH)
     val hour = c.get(Calendar.HOUR)
     val minute = c.get(Calendar.MINUTE)
+    private var lastInput: String = ""
+    var mainPosition = 0
+    var subPosition = 0
     val preferenceManager=PreferenceManager(context)
 
     fun setData(list: List<FormQuestionLanguage>){
@@ -71,10 +76,13 @@ class QuestionsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
+            Log.d("dependencyCheck",list.toString())
             //setIsRecyclable(false)
             with(list[position]){
                 when(question_type){
-                    "DATETIME","TEXT","NUMBER","GEO_LOCATION","DATE","TIME","EMAIL"->{
+                    "DATETIME","TEXT","NUMBER","GEO_LOCATION","DATE","TIME","EMAIL","MAP","LOOP","SUB"->{
+                        val form = this
+                        val pos = position
                         binding.llEdittext.visibility = View.VISIBLE
                         binding.llMultiselect.visibility = View.GONE
                         binding.llSpinner.visibility = View.GONE
@@ -83,15 +91,27 @@ class QuestionsAdapter(
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
-                        binding.txtEditTextLable.text = getHintText(this.title,position+1,this.is_mandatory)
+                        binding.txtEditTextLable.text =
+                            getHintText(this.title, position + 1, this.is_mandatory)
+                        /*if (this.parent_question_id == null || this.parent_question_id == 0 ) {
+                            mainPosition = position+1
+                            subPosition = 0
+                            binding.txtEditTextLable.text =
+                                getHintText(this.title, position + 1, this.is_mandatory)
+                        } else {
+                            subPosition = subPosition + 1
+                            binding.txtEditTextLable.text =
+                                getHintText2(this.title, mainPosition.toString()+"."+subPosition, this.is_mandatory)
+                        }*/
+                       Log.d("checktitle",getHintText(this.title,position+1,this.is_mandatory).toString())
+
                         binding.edittext.addTextChangedListener(object :TextWatcher{
                             override fun beforeTextChanged(
                                 p0: CharSequence?,
                                 p1: Int,
                                 p2: Int,
                                 p3: Int
-                            ) {
-                            }
+                            ) {}
 
                             override fun onTextChanged(
                                 p0: CharSequence?,
@@ -101,16 +121,25 @@ class QuestionsAdapter(
                             ) {
                                 if (binding.edittext.isFocused){
                                     answer=p0.toString()
+                                    var currentinput = p0.toString()
+                                    if (question_type == "LOOP") {
+                                        if (currentinput != lastInput) {
+                                            lastInput = p0.toString()
+                                            Log.d("checkcallintimes","times")
+                                            clickListener.onLoopSelect(
+                                                form,
+                                                p0.toString()
+                                            )
+                                        }
+                                    }
                                 }
                             }
 
                             override fun afterTextChanged(p0: Editable?) {
-
                             }
-
                         })
                         binding.edittext.setText(this.answer)
-                        if (question_type=="DATETIME" || question_type=="DATE" || question_type=="TIME" || question_type=="GEO_LOCATION"){
+                        if (question_type=="DATETIME" || question_type=="DATE" || question_type=="TIME" || question_type=="GEO_LOCATION" || question_type=="MAP"){
                             binding.edittext.isFocusable=false
                             binding.edittext.setOnClickListener {
                                 when (question_type) {
@@ -157,8 +186,16 @@ class QuestionsAdapter(
                                         binding.edittext.setText(preferenceManager.getLocation())
                                         if (preferenceManager.getLocation()==""){
                                             UtilMethods.showToast(context,"Location not available. Please make sure that you enabled the location and internet in your device")
-                                        }else{
+                                        } else {
                                             this.answer=preferenceManager.getLocation()
+                                        }
+                                    }
+                                    "MAP" -> {
+                                        binding.edittext.setOnClickListener{
+                                            clickListener.onFileSelect(this,position, this.allowed_file_type!!,this.question_type)
+                                        }
+                                        if (this.answer!=""){
+                                            binding.edittext.setText("Done")
                                         }
                                     }
                                 }
@@ -169,6 +206,9 @@ class QuestionsAdapter(
                             binding.edittext.isEnabled=true
                         }
                         when(question_type){
+                            "LOOP"->{
+                                binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
+                            }
                             "NUMBER"->{
                                 binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
                             }
@@ -178,12 +218,18 @@ class QuestionsAdapter(
                             "EMAIL"->{
                                 binding.edittext.inputType=InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
                             }
+                            "MAP"->{
+                                binding.edittext.inputType=InputType.TYPE_NULL
+                            }
                             else->{
                                 binding.edittext.inputType=InputType.TYPE_CLASS_TEXT
                             }
                         }
                     }
                     "SINGLE_SELECT"->{
+                        var formQuestionData = this
+                        var pos = position
+                        var check = true
                         binding.llEdittext.visibility = View.GONE
                         binding.llMultiselect.visibility = View.GONE
                         binding.llSpinner.visibility = View.VISIBLE
@@ -194,25 +240,29 @@ class QuestionsAdapter(
                         binding.llRating.visibility = View.GONE
                         binding.txtSpLable.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.spinner.adapter=CustomSpinnerAdapter(context,getStringList(this.options))
-                        if (this.answer!=null){
-                            /*this.options.forEachIndexed { index, options ->
-                                if (options.title==answer){
-                                    binding.spinner.setSelection(index,true)
-                                }
-                            }*/
+                        if (this.answer!=null && this.answer != ""){
+                            check = false
                             binding.spinner.setSelection(getIndex(binding.spinner,this.answer!!))
                         }
+
                         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                             override fun onNothingSelected(parent: AdapterView<*>?) {
 
                             }
-
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                                 if (position>0){
                                     answer=binding.spinner.selectedItem.toString()
+                                    if (formQuestionData.has_dependancy_question.equals("YES") && check) {
+                                        clickListener.onDependentSelect(
+                                            formQuestionData,
+                                            pos,
+                                            binding.spinner.selectedItem.toString()
+                                        )
+                                    } else {
+                                        check = true
+                                    }
                                 }
                             }
-
                         }
                     }
                     "MULTI_SELECT"->{
@@ -226,10 +276,6 @@ class QuestionsAdapter(
                         binding.llRating.visibility = View.GONE
                         binding.txtMultiselect.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.multiselect.setText(this.answer)
-                        /*val options= arrayListOf<MultiSelectItem>()
-                        for (o in this.options){
-                            options.add(MultiSelectItem(o.title,false))
-                        }*/
                         binding.multiselect.setOnClickListener {
                             val dialog=Dialog(context)
                             dialog.setContentView(R.layout.multi_select_layout_dialog)
@@ -278,6 +324,13 @@ class QuestionsAdapter(
                             radioButton.setOnCheckedChangeListener { compoundButton, b ->
                                 if (b){
                                     answer=compoundButton.text.toString()
+                                    if (this.has_dependancy_question.equals("YES")) {
+                                        clickListener.onDependentSelect(
+                                            this,
+                                            position,
+                                            compoundButton.text.toString()
+                                        )
+                                    }
                                 }
                             }
                             binding.rgRadio.addView(radioButton)
@@ -306,8 +359,6 @@ class QuestionsAdapter(
                             binding.rangeSliderPrice.values= values
                         }
 
-
-
                         binding.rangeSliderPrice.valueFrom=this.min_length.toFloat()
                         binding.rangeSliderPrice.valueTo=this.max_length.toFloat()
                         binding.rangeSliderPrice.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
@@ -321,6 +372,7 @@ class QuestionsAdapter(
                         })
                     }
                     "FILE","CAPTURE"->{
+
                         binding.llEdittext.visibility = View.GONE
                         binding.llMultiselect.visibility = View.GONE
                         binding.llSpinner.visibility = View.GONE
@@ -394,6 +446,8 @@ class QuestionsAdapter(
     }
     interface ClickListener{
         fun onFileSelect(question: FormQuestionLanguage,pos:Int,type:String,capture: String)
+        fun onDependentSelect(question: FormQuestionLanguage,pos:Int,answer: String)
+        fun onLoopSelect(question: FormQuestionLanguage,answer: String)
     }
     fun getStringList(optionList:List<Options>):List<String>{
         val list= arrayListOf<String>()
@@ -420,9 +474,6 @@ class QuestionsAdapter(
     }
     var questionId=0
 
-    fun openFilePick(){
-
-    }
     fun modifyCommaSeparatedString(inputString: String, action: String, vararg items: String): String {
         val existingItems = inputString.split(",").toMutableList()
 
@@ -445,6 +496,20 @@ class QuestionsAdapter(
             Log.e("HintText","mandatory   $mandatory")
             SpannableStringBuilder()
                 .bold { append("$num. ") }
+                .append(text)
+        }
+    }
+    fun getHintText2(text:String, num:String,mandatory:String):SpannableStringBuilder{
+        return if (mandatory=="YES"){
+            Log.e("HintText","mandatory   $mandatory")
+            SpannableStringBuilder()
+                .bold { append("$num ") }
+                .append(text)
+                .color(Color.RED) { append("*") }
+        }else{
+            Log.e("HintText","mandatory   $mandatory")
+            SpannableStringBuilder()
+                .bold { append("$num ") }
                 .append(text)
         }
     }

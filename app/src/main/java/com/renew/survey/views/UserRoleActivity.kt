@@ -34,6 +34,12 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         lifecycleScope.launch {
             binding.tvProjectSate.text = "State : " +AppDatabase.getInstance(this@UserRoleActivity).placesDao()
                 .getStates(preferenceManager.getProject().mst_state_id)?.lowercase()
+
+            binding.tvProjectDivision.text = "Division :${AppDatabase.getInstance(this@UserRoleActivity).formDao()
+                .getDivisions(preferenceManager.getProject().mst_divisions_id).division_name}"
+
+            binding.tvProjectCategory.text = "Category : ${AppDatabase.getInstance(this@UserRoleActivity).formDao()
+                .getCategories(preferenceManager.getProject().mst_categories_id).category_name}"
         }
     }
 
@@ -41,7 +47,8 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         lifecycleScope.launch {
             val forms = if (preferenceManager.getUserdata().user_type=="USER") {
                 AppDatabase.getInstance(this@UserRoleActivity).formDao().getAllFormsWithLanguage(preferenceManager.getLanguage(),
-                    preferenceManager.getProject().id!!,preferenceManager.getProject().mst_divisions_id,preferenceManager.getProject().mst_categories_id)
+                    preferenceManager.getProject().id!!,
+                    preferenceManager.getProject().mst_divisions_id,preferenceManager.getProject().mst_categories_id)
             } else {
                 AppDatabase.getInstance(this@UserRoleActivity).formDao()
                     .getAssignedFormsWithLanguage(
@@ -73,10 +80,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
             val retrievedList = preferenceManager.getTrainingState("trainingState")
             if (retrievedList?.contains("${form.tbl_forms_id}-${preferenceManager.getProject().id}-${preferenceManager.getUserId()}") != true && form.tbl_forms_id != 4) {
                 Intent(this, TrainingActivity::class.java).apply {
-                    putExtra(
-                        "trainingInfo",
-                        preferenceManager.getProject().id.toString() + form.tbl_forms_id
-                    )
+                    putExtra("trainingInfo", preferenceManager.getProject().id.toString() + form.tbl_forms_id)
                     startActivity(this)
                 }
             } else {

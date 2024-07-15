@@ -27,6 +27,7 @@ import com.renew.survey.room.entities.FormQuestionEntity
 import com.renew.survey.room.entities.FormQuestionGroupEntity
 import com.renew.survey.room.entities.FormQuestionOptionsEntity
 import com.renew.survey.room.entities.LanguageEntity
+import com.renew.survey.room.entities.NbsAssignedSurveyEntity
 import com.renew.survey.room.entities.PanchayathEntity
 import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
@@ -95,7 +96,6 @@ class SyncDataActivity : BaseActivity() {
                 Log.e("param","UserId=${preferenceManager.getUserId()}")
                 val response=syncDataFromServer(preferenceManager.getToken()!!,preferenceManager.getUserId()!!)
                 if (response.isSuccessful){
-                    hideProgress()
                     val json=JSONObject(response.body().toString())
                     Log.e("response","Resp=${response.code()}")
                     Log.e("response","Resp=${response.body()}")
@@ -306,7 +306,11 @@ class SyncDataActivity : BaseActivity() {
                         val formQuestions= arrayListOf<FormQuestionEntity>()
                         for (d in s.data){
                             if (!d.tbl_form_questions_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.question_type.isNullOrEmpty() && !d.tbl_form_questions_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty()) {
-                                val formQuestion=FormQuestionEntity(d.tbl_form_questions_id.toInt(),d.allowed_file_type,d.format,d.is_mandatory,d.is_special_char_allowed,d.is_validation_required,d.max_file_size,d.max_length,d.min_length,d.mst_question_group_id.toInt(),d.order_by.toInt(),d.question_type,d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt())
+                                val formQuestion=FormQuestionEntity(d.tbl_form_questions_id.toInt(),
+                                    d.allowed_file_type,d.format,d.is_mandatory,d.is_special_char_allowed,
+                                    d.is_validation_required,d.max_file_size,d.max_length,d.min_length,
+                                    d.mst_question_group_id.toInt(),d.order_by.toInt(),d.question_type,d.tbl_form_questions_id.toInt(),
+                                    d.tbl_forms_id.toInt(),d.has_dependancy_question,d.parent_question_id,d.parent_option)
                             formQuestions.add(formQuestion)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                             } else {
@@ -339,7 +343,9 @@ class SyncDataActivity : BaseActivity() {
                     "mst_form_language"->{
                         val formLanguages= arrayListOf<FormLanguageEntity>()
                         for (d in s.data){
-                            if (!d.mst_form_language_id.isNullOrEmpty()  /*&& !d.mst_form_language_id.isNullOrEmpty() && !d.mst_language_id.isNullOrEmpty() && !d.title.isNullOrEmpty()*/) {
+                          //  Log.d("printprojectentry123",s.data.toString())
+
+                            if (!d.mst_form_language_id.isNullOrEmpty()  && !d.module_id.isNullOrEmpty() && !d.mst_language_id.isNullOrEmpty() && !d.title.isNullOrEmpty()) {
                                 val formLanguage=FormLanguageEntity(d.mst_form_language_id.toInt(),d.module,d.module_id.toInt(),d.mst_form_language_id.toInt(),d.mst_language_id.toInt(),d.title)
                             formLanguages.add(formLanguage)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
@@ -412,7 +418,7 @@ class SyncDataActivity : BaseActivity() {
                             if (!d.tbl_project_phase_question_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.tbl_form_questions_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty() && !d.tbl_project_phase_id.isNullOrEmpty() && !d.tbl_project_phase_question_id.isNullOrEmpty()&& !d.tbl_projects_id.isNullOrEmpty() && !d.version.isNullOrEmpty()) {
                                 val projectEntity=ProjectPhaseQuestionEntity(d.tbl_project_phase_question_id.toInt(),d.mst_question_group_id.toInt(),d.tbl_form_questions_id.toInt(),d.tbl_forms_id.toInt(),d.tbl_project_phase_id.toInt(),d.tbl_project_phase_question_id.toInt(),d.tbl_projects_id.toInt(),d.version)
                             projectsPhaseQuestionEntity.add(projectEntity)
-                                Log.d("printprojectentry",projectEntity.toString())
+                               // Log.d("printprojectentry",projectEntity.toString())
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                             } else {
                                 navigate = false
@@ -544,6 +550,8 @@ class SyncDataActivity : BaseActivity() {
                 }
             }
             val assignedSurveyList= arrayListOf<AssignedSurveyEntity>()
+            val nbsassignedSurveyList= arrayListOf<NbsAssignedSurveyEntity>()
+
             Log.d("assignedSurvaytest",data.assigned_survey.toString())
             for (d in data.assigned_survey){
                 var panchayathId=0
@@ -559,16 +567,34 @@ class SyncDataActivity : BaseActivity() {
                 if (d.family_member_below_15_year!=null){
                     below15=d.family_member_below_15_year!!
                 }
+
                 try {
-                    /*val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),
-                        d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cylinder_per_year,d.device_serial_number, d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,above15,below15,
-                        d.wood_use_per_day_in_kg,
-                        d.date_and_time_of_visit!!,d.did_the_met_person_allowed_for_data!!,d.gps_location!!,d.do_you_have_aadhar_card,d.font_photo_of_aadar_card,d.back_photo_of_aadhar_card,d.total_electricity_bill,d.frequency_of_bill_payment,d.photo_of_bill,d.cost_of_lpg_cyliner,d.do_you_have_ration_or_aadhar,d.farmland_is_owned_by_benficary,d.if_5m_area_is_available_near_by)
-                    assignedSurveyList.add(assigned)*/
+
+                    if (d.electricity_connection_available.isNullOrEmpty()) {
+                        preferenceManager.saveUsertype(true)
+                        val nbsAssigned = NbsAssignedSurveyEntity(d.parent_survey_id.toInt(),d.farmer_unique_id, d.date_and_time_of_visit!!,d.gps_location!!,
+                            d.banficary_name,d.aadhar_card, d.mobile_number, d.alternate_mobile_number, d.residential_address,
+                            d.mst_district_id.toInt(),d.mst_state_id.toInt(),
+                            d.mst_tehsil_id.toInt(),panchayathId,d.mst_village_id.toInt(),d.tbl_forms_id,d.answer_id,d.next_form_id.toInt(),d.tbl_projects_id.toInt(),
+                            0,d.tbl_project_survey_common_data_id.toInt())
+                        nbsassignedSurveyList.add(nbsAssigned)
+                    } else {
+                        val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,
+                            d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),
+                            d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cylinder_per_year,d.device_serial_number, d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,above15,below15,
+                            d.wood_use_per_day_in_kg, d.date_and_time_of_visit!!,d.did_the_met_person_allowed_for_data!!,d.gps_location!!,d.do_you_have_aadhar_card,d.font_photo_of_aadar_card,d.back_photo_of_aadhar_card,d.total_electricity_bill,d.frequency_of_bill_payment,d.photo_of_bill,d.cost_of_lpg_cyliner,d.do_you_have_ration_or_aadhar,
+                            d.farmland_is_owned_by_benficary,d.if_5m_area_is_available_near_by)
+                        assignedSurveyList.add(assigned)
+                    }
+
+                preferenceManager.saveUsertype(true)
+
                 } catch (e : NumberFormatException){
 
                 }
             }
+            AppDatabase.getInstance(this@SyncDataActivity).formDao().insertNbsAllAssignedSurvey(nbsassignedSurveyList)
+
             AppDatabase.getInstance(this@SyncDataActivity).formDao().insertAllAssignedSurvey(assignedSurveyList)
             try{
                 for (d in data.training_tutorials){
@@ -579,8 +605,11 @@ class SyncDataActivity : BaseActivity() {
                 e.toString()
             }
             if (navigate == true) {
+               // hideProgress()
                 navigateToNext()
                 preferenceManager.saveSync(UtilMethods.getFormattedDate(Date()),true)
+            } else {
+                hideProgress()
             }
         }
     }
@@ -589,10 +618,12 @@ class SyncDataActivity : BaseActivity() {
         lifecycleScope.launch {
             answers=AppDatabase.getInstance(this@SyncDataActivity).formDao().getAllUnsyncedAnswers()
             for (a in answers){
+                //val commonAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getCommonAnswers(a.id!!)
                 val commonAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getCommonAnswers(a.id!!)
                 val dynamicAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getDynamicAns(a.id!!)
                 a.dynamicAnswersList=dynamicAns
-                a.commonAnswersEntity=commonAns
+                a.nbscommonAnswersEntity = commonAns
+               // a.commonAnswersEntity=commonAns
                 if (a.tbl_forms_id=="2"){
                     a.parent_survey_id=commonAns.parent_survey_id
                     a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
@@ -643,7 +674,7 @@ class SyncDataActivity : BaseActivity() {
                 val commonAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getCommonAnswers(a.id!!)
                 val dynamicAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getDynamicAns(a.id!!)
                 a.dynamicAnswersList=dynamicAns
-                a.commonAnswersEntity=commonAns
+               // a.commonAnswersEntity=commonAns
                 if (a.tbl_forms_id=="2"){
                     a.parent_survey_id=commonAns.parent_survey_id
                     a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id

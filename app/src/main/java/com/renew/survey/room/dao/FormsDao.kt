@@ -13,6 +13,7 @@ import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.CategoryEntity
 import com.renew.survey.room.entities.CommonAnswersEntity
 import com.renew.survey.room.entities.DivisionEntity
+import com.renew.survey.room.entities.DraftNbsCommonAnswer
 import com.renew.survey.room.entities.DynamicAnswersEntity
 import com.renew.survey.room.entities.FileTypeEntity
 import com.renew.survey.room.entities.FormEntity
@@ -22,6 +23,9 @@ import com.renew.survey.room.entities.FormQuestionGroupEntity
 import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.FormQuestionOptionsEntity
 import com.renew.survey.room.entities.FormWithLanguage
+import com.renew.survey.room.entities.NbsAssignedFilterSurveyEntity
+import com.renew.survey.room.entities.NbsAssignedSurveyEntity
+import com.renew.survey.room.entities.NbsCommonAnswersEntity
 import com.renew.survey.room.entities.Options
 import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectPhaseQuestionEntity
@@ -77,11 +81,65 @@ interface FormsDao {
 
     @Query("SELECT l.title,q.* from \n" +
             "ProjectPhaseQuestionEntity as p inner join\n" +
-            "FormQuestionEntity as q  on q.tbl_form_questions_id = p.tbl_form_questions_id and p.tbl_projects_id=:project \n" +
+            "FormQuestionEntity as q  on q.tbl_form_questions_id = p.tbl_form_questions_id and" +
+            "( p.tbl_projects_id=:project and q.parent_question_id = null or q.parent_question_id = 0) \n" +
             "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
-            "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId group by q.tbl_form_questions_id order by q.order_by")
-    suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int,project: Int):List<FormQuestionLanguage>
+            "inner join FormEntity as fe on fe.tbl_forms_id = p.tbl_forms_id \n" +
+            "where fe.mst_divisions_id =:divisionId and fe.mst_categories_id =:categoryId and l.mst_language_id=:language and" +
+            " q.mst_question_group_id=:group and p.tbl_forms_id=:formId group by q.tbl_form_questions_id order by q.order_by " )
+    suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int,project: Int,divisionId:Int,categoryId:Int):MutableList<FormQuestionLanguage>
 
+    @Query("SELECT l.title,d.answer,q.id,q.allowed_file_type,q.format,q.is_mandatory,q.is_special_char_allowed," +
+            "q.is_validation_required,q.max_file_size,q.max_length,q.min_length,q.mst_question_group_id,q.order_by," +
+            "q.question_type,q.tbl_form_questions_id,q.tbl_forms_id,q.has_dependancy_question,q.parent_question_id from \n" +
+            "ProjectPhaseQuestionEntity as p inner join\n" +
+            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id and p.tbl_projects_id=:project\n" +
+            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
+            "inner join DynamicAnswersEntity as d on d.tbl_form_questions_id=q.tbl_form_questions_id "+
+            "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId and" +
+            " d.answer_id=:answerId group by q.tbl_form_questions_id order by q.order_by")
+    suspend fun getAllFormsQuestionsWithDraftAnswer(language: Int,group:Int,formId:Int,answerId:Int,project: Int):MutableList<FormQuestionLanguage>
+
+    @Query("SELECT l.title,d.answer,q.id,q.allowed_file_type,q.format,q.is_mandatory,q.is_special_char_allowed," +
+            "q.is_validation_required,q.max_file_size,q.max_length,q.min_length,q.mst_question_group_id,q.order_by," +
+            "q.question_type,q.tbl_form_questions_id,q.tbl_forms_id,q.has_dependancy_question,q.parent_question_id from \n" +
+            "ProjectPhaseQuestionEntity as p inner join\n" +
+            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id and p.tbl_projects_id=:project\n" +
+            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
+            "inner join DynamicAnswersEntity as d on d.tbl_form_questions_id=q.tbl_form_questions_id "+
+            "where l.mst_language_id=:language and q.mst_question_group_id=:group and" +
+            " p.tbl_forms_id=:formId and q.question_type=:questionType and " +
+            "d.answer_id=:answerId group by q.tbl_form_questions_id order by q.order_by")
+    suspend fun getAllLoopQuestionsWithDraftAnswer(language: Int,group:Int,formId:Int,answerId:Int,project: Int,questionType: String):MutableList<FormQuestionLanguage>
+
+    @Query("SELECT l.title,q.* from ProjectPhaseQuestionEntity as p inner join\n" +
+            "FormQuestionEntity as q  on q.tbl_form_questions_id = p.tbl_form_questions_id and p.tbl_projects_id=:project" +
+            " and q.parent_question_id =:pearntQuestionId /*and q.parent_option =:option*/ \n" +
+            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
+            "inner join FormEntity as fe on fe.tbl_forms_id = p.tbl_forms_id \n" +
+            "where fe.mst_divisions_id =:divisionId and fe.mst_categories_id =:categoryId and l.mst_language_id=:language" +
+            " and q.mst_question_group_id=:group and p.tbl_forms_id=:formId group by q.tbl_form_questions_id order by q.order_by")
+    suspend fun getDependentFormsQuestionsToDelete(language: Int,group:Int,formId:Int,project: Int,divisionId:Int,categoryId:Int, pearntQuestionId : Int):MutableList<FormQuestionLanguage>
+
+    @Query("SELECT l.title,q.* from \n" +
+            "ProjectPhaseQuestionEntity as p inner join\n" +
+            "FormQuestionEntity as q  on q.tbl_form_questions_id = p.tbl_form_questions_id and p.tbl_projects_id=:project" +
+            " and q.parent_question_id =:pearntQuestionId and q.parent_option =:option \n" +
+            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
+            "inner join FormEntity as fe on fe.tbl_forms_id = p.tbl_forms_id \n" +
+            "where fe.mst_divisions_id =:divisionId and fe.mst_categories_id =:categoryId and l.mst_language_id=:language" +
+            " and q.mst_question_group_id=:group and p.tbl_forms_id=:formId group by q.tbl_form_questions_id order by q.order_by")
+    suspend fun getDependentFormsQuestions(language: Int,group:Int,formId:Int,project: Int,divisionId:Int,categoryId:Int, pearntQuestionId : Int, option : String): MutableList<FormQuestionLanguage>
+
+    @Query("SELECT l.title,q.* from \n" +
+            "ProjectPhaseQuestionEntity as p inner join\n" +
+            "FormQuestionEntity as q  on q.tbl_form_questions_id = p.tbl_form_questions_id and p.tbl_projects_id=:project" +
+            " and q.parent_question_id =:pearntQuestionId  \n" +
+            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
+            "inner join FormEntity as fe on fe.tbl_forms_id = p.tbl_forms_id \n" +
+            "where fe.mst_divisions_id =:divisionId and fe.mst_categories_id =:categoryId and l.mst_language_id=:language" +
+            " and q.mst_question_group_id=:group and p.tbl_forms_id=:formId group by q.tbl_form_questions_id order by q.order_by")
+    suspend fun getLoopFormsQuestions(language: Int,group:Int,formId:Int,project: Int,divisionId:Int,categoryId:Int, pearntQuestionId : Int):MutableList<FormQuestionLanguage>
     @Query("SELECT mfl.title, tq.* from" +
             " TestQuestionsEntry as tq LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_test_questions' AND mfl.module_id = tbl_test_questions_id " +
             "WHERE tbl_tests_id = :formId AND is_active AND mst_language_id =:language")
@@ -97,13 +155,6 @@ interface FormsDao {
             "WHERE tt.tbl_forms_id = :formId")
     suspend fun getTutorial(formId:Int): TutorialsDetailsEntry
 
-    @Query("SELECT l.title,d.answer,q.id,q.allowed_file_type,q.format,q.is_mandatory,q.is_special_char_allowed,q.is_validation_required,q.max_file_size,q.max_length,q.min_length,q.mst_question_group_id,q.order_by,q.question_type,q.tbl_form_questions_id,q.tbl_forms_id from \n" +
-            "ProjectPhaseQuestionEntity as p inner join\n" +
-            "FormQuestionEntity as q  on q.id = p.tbl_form_questions_id and p.tbl_projects_id=:project\n" +
-            "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
-            "inner join DynamicAnswersEntity as d on d.tbl_form_questions_id=q.tbl_form_questions_id "+
-            "where l.mst_language_id=:language and q.mst_question_group_id=:group and p.tbl_forms_id=:formId and d.answer_id=:answerId group by q.tbl_form_questions_id order by q.order_by")
-    suspend fun getAllFormsQuestionsWithDraftAnswer(language: Int,group:Int,formId:Int,answerId:Int,project: Int):List<FormQuestionLanguage>
 
 
     @Query("SELECT title,tbl_project_phase_id,version,mqg.* FROM ProjectPhaseQuestionEntity pq " +
@@ -114,7 +165,7 @@ interface FormsDao {
     suspend fun getAllFormsQuestionGroup(language: Int,project:Int,formId: Int):List<QuestionGroupWithLanguage>
 
     @Query("SELECT l.title from FormQuestionOptionsEntity as q inner join FormLanguageEntity as l on q.tbl_form_questions_option_id=l.module_id where l.module='tbl_form_questions_option' and tbl_form_questions_id=:question and l.mst_language_id=:language")
-    suspend fun getAllOptions(question: Int,language: Int):List<Options>
+    suspend fun getAllOptions(question: Int,language: Int):MutableList<Options>
 
     @Query("SELECT l.title, q.* from TestOptionsEntity as q inner join FormLanguageEntity as l on q.tbl_test_questions_option_id=l.module_id where l.module='tbl_test_questions_option' and tbl_test_questions_id=:question and l.mst_language_id=:language")
     suspend fun getAllTestOptions(question: Int,language: Int):List<TestOptionLanguage>
@@ -137,12 +188,16 @@ interface FormsDao {
     suspend fun insertAllAssignedSurvey(formList: List<AssignedSurveyEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNbsAllAssignedSurvey(formList: List<NbsAssignedSurveyEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllProjects(formList: List<ProjectEntity>)
 
     @Query("Select * from ProjectEntity order by tbl_projects_id")
     suspend fun getAllProjects(): List<ProjectEntity>
 
-    @Query("Select title,p.* from ProjectEntity as p  inner join FormLanguageEntity as l on p.tbl_projects_id=l.module_id where l.module='tbl_projects' and mst_language_id=:language order by tbl_projects_id")
+    @Query("Select title,p.* from ProjectEntity as p  inner join FormLanguageEntity as l on p.tbl_projects_id=l.module_id" +
+            " where l.module='tbl_projects' and mst_language_id=:language order by tbl_projects_id")
     suspend fun getAllProjectsWithLanguage(language:Int): List<ProjectWithLanguage>
 
 
@@ -155,8 +210,14 @@ interface FormsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllDivisions(formList: List<DivisionEntity>)
 
+    @Query("Select * from DivisionEntity where mst_divisions_id=:id")
+    suspend fun getDivisions(id: Int): DivisionEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllCategories(formList: List<CategoryEntity>)
+
+    @Query("Select * from CategoryEntity where mst_categories_id=:id")
+    suspend fun getCategories(id: Int): CategoryEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllTutorials(formList: List<TutorialEntity>)
@@ -183,6 +244,12 @@ interface FormsDao {
     suspend fun updateCommonAnswer(ans:CommonAnswersEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNbsCommonAnswer(ans:NbsCommonAnswersEntity):Long
+
+    @Update
+    suspend fun updateNbsCommonAnswer(ans:NbsCommonAnswersEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDynamicAnswer(ans:DynamicAnswersEntity):Long
 
     @Query("Select * from AnswerEntity where sync=0 and draft=0")
@@ -194,11 +261,20 @@ interface FormsDao {
     @Query("Select * from CommonAnswersEntity where answer_id=:ansId limit 1")
     suspend fun getCommonAnswers(ansId:Int): CommonAnswersEntity
 
+    @Query("Select * from NbsCommonAnswersEntity where answer_id=:ansId limit 1")
+    suspend fun getNbsCommonAnswers(ansId:Int): NbsCommonAnswersEntity
+
     @Query("Select * from TutorialEntity where tbl_forms_id =:formId limit 1")
     suspend fun getTrainings(formId:Int): TutorialEntity
 
     @Query("Select * from DynamicAnswersEntity where answer_id=:answer_id")
     suspend fun getDynamicAns(answer_id:Int): List<DynamicAnswersEntity>
+
+    @Query("Select * from DynamicAnswersEntity where answer_id=:answer_id and tbl_form_questions_id=:questionId")
+    suspend fun getDynamicLoopAns(answer_id:Int, questionId:Int): DynamicAnswersEntity
+
+    @Query("Select * from DynamicAnswersEntity where answer_id=:answer_id and tbl_form_questions_id=:questionId")
+    suspend fun getDependencyDynamicAns(answer_id:Int, questionId:Int): DynamicAnswersEntity
 
     @Query("Update AnswerEntity set sync=1 where id=:ans_id")
     suspend fun updateSync(ans_id:Int)
@@ -212,11 +288,19 @@ interface FormsDao {
     @Query("Select * from AssignedSurveyEntity where status=0 and next_form_id=:formId and tbl_projects_id=:project")
     suspend fun getAllFilteredAssignedSurvey(formId: Int, project: Int): List<AssignedFilterSurveyEntity>
 
+    @Query("Select * from NbsAssignedSurveyEntity where status=0 and next_form_id=:formId and tbl_projects_id=:project")
+    suspend fun getAllNbsFilteredAssignedSurvey(formId: Int, project: Int): List<NbsAssignedFilterSurveyEntity>
     @Query("Select tbl_forms_id,ca.*  from AnswerEntity as a inner join CommonAnswersEntity ca on a.id=ca.answer_id where a.draft=1 and a.tbl_forms_id=:formId and tbl_projects_id=:project")
     suspend fun getAllDraftSurvey(formId: Int, project: Int): List<DraftCommonAnswer>
 
+    @Query("Select tbl_forms_id,ca.*  from AnswerEntity as a inner join NbsCommonAnswersEntity ca on a.id=ca.answer_id where a.draft=1 and a.tbl_forms_id=:formId and tbl_projects_id=:project")
+    suspend fun getAllNbsDraftSurvey(formId: Int, project: Int): List<DraftNbsCommonAnswer>
+
     @Query("UPDATE DynamicAnswersEntity set answer=:answer where mst_question_group_id=:group and tbl_form_questions_id=:question and answer_id=:answer_id")
     suspend fun updateDynamicAnswer(answer:String,group: Int,question: Int,answer_id: Int)
+
+    @Query("Delete from DynamicAnswersEntity where tbl_form_questions_id=:id and answer_id=:ansId ")
+    suspend fun deleteDependencyAns(id: Int,ansId : Int)
 
     @Query("UPDATE AssignedSurveyEntity set status=1 where id=:id")
     suspend fun updateAssignedStatus(id: Int)

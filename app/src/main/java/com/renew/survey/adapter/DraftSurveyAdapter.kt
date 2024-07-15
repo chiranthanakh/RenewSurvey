@@ -9,6 +9,7 @@ import com.renew.survey.databinding.ItemProjectSelectBinding
 import com.renew.survey.response.Project
 import com.renew.survey.room.entities.AssignedSurveyEntity
 import com.renew.survey.room.entities.DraftCommonAnswer
+import com.renew.survey.room.entities.DraftNbsCommonAnswer
 import com.renew.survey.room.entities.ProjectEntity
 import com.renew.survey.room.entities.ProjectWithLanguage
 
@@ -36,5 +37,7 @@ class DraftSurveyAdapter(val context:Context, private var list: List<DraftCommon
     }
     interface ClickListener{
         fun onProjectSelect(assignedSurveyEntity: DraftCommonAnswer)
+        fun onProjectSelectNbs(assignedSurveyEntity: DraftNbsCommonAnswer)
+
     }
 }

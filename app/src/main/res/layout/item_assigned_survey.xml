@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="@dimen/dp_10"
+    android:layout_marginTop="@dimen/dp_10"
+    app:cardCornerRadius="@dimen/dp_10"
+    android:padding="@dimen/dp_10"
+    android:orientation="vertical">
+
     <LinearLayout
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
         android:orientation="vertical">
@@ -21,7 +33,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:background="@color/black"/>
 
         <TextView
@@ -47,7 +59,7 @@
     </LinearLayout>
 
     <View
-        android:layout_width="3dp"
+        android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/black"/>
 
@@ -57,8 +69,11 @@
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_marginBottom="@dimen/dp_10"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_15_dp"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

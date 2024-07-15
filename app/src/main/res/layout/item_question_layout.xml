@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_main"
     android:orientation="vertical">
     <LinearLayout
         android:id="@+id/ll_edittext"
@@ -88,6 +89,7 @@
            android:layout_height="wrap_content"
            android:layout_marginEnd="@dimen/margin_15_dp"
            android:layout_marginStart="@dimen/margin_15_dp">
+
 
        </RadioGroup>
     </LinearLayout>

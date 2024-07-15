@@ -24,7 +24,10 @@ data class AnswerEntity(
     var draft: Int,
     @Ignore
     @SerializedName("common_question_answer")
-    var commonAnswersEntity: CommonAnswersEntity?,
+    var commonAnswersEntity: NbsCommonAnswersEntity?,
+    @Ignore
+    @SerializedName("nbs_common_question_answer")
+    var nbscommonAnswersEntity: CommonAnswersEntity?,
     @Ignore
     @SerializedName("question_answer")
     var dynamicAnswersList : List<DynamicAnswersEntity>
@@ -59,6 +62,7 @@ data class AnswerEntity(
         sync,
         media_sync,
         draft,
+        null,
         null,
         listOf()
     )

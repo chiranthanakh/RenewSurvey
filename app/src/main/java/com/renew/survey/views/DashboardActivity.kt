@@ -99,12 +99,16 @@ class DashboardActivity : BaseActivity() {
                         logout()
                     }
                 }
-
                 override fun onNo() {
 
                 }
-
             })
+        }
+        bindingNav.llDownloadMap.setOnClickListener {
+            val intent = Intent(this,MapManagerActivity::class.java)
+            intent.putExtra("place", "1");
+            startActivity(intent)
+
         }
         binding.cardDraft.setOnClickListener {
             if (draftCount==0){
@@ -127,14 +131,14 @@ class DashboardActivity : BaseActivity() {
             lifecycleScope.launch {
                 val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswers()
                 for (a in answers){
-                    val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
+                    val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getNbsCommonAnswers(a.id!!)
                     val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
                     a.dynamicAnswersList=dynamicAns
                     a.commonAnswersEntity=commonAns
-                    if (a.tbl_forms_id=="2"){
+                    /*if (a.tbl_forms_id=="2"){
                         a.parent_survey_id=commonAns.parent_survey_id
                         a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
-                    }
+                    }*/
                 }
                 for (a in answers){
                     for (d in a.dynamicAnswersList){
@@ -156,7 +160,7 @@ class DashboardActivity : BaseActivity() {
                             val json=JSONObject(response.body().toString())
                             UtilMethods.showToast(this@DashboardActivity,json.getString("message"))
                             if (json.getString("success")=="1"){
-                                syncMedia()
+                               // syncMedia()
                                 for (ans in answers){
                                     AppDatabase.getInstance(this@DashboardActivity).formDao().updateSync(ans.id!!)
                                 }
@@ -253,11 +257,11 @@ class DashboardActivity : BaseActivity() {
             val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedMediaAnswers()
             val mediaList= arrayListOf<MediaSyncReqItem>()
             for (a in answers){
-                val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
+                val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getNbsCommonAnswers(a.id!!)
                 val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
                 a.dynamicAnswersList=dynamicAns
                 a.commonAnswersEntity=commonAns
-                if (a.tbl_forms_id=="2"){
+                /*if (a.tbl_forms_id=="2"){
                     a.parent_survey_id=commonAns.parent_survey_id
                     a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
                 }
@@ -269,7 +273,7 @@ class DashboardActivity : BaseActivity() {
                 }
                 if (commonAns.photo_of_bill.isNotEmpty()){
                     mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.photo_of_bill.substring(commonAns.photo_of_bill.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.photo_of_bill))
-                }
+                }*/
             }
 
             for (a in answers){

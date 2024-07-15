@@ -1,8 +1,10 @@
 package com.renew.survey.views
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -35,6 +37,7 @@ import com.mapbox.mapboxsdk.offline.OfflineRegionError
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.renew.survey.R
+import com.renew.survey.utilities.LatLagWrapper
 import org.json.JSONObject
 
 /**
@@ -47,6 +50,7 @@ class MapManagerActivity : AppCompatActivity(),MapboxMap.OnMapClickListener,
     private var progressBar: ProgressBar? = null
     private var downloadButton: Button? = null
     private var listButton: Button? = null
+    private var savebutton: Button? = null
     private var isEndNotified = false
     private var regionSelected = 0
     private var offlineManager: OfflineManager? = null
@@ -61,7 +65,8 @@ class MapManagerActivity : AppCompatActivity(),MapboxMap.OnMapClickListener,
         Mapbox.getInstance(this, "sk.eyJ1IjoiY2hpcnVoZW1hIiwiYSI6ImNsd3NtcjkzYzAxZ2EybXNjaTAwcWN3eWYifQ.m1qVAeCqngttwSX6hr_K3A")
         setContentView(R.layout.activity_map_manager)
 
-        // Set up the MapView
+         val intent = intent
+         val place = intent.getStringExtra("place")
         mapView = findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(object : OnMapReadyCallback {
@@ -72,10 +77,25 @@ class MapManagerActivity : AppCompatActivity(),MapboxMap.OnMapClickListener,
                         progressBar = findViewById(R.id.progress_bar)
                         offlineManager = OfflineManager.getInstance(this@MapManagerActivity)
                         downloadButton = findViewById(R.id.download_button)
-                        downloadButton!!.setOnClickListener { downloadRegionDialog() }
+                        savebutton = findViewById(R.id.save_button)
+                        if(place.equals("1")){
+                            savebutton?.visibility = View.GONE
+                        } else {
+                            downloadButton?.visibility = View.GONE
+                        }
+                        downloadButton?.setOnClickListener {
+                            downloadRegionDialog()
+                        }
+                        savebutton?.setOnClickListener{
+                            val wrappedPoints = points.map { LatLagWrapper(it) }
+                            val resultIntent = Intent()
+                            resultIntent.putParcelableArrayListExtra("key", ArrayList(wrappedPoints))
+                            setResult(Activity.RESULT_OK, resultIntent)
+                            finish()
+                        }
                         // List offline regions
                         listButton = findViewById(R.id.list_button)
-                        listButton!!.setOnClickListener { downloadedRegionList() }
+                        listButton?.setOnClickListener { downloadedRegionList() }
                         mapboxMap.addOnMapClickListener(this@MapManagerActivity)
                         enableLocationComponent(style)
                     }

@@ -13,7 +13,7 @@ data class QuestionGroupWithLanguage(
     var answeredQuestions:Int?,
     var selected: Boolean?,
     @Ignore
-    var questions:List<FormQuestionLanguage>
+    var questions:MutableList<FormQuestionLanguage>
 ) {
     constructor(
         mst_question_group_id: Int,
@@ -30,6 +30,6 @@ data class QuestionGroupWithLanguage(
         0,
         0,
         false,
-        listOf()
+        mutableListOf()
     )
 }

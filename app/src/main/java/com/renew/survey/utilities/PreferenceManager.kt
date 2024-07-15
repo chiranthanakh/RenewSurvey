@@ -148,6 +148,16 @@ class PreferenceManager constructor(context: Context){
         return  sharedPreferences.getInt("draft",0)
     }
 
+    fun saveAnsId(ans: Int){
+        val editor = sharedPreferences.edit()
+        editor.putInt("ansId",ans)
+        editor.apply()
+    }
+
+    fun getAnsId(): Int{
+        return  sharedPreferences.getInt("ansId",0)
+    }
+
     fun saveProject(projectEntity: ProjectWithLanguage){
         val editor = sharedPreferences.edit()
         editor.putString("project",gson.toJson(projectEntity))
@@ -217,5 +227,14 @@ class PreferenceManager constructor(context: Context){
         return gson.fromJson(sharedPreferences.getString("userData",""),UserData::class.java)
     }
 
+    fun saveUsertype(isnbs: Boolean){
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("isNbs",isnbs)
+        editor.apply()
+    }
+
+    fun getUsertype(): Boolean{
+        return sharedPreferences.getBoolean("isNbs",false)
+    }
 
 }

@@ -13,7 +13,6 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,21 +26,25 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.renew.survey.R
 import com.renew.survey.adapter.QuestionsAdapter
 import com.renew.survey.adapter.TestQuestionsAdapter
 import com.renew.survey.databinding.FragmentQuestionsBinding
 import com.renew.survey.helper.compressor.Compressor
 import com.renew.survey.room.AppDatabase
+import com.renew.survey.room.entities.DynamicAnswersEntity
 import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.Options
 import com.renew.survey.room.entities.QuestionGroupWithLanguage
 import com.renew.survey.room.entities.TestQuestionLanguage
 import com.renew.survey.utilities.FileUtils
+import com.renew.survey.utilities.LatLagWrapper
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
 import com.renew.survey.views.DashboardActivity
 import com.renew.survey.views.FormsDetailsActivity
+import com.renew.survey.views.MapManagerActivity
 import com.renew.survey.views.TrainingActivity
 import kotlinx.coroutines.launch
 import java.io.File
@@ -54,7 +57,7 @@ import kotlin.math.roundToInt
 class QuestionsFragment(
     val group: Int,
     val fragPos: Int,
-    var questionGroupList: List<QuestionGroupWithLanguage>,
+    var questionGroupList: MutableList<QuestionGroupWithLanguage> = mutableListOf(),
     var testquestionList: List<TestQuestionLanguage>,
     val status: Int,
     val isTraingForm: Boolean
@@ -71,13 +74,11 @@ class QuestionsFragment(
         binding=FragmentQuestionsBinding.inflate(inflater,container,false)
         prefsManager=PreferenceManager(requireContext())
         if (isTraingForm) {
-            getTestQuestions()
             binding.recyclerView.layoutManager=LinearLayoutManager(requireContext())
             testquestionsAdapter= TestQuestionsAdapter(requireContext(),testquestionList)
             binding.recyclerView.adapter=testquestionsAdapter
         } else {
             Log.d("QuestionQuairy", status.toString())
-
             if (status==4||status==5||status==6||status==8) {
                 getQuestionsWithDraftAnswer()
             } else {
@@ -90,40 +91,22 @@ class QuestionsFragment(
         return binding.root
     }
 
-    private fun getTestQuestions() {
-        /*lifecycleScope.launch {
-            if (testquestionList.isEmpty()) {
-                testquestionList = AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
-            }
-            testquestionList.forEachIndexed { index, testQuestionLanguage ->
-                if (testQuestionLanguage.question_type=="CHECKBOX"||testQuestionLanguage.question_type=="SINGLE_SELECT"||testQuestionLanguage.question_type=="MULTI_SELECT"||testQuestionLanguage.question_type=="RADIO"){
-                    val options= testQuestionLanguage?.tbl_test_questions_id?.let {
-                        AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
-                            it,prefsManager.getLanguage())
-                    } as ArrayList
-                    if (testQuestionLanguage.question_type=="SINGLE_SELECT"){
-                        options.add(0,Options(getString(R.string.select)))
-                    }
-                    testquestionList[index].options=options
-                }
-            }
-            testquestionsAdapter.setData(testquestionList)
-        }*/
-    }
-
     fun getQuestions(){
         lifecycleScope.launch {
             if (questionGroupList[fragPos].questions.isEmpty()){
-                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,prefsManager.getProject().tbl_projects_id)
-                //questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), 1)
+                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().
+                getAllFormsQuestions(prefsManager.getLanguage(),
+                    group,prefsManager.getForm().tbl_forms_id,
+                    prefsManager.getProject().tbl_projects_id,
+                    prefsManager.getProject().mst_divisions_id,prefsManager.getProject().mst_categories_id)
             }
-            val questionList=AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
+            Log.d("checkfullquestions",questionGroupList[fragPos].questions.toString())
+            AppDatabase.getInstance(requireContext()).formDao().getAllTestQuestions(prefsManager.getLanguage(), prefsManager.getForm().tbl_forms_id)
             Log.d("QuestionQuairy", prefsManager.getLanguage().toString()+"--"+group.toString()+"--"+prefsManager.getForm().tbl_forms_id.toString()+"--"+prefsManager.getProject().tbl_projects_id.toString())
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
                 if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
-                    val options= formQuestionLanguage?.tbl_form_questions_id?.let {
-                        AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
-                            it,prefsManager.getLanguage())
+                    val options= formQuestionLanguage.tbl_form_questions_id.let {
+                        AppDatabase.getInstance(requireContext()).formDao().getAllOptions(it,prefsManager.getLanguage())
                     } as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
                         options.add(0,Options(getString(R.string.select),false))
@@ -131,28 +114,101 @@ class QuestionsFragment(
                     questionGroupList[fragPos].questions[index].options=options
                 }
             }
-            val json= Gson().toJson(questionGroupList[fragPos])
+            Gson().toJson(questionGroupList[fragPos])
             Log.e("Options123",questionGroupList[1].questions.toString())
             questionsAdapter.setData(questionGroupList[fragPos].questions)
         }
 
     }
+
+    private fun assignData(loopDependentQuestion: MutableList<FormQuestionLanguage>, j:Int): FormQuestionLanguage {
+        val allowedFileType = loopDependentQuestion[j].allowed_file_type
+        val format = loopDependentQuestion[j].format
+        val isMandatory = loopDependentQuestion[j].is_mandatory
+        val isSpecialCharAllowed = loopDependentQuestion[j].is_special_char_allowed
+        val isValidationRequired = loopDependentQuestion[j].is_validation_required
+        val maxFileSize = loopDependentQuestion[j].max_file_size
+        val maxLength = loopDependentQuestion[j].max_length
+        val minLength = loopDependentQuestion[j].min_length
+        val mstQuestionGroupId = loopDependentQuestion[j].mst_question_group_id
+        val orderBy = loopDependentQuestion[j].order_by
+        val questionType = loopDependentQuestion[j].question_type
+        val tblFormQuestionsId = loopDependentQuestion[j].tbl_form_questions_id
+        val title = loopDependentQuestion[j].title
+        val answer = loopDependentQuestion[j].answer
+        val hasDependencyQuestion = loopDependentQuestion[j].has_dependancy_question
+        val parentQuestionId = loopDependentQuestion[j].parent_question_id
+        val newFormQuestionLanguage = FormQuestionLanguage(
+            id = null, // Assuming id is nullable and you want to set it to null
+            allowed_file_type = allowedFileType,
+            format = format,
+            is_mandatory = isMandatory,
+            is_special_char_allowed = isSpecialCharAllowed,
+            is_validation_required = isValidationRequired,
+            max_file_size = maxFileSize,
+            max_length = maxLength,
+            min_length = minLength,
+            mst_question_group_id = mstQuestionGroupId,
+            order_by = orderBy,
+            question_type = questionType,
+            tbl_form_questions_id = tblFormQuestionsId,
+            title = title,
+            answer = answer,
+            has_dependancy_question = hasDependencyQuestion,
+            parent_question_id = parentQuestionId,
+            options = listOf() // Initialize options list as empty for now
+        )
+        return newFormQuestionLanguage
+    }
+
     fun getQuestionsWithDraftAnswer(){
         lifecycleScope.launch {
             //Log.e("OptionsDraft","draftAnswer=${prefsManager.getDraft()}   language=${prefsManager.getLanguage()} formId=${prefsManager.getForm().tbl_forms_id} group=${group}")
             if (questionGroupList[fragPos].questions.isEmpty()){
-                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestionsWithDraftAnswer(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,prefsManager.getDraft(),prefsManager.getProject().tbl_projects_id)
+                questionGroupList[fragPos].questions=AppDatabase.getInstance(requireContext()).formDao()
+                    .getAllFormsQuestionsWithDraftAnswer(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,prefsManager.getDraft(),prefsManager.getProject().tbl_projects_id)
             }
-            Log.e("DraftAnswer","${questionGroupList[fragPos].questions}")
-            //questionList=AppDatabase.getInstance(requireContext()).formDao().getAllFormsQuestions(prefsManager.getLanguage(), group)
             questionGroupList[fragPos].questions.forEachIndexed { index, formQuestionLanguage ->
-                if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type=="SINGLE_SELECT"||formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
+                if (formQuestionLanguage.question_type=="CHECKBOX"||formQuestionLanguage.question_type == "SINGLE_SELECT"||
+                    formQuestionLanguage.question_type=="MULTI_SELECT"||formQuestionLanguage.question_type=="RADIO"){
+                    Log.d("checkOptionIdes",formQuestionLanguage.toString())
                     val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
-                        formQuestionLanguage.tbl_form_questions_id!!,prefsManager.getLanguage()) as ArrayList
+                        formQuestionLanguage.tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
                     if (formQuestionLanguage.question_type=="SINGLE_SELECT"){
                         options.add(0,Options(getString(R.string.select),false))
                     }
                     questionGroupList[fragPos].questions[index].options=options
+                } else if(formQuestionLanguage.question_type == "LOOP") {
+                    var loopDependentQuestion =
+                        AppDatabase.getInstance(requireContext()).formDao().getLoopFormsQuestions(
+                            prefsManager.getLanguage(), group, prefsManager.getForm().tbl_forms_id,
+                            prefsManager.getProject().tbl_projects_id, prefsManager.getProject().mst_divisions_id,
+                            prefsManager.getProject().mst_categories_id, formQuestionLanguage.tbl_form_questions_id )
+
+                    if (loopDependentQuestion.isNotEmpty() && !formQuestionLanguage.answer.isNullOrEmpty()) {
+                        for (j in 0..loopDependentQuestion.size - 1) {
+                            for (i in 1..formQuestionLanguage.answer!!.toInt()) {
+                                Log.d("checkOptionIdes",formQuestionLanguage.toString())
+
+                                val dynamicAns=AppDatabase.getInstance(requireContext()).formDao().
+                                getDynamicLoopAns( prefsManager.getDraft(),(loopDependentQuestion.get(j).tbl_form_questions_id.toString()+i.toString()).toInt())
+                                val data = assignData(loopDependentQuestion,j)
+
+                                if (loopDependentQuestion.get(j).question_type=="CHECKBOX"||loopDependentQuestion.get(j).question_type == "SINGLE_SELECT"||
+                                    loopDependentQuestion.get(j).question_type=="MULTI_SELECT"||loopDependentQuestion.get(j).question_type=="RADIO"){
+                                    Log.d("checkOptionIdes",formQuestionLanguage.toString())
+                                    val options=AppDatabase.getInstance(requireContext()).formDao().getAllOptions(
+                                        loopDependentQuestion.get(j).tbl_form_questions_id,prefsManager.getLanguage()) as ArrayList
+                                   data.options = options
+                                }
+                                if (!dynamicAns.answer.isNullOrEmpty()) {
+                                    data.answer = dynamicAns.answer
+                                   // questionGroupList[fragPos].questions.add(data as FormQuestionLanguage)
+                                }
+                                questionGroupList[fragPos].questions.add(data as FormQuestionLanguage)
+                            }
+                        }
+                    }
                 }
             }
             if (fragPos==1){
@@ -161,11 +217,8 @@ class QuestionsFragment(
             }
             questionsAdapter.setData(questionGroupList[fragPos].questions)
         }
-
     }
     var filePath = ""
-    var fileType = ""
-    var fileName = ""
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
@@ -195,37 +248,142 @@ class QuestionsFragment(
                     questionsAdapter.notifyItemChanged(position)
                 }
             }
+            FROM_MAP -> {
+                var points: MutableList<LatLng> = mutableListOf()
+                if (data != null) {
+                    val wrappedPoints = data.getParcelableArrayListExtra<LatLagWrapper>("key")
+                    val formattedList = wrappedPoints?.let {
+                        it.map {
+                            "\"${String.format("%.2f", it.latitude)},${String.format("%.2f", it.longitude)}\""
+                        }
+                    }
+                    Log.d("MapPointsCo", formattedList.toString())
+                    questionGroupList[fragPos].questions[position].answer = formattedList?.toString()
+                    questionsAdapter.notifyItemChanged(position)
+                }
+            }
         }
-
     }
 
     override fun onFileSelect(question: FormQuestionLanguage, pos: Int, type:String, capture:String) {
         position=pos
-        //openCamera()
         if (capture=="CAPTURE"){
             openCamera()
+        }else if (capture=="MAP"){
+            val intent = Intent(requireActivity(), MapManagerActivity::class.java)
+            startActivityForResult(intent, FROM_MAP)
         }else{
             openFilePick("*/*")
         }
-
-        /*when(type){
-            *//*"JPEG","JPG"->{
-                openFilePick("image/jpeg")
-            }
-            "PNG"->{
-                openFilePick("image/png")
-            }
-            "GIF"->{
-                openFilePick("image/gif")
-            }
-            "PDF"->{
-                openFilePick("application/pdf")
-            }
-            "XLS","DOC","XLSX"->{
-
-            }*//*
-        }*/
     }
+
+    override fun onLoopSelect(question: FormQuestionLanguage, answer: String) {
+        lifecycleScope.launch {
+
+            Log.e("LoopDuplicate","data=$questionGroupList[fragPos].questions")
+            questionGroupList[fragPos].questions.removeAll{
+                it.parent_question_id == question.tbl_form_questions_id
+            }
+           // Log.e("LoopDuplicate2","data=$questionGroupList[fragPos].questions")
+            questionsAdapter.notifyDataSetChanged()
+            var loopDependentQuestion =
+                AppDatabase.getInstance(requireContext()).formDao().getLoopFormsQuestions(
+                    prefsManager.getLanguage(), group, prefsManager.getForm().tbl_forms_id,
+                    prefsManager.getProject().tbl_projects_id, prefsManager.getProject().mst_divisions_id,
+                    prefsManager.getProject().mst_categories_id, question.tbl_form_questions_id
+                )
+            Log.d("checkoptions1234", "calledtimes")
+            if (answer.isNotEmpty()) {
+                for (j in 0 until loopDependentQuestion.size) {
+                    val baseData = assignData(loopDependentQuestion, j)
+                    val questionid = baseData.tbl_form_questions_id
+
+                    for (i in 1..answer.toInt()) {
+                        val data = baseData.copy()
+                        data.tbl_form_questions_id = "${baseData.tbl_form_questions_id}$i".toInt()
+                        if (data.question_type == "CHECKBOX" || data.question_type == "SINGLE_SELECT" ||
+                            data.question_type == "MULTI_SELECT" || data.question_type == "RADIO"
+                        ) {
+                            val options = AppDatabase.getInstance(requireContext()).formDao()
+                                .getAllOptions(questionid, prefsManager.getLanguage())
+                            data.options = options
+
+                            if (data.question_type == "SINGLE_SELECT") {
+                                // options.add(0, Options(getString(R.string.select), false))
+                            }
+                        }
+                        Log.d("checkoptions123", "data${j},${i}")
+                        questionGroupList[fragPos].questions.add(data)
+                    }
+                }
+                questionGroupList[fragPos].questions
+                questionsAdapter.notifyDataSetChanged()
+                loopDependentQuestion.forEach {
+                    for (i in 1..answer.toInt()) {
+                        val dynamicAnswersEntity= DynamicAnswersEntity(null,it.mst_question_group_id,
+                            "",(it.tbl_form_questions_id.toString()+"_"+i.toString()),prefsManager.getDraft())
+                        AppDatabase.getInstance(requireContext()).formDao().insertDynamicAnswer(dynamicAnswersEntity)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDependentSelect(question: FormQuestionLanguage, pos: Int, answer: String) {
+        lifecycleScope.launch {
+            //if ans already present delete it
+            questionGroupList[fragPos].questions.removeAll{
+                it.parent_question_id == question.tbl_form_questions_id
+            }
+            questionsAdapter.notifyDataSetChanged()
+
+            //get all dependency question
+        var deleteDependentQuestion= AppDatabase.getInstance(requireContext()).formDao().
+            getDependentFormsQuestionsToDelete(prefsManager.getLanguage(),
+            group,prefsManager.getForm().tbl_forms_id, prefsManager.getProject().tbl_projects_id,
+            prefsManager.getProject().mst_divisions_id,prefsManager.getProject().mst_categories_id,
+            question.tbl_form_questions_id)
+
+            //delete if parent option changes
+            deleteDependentQuestion.forEach { AppDatabase.getInstance(requireContext()).formDao()
+                .deleteDependencyAns(it.tbl_form_questions_id,prefsManager.getDraft()) }
+
+            //to get all dependent question
+        var dependentQuestion = AppDatabase.getInstance(requireContext()).formDao().
+        getDependentFormsQuestions(prefsManager.getLanguage(), group,prefsManager.getForm().tbl_forms_id,
+            prefsManager.getProject().tbl_projects_id, prefsManager.getProject().mst_divisions_id,
+            prefsManager.getProject().mst_categories_id, question.tbl_form_questions_id,answer)
+
+            dependentQuestion.forEach {
+                if (it.question_type == "CHECKBOX" || it.question_type == "SINGLE_SELECT" ||
+                    it.question_type == "MULTI_SELECT" || it.question_type == "RADIO"
+                ) {
+                    val options = AppDatabase.getInstance(requireContext()).formDao()
+                        .getAllOptions(it.tbl_form_questions_id, prefsManager.getLanguage())
+                    it.options = options
+
+                    if (it.question_type == "SINGLE_SELECT") {
+                        (it.options as MutableList<Options>).add(0, Options(getString(R.string.select), false))
+                    }
+                }
+                questionGroupList[fragPos].questions.add(it)
+
+                val dynamicAnswersEntity= DynamicAnswersEntity(null,it.mst_question_group_id,"",it.tbl_form_questions_id.toString(),prefsManager.getDraft())
+                var checkid = AppDatabase.getInstance(requireContext()).formDao().getDependencyDynamicAns(it.tbl_form_questions_id,prefsManager.getDraft())
+                if (checkid == null) {
+                    AppDatabase.getInstance(requireContext()).formDao().insertDynamicAnswer(dynamicAnswersEntity)
+                } else {
+                    AppDatabase.getInstance(requireContext()).formDao().updateDynamicAnswer(it.answer!!,it.mst_question_group_id,it.tbl_form_questions_id,prefsManager.getDraft())
+                }
+            }
+
+            //questionGroupList[fragPos].questions.add(pos+1,dependentQuestion)
+            questionsAdapter.notifyDataSetChanged()
+            Log.d("LogMap",dependentQuestion.toString())
+
+        }
+    }
+
     private fun openFilePick(type: String) {
         val intent = Intent()
         intent.action = Intent.ACTION_GET_CONTENT
@@ -234,6 +392,7 @@ class QuestionsFragment(
     }
     val PICKFILE_REQUEST_CODE=43
     val FROM_CAMERA=49
+    val FROM_MAP = 54
     var position=0
     var imageUri1: Uri? = null
     private fun openCamera() {
@@ -349,7 +508,6 @@ class QuestionsFragment(
             startActivity(intent)
             dialogView.dismiss()
         }
-
         dialogView.show()
     }
 

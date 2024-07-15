@@ -97,4 +97,17 @@
     <string name="if_5m_area_is_available_near_by">22. बायो-गॅस डायजेस्टर युनिट सेट करण्यासाठी स्वयंपाकघराजवळ 5 मीटर 2 क्षेत्र उपलब्ध असल्यास?<font color='#EA0C27'>*</font></string>
     <string name="device_Serial_number">23. Device Serial number<font color='#EA0C27'>*</font></string>
 
+
+    <string name="Unique_farmer_id">1. অনন্য কৃষক আইডি<font color='#EA0C27'>*</font></string>
+    <string name="father_name">2. কৃষকৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="id_proof">3. আধাৰ নম্বৰ বা পৰিচয় প্ৰমাণ<font color='#EA0C27'>*</font></string>
+    <string name="mobilenumber">4. মোবাইল নম্বৰ<font color='#EA0C27'>*</font></string>
+    <string name="alt_mob_no">5. বিকল্প মোবাইল নম্বৰ<font color='#EA0C27'>*</font></string>
+    <string name="resaddress">6. আৱাসিক ঠিকনা<font color='#EA0C27'>*</font></string>
+    <string name="statename">7. ৰাজ্যৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="districtname">8. জিলাৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="tehsilname">9. তহচিলৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="panchayatname">10. পঞ্চায়তৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="villagename">11. গাঁৱৰ নাম<font color='#EA0C27'>*</font></string>
+
 </resources>

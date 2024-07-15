@@ -442,15 +442,12 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             dpd.show()
         }
         binding.edtGpsLocation.setOnClickListener {
-            Intent(requireContext(), MapManagerActivity::class.java).apply {
-                startActivity(this)
-            }
-            /*binding.edtGpsLocation.setText(preferenceManager.getLocation())
+            binding.edtGpsLocation.setText(preferenceManager.getLocation())
             if (preferenceManager.getLocation()==""){
                 UtilMethods.showToast(requireContext(),"Location not available. Please make sure that you enabled the location and internet in your device")
             }else{
                 commonAnswersEntity.gps_location = preferenceManager.getLocation().toString()
-            }*/
+            }
         }
         binding.llAadharBack.setOnClickListener {
             if (!disableViews)
@@ -517,12 +514,8 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("serialNumberTest1",serialNumber.toString()+"  "+ preferenceManager.getForm().tbl_forms_id)
                 if (preferenceManager.getForm().tbl_forms_id == 3) {
-                    Log.d("serialNumberTest2",p0.toString())
-
                     if (serialNumber.equals(p0.toString())) {
-                        Log.d("serialNumberTest3",p0.toString())
                         commonAnswersEntity.device_serial_number=p0.toString().trim()
                     }
                 } else {

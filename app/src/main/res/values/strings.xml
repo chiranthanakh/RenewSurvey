@@ -60,6 +60,7 @@
     <string name="frequancy_of_electricity_bill">18.2.Frequency of bill payment<font color='#EA0C27'>*</font></string>
     <string name="e_bill_photo">18.3. If bill available than capture photo<font color='#EA0C27'>*</font></string>
 
+    <string name="gps_location_nbs">2. GPS Location<font color='#EA0C27'>*</font></string>
     <string name="no_of_cattle_own">19. No of cattle own<font color='#EA0C27'>*</font></string>
     <string name="mobile_number">5. Mobile number<font color='#EA0C27'>*</font></string>
     <string name="district">8. District<font color='#EA0C27'>*</font></string>
@@ -149,5 +150,21 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    
+
+
+    <string name="Unique_farmer_id">1. Unique Farmer ID<font color='#EA0C27'>*</font></string>
+    <string name="date_and_time_of_visit_nbs">2. Date and Time of visit<font color='#EA0C27'>*</font></string>
+    <string name="father_name">4. Farmer Name<font color='#EA0C27'>*</font></string>
+    <string name="id_proof">5. Aadhar number or identity proof<font color='#EA0C27'>*</font></string>
+    <string name="mobilenumber">6. Mobile Number<font color='#EA0C27'>*</font></string>
+    <string name="alt_mob_no">7. Alternate mobile number<font color='#EA0C27'>*</font></string>
+    <string name="resaddress">8. Residential Address<font color='#EA0C27'>*</font></string>
+    <string name="statename">9. State Name<font color='#EA0C27'>*</font></string>
+    <string name="districtname">10. District Name<font color='#EA0C27'>*</font></string>
+    <string name="tehsilname">11. Tehsil Name<font color='#EA0C27'>*</font></string>
+    <string name="panchayatname">12. Panchayat Name<font color='#EA0C27'>*</font></string>
+    <string name="villagename">13. Village Name<font color='#EA0C27'>*</font></string>
+
 
 </resources>

@@ -72,4 +72,7 @@ data class DataX(
     val tbl_test_questions_option_id: String,
     val tbl_users_assigned_projects_id: String,
     val tbl_users_id: String,
+    val has_dependancy_question:String,
+    val parent_question_id: Int,
+    val parent_option: String? = null
     )

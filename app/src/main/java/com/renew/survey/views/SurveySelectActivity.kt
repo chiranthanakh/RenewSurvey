@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import com.renew.survey.R
+import com.renew.survey.adapter.AssignedNbsSurveyAdapter
 import com.renew.survey.adapter.AssignedSurveyAdapter
 import com.renew.survey.adapter.DistrictSpinnerAdapter
 import com.renew.survey.adapter.PanchayatSpinnerAdapter
@@ -31,6 +32,7 @@ import com.renew.survey.response.VillageModel
 import com.renew.survey.room.AppDatabase
 import com.renew.survey.room.entities.AssignedFilterSurveyEntity
 import com.renew.survey.room.entities.DistrictEntity
+import com.renew.survey.room.entities.NbsAssignedFilterSurveyEntity
 import com.renew.survey.room.entities.PanchayathEntity
 import com.renew.survey.room.entities.StatesEntity
 import com.renew.survey.room.entities.TehsilEntity
@@ -39,10 +41,11 @@ import com.renew.survey.utilities.PreferenceManager
 import kotlinx.coroutines.launch
 
 
-class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener {
+class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener, AssignedNbsSurveyAdapter.ClickListener {
     lateinit var binding: ActivitySurveySelectBinding
     var villageList = arrayListOf<VillageModel>()
     var list = arrayListOf<AssignedFilterSurveyEntity>()
+    var list2 = arrayListOf<NbsAssignedFilterSurveyEntity>()
     var filteredlist = arrayListOf<AssignedFilterSurveyEntity>()
 
     var stateList= arrayListOf<StateModel>()
@@ -130,29 +133,58 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
 
     fun getData() {
         list.clear()
+        list2.clear()
         lifecycleScope.launch {
-             list = AppDatabase.getInstance(this@SurveySelectActivity).formDao()
+            if(preferenceManager.getUsertype()) {
+                Log.d("filteredList", preferenceManager.getForm().tbl_forms_id.toString()+"--"+preferenceManager.getProject().tbl_projects_id)
+
+                list2 = AppDatabase.getInstance(this@SurveySelectActivity).formDao()
+                    .getAllNbsFilteredAssignedSurvey(preferenceManager.getForm().tbl_forms_id, preferenceManager.getProject()
+                        .tbl_projects_id) as ArrayList<NbsAssignedFilterSurveyEntity>
+
+                list2.forEach {
+                    it.mst_village_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao().getVillage(it.mst_village_id)?.lowercase()
+                    it.mst_tehsil_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
+                        .getTehsils(it.mst_tehsil_id)?.lowercase()
+                    it.mst_panchayat_name = it.mst_panchayat_id?.let { it1 ->
+                        AppDatabase.getInstance(this@SurveySelectActivity).placesDao().getPanchayath(
+                            it1
+                        )?.lowercase()
+                    }
+                    it.mst_district_name =
+                        AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
+                            .getDistricts(it.mst_district_id)?.lowercase()
+                    it.mst_state_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
+                        .getStates(it.mst_state_id)?.lowercase()
+                }
+                binding.recyclerView.adapter =
+                    AssignedNbsSurveyAdapter(this@SurveySelectActivity, list2, this@SurveySelectActivity)
+
+            } else {
+                list = AppDatabase.getInstance(this@SurveySelectActivity).formDao()
                  .getAllFilteredAssignedSurvey(preferenceManager.getForm().tbl_forms_id, preferenceManager.getProject().tbl_projects_id) as ArrayList<AssignedFilterSurveyEntity>
 
-            list.forEach {
+                list.forEach {
 //                Log.d("formDetails234", it.mst_village_id.toString())
-                it.mst_village_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao().getVillage(it.mst_village_id)?.lowercase()
-                it.mst_tehsil_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
-                    .getTehsils(it.mst_tehsil_id)?.lowercase()
-                it.mst_panchayat_name = it.mst_panchayat_id?.let { it1 ->
-                    AppDatabase.getInstance(this@SurveySelectActivity).placesDao().getPanchayath(
-                        it1
-                    )?.lowercase()
+                    it.mst_village_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao().getVillage(it.mst_village_id)?.lowercase()
+                    it.mst_tehsil_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
+                        .getTehsils(it.mst_tehsil_id)?.lowercase()
+                    it.mst_panchayat_name = it.mst_panchayat_id?.let { it1 ->
+                        AppDatabase.getInstance(this@SurveySelectActivity).placesDao().getPanchayath(
+                            it1
+                        )?.lowercase()
+                    }
+                    it.mst_district_name =
+                        AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
+                            .getDistricts(it.mst_district_id)?.lowercase()
+                    it.mst_state_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
+                        .getStates(it.mst_state_id)?.lowercase()
                 }
-                it.mst_district_name =
-                    AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
-                        .getDistricts(it.mst_district_id)?.lowercase()
-                it.mst_state_name = AppDatabase.getInstance(this@SurveySelectActivity).placesDao()
-                    .getStates(it.mst_state_id)?.lowercase()
+                binding.recyclerView.adapter =
+                    AssignedSurveyAdapter(this@SurveySelectActivity, list, this@SurveySelectActivity)
+
             }
-            Log.d("filteredList", list.toString())
-            binding.recyclerView.adapter =
-                AssignedSurveyAdapter(this@SurveySelectActivity, list, this@SurveySelectActivity)
+
         }
     }
 
@@ -340,6 +372,13 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
             return VillageModel(
                 mst_village_id.toString(),village_name
             )
+        }
+    }
+
+    override fun onProjectSelectNbs(assignedSurveyEntity: NbsAssignedFilterSurveyEntity) {
+        Intent(this, FormsDetailsActivity::class.java).apply {
+            putExtra("assignedNbs", gson.toJson(assignedSurveyEntity))
+            startActivity(this)
         }
     }
 }
