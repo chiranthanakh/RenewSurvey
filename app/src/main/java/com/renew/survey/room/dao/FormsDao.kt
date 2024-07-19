@@ -302,6 +302,11 @@ interface FormsDao {
     @Query("Delete from DynamicAnswersEntity where tbl_form_questions_id=:id and answer_id=:ansId ")
     suspend fun deleteDependencyAns(id: Int,ansId : Int)
 
+    @Query("Delete from DynamicAnswersEntity where questionType=:id and answer_id=:ansId ")
+    suspend fun deleteLoopAns(id: String,ansId : Int)
+
+    @Query("UPDATE NbsAssignedSurveyEntity set status=1 where id=:id")
+    suspend fun updateNbsAssignedStatus(id: Int)
     @Query("UPDATE AssignedSurveyEntity set status=1 where id=:id")
     suspend fun updateAssignedStatus(id: Int)
 

@@ -74,7 +74,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
     var formType = 2
     var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(null,"","","","","","","","","","","","","","","","","","","","","","","","","","",
         "","","","","","","","","","","",0)
-    var nbsCommonAnswersEntity: NbsCommonAnswersEntity=NbsCommonAnswersEntity(null,null,"","","","","","","","","","","","",null)
+    var nbsCommonAnswersEntity: NbsCommonAnswersEntity=NbsCommonAnswersEntity(null,null,"","","","","","","","","","","","","",null)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
@@ -103,7 +103,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 assignedNbs!!.gps_location,assignedNbs!!.banficary_name,assignedNbs!!.aadhar_card,assignedNbs!!.mobile_number,
                 assignedNbs!!.alternate_mobile_number,assignedNbs!!.residential_address,assignedNbs!!.mst_district_id.toString(),
                 assignedNbs!!.mst_state_id.toString(),assignedNbs!!.mst_tehsil_id.toString(),assignedNbs!!.mst_panchayat_id.toString(),
-                assignedNbs!!.mst_village_id.toString(),null )
+                assignedNbs!!.mst_village_id.toString(),assignedNbs!!.parent_survey_id,null )
             tbl_project_survey_common_data_id=assignedNbs!!.tbl_project_survey_common_data_id.toString()
             if (assignedNbs!!.next_form_id == 4) {
                 status=assignedNbs!!.next_form_id-1
@@ -130,7 +130,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                     status=3+a.tbl_forms_id!!
                 }
                 nbsCommonAnswersEntity= NbsCommonAnswersEntity(
-                    null,a.farmer_unique_id.toString(),a.date_and_time_of_visit,a.gps_location,a.banficary_name,a.aadhar_card,a.mobile_number, a.alternate_mobile_number,a.residential_address, a.mst_district_id, a.mst_state_id, a.mst_tehsil_id, a.mst_panchayat_id,a.mst_village_id,null
+                    null,a.farmer_unique_id.toString(),a.date_and_time_of_visit,a.gps_location,a.banficary_name,a.aadhar_card,a.mobile_number, a.alternate_mobile_number,a.residential_address, a.mst_district_id, a.mst_state_id, a.mst_tehsil_id, a.mst_panchayat_id,a.mst_village_id,a.parent_survey_id,null
                 )
             }
         }
@@ -217,10 +217,15 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                             Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id} answerId=${ansId}")
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,ansId.toInt())
                         } else {
-                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id.toString(),ansId.toInt())
+                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,ansId.toInt(),"")
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
                         }
                     }
+                }
+                if (intent.hasExtra("assigned")){
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAssignedStatus(assigned!!.id!!)
+                } else if (intent.hasExtra("assignedNbs")) {
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateNbsAssignedStatus(assignedNbs!!.id!!)
                 }
                 if (assigned!=null){
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().deleteAssigned(assigned!!.id!!)
@@ -252,8 +257,6 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             }
         }
         binding.btnContinue.setOnClickListener {
-            Log.d("question",gson.toJson(questionGroupList[1]))
-          //  if (commonAnswersEntity.did_the_met_person_allowed_for_data== AppConstants.yes.uppercase(Locale.ROOT)){
                 if(formType == 1) {
                     if (!validateCommonQuestions() ){
                         return@setOnClickListener
@@ -266,7 +269,6 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 if (!validateDynamicQuestions()){
                     return@setOnClickListener
                 }
-           // }
 
             lifecycleScope.launch {
                 val appUniqueCode="${preferenceManager.getUserId()}_${preferenceManager.getProject().id}_${preferenceManager.getForm().tbl_forms_id}_${questionGroupList[1].tbl_project_phase_id}_${UtilMethods.getFormattedDate(
@@ -328,14 +330,21 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                             Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,ansId)
                         } else {
-                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id.toString(),ansId.toInt())
+                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,ansId.toInt(),"")
                             Log.d("insertDatae",dynamicAnswersEntity.toString())
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
                         }
                     }
                 }
+                Log.d("checkLogs",assignedNbs!!.id.toString())
+
                 if (intent.hasExtra("assigned")){
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAssignedStatus(assigned!!.id!!)
+                    Log.d("checkLogs1",assignedNbs!!.id.toString())
+
+                } else if (intent.hasExtra("assignedNbs")) {
+                    Log.d("checkLogs2",assignedNbs!!.id.toString())
+                    AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateNbsAssignedStatus(assignedNbs!!.id!!)
                 }
                 UtilMethods.showToast(this@FormsDetailsActivity, "Form saved successfully")
                 finish()
@@ -786,11 +795,19 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                         Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
                         AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,draftAnsId!!)
                     } else{
-                        val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id.toString(),draftAnsId!!.toInt())
+                        val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,draftAnsId!!.toInt(),"")
                         Log.d("UpdatingQeuery1",dynamicAnswersEntity.toString())
                         AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
                     }
                 }
+            }
+            if (intent.hasExtra("assigned")){
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAssignedStatus(assigned!!.id!!)
+                Log.d("checkLogs1",assignedNbs!!.id.toString())
+
+            } else if (intent.hasExtra("assignedNbs")) {
+                Log.d("checkLogs2",assignedNbs!!.id.toString())
+                AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateNbsAssignedStatus(assignedNbs!!.id!!)
             }
             if (status < 4){
                 status=3 + ans.tbl_forms_id.toInt()

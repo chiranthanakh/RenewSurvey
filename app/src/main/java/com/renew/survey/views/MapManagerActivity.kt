@@ -105,6 +105,7 @@ class MapManagerActivity : AppCompatActivity(),MapboxMap.OnMapClickListener,
     }
 
     override fun onMapClick(p0: LatLng): Boolean {
+        Log.d("latlogpoints",p0.toString())
         points.add(p0)
         if (points.size >= 2) {
             drawRectangle()

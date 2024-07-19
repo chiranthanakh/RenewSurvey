@@ -121,6 +121,7 @@ class QuestionsAdapter(
                             ) {
                                 if (binding.edittext.isFocused){
                                     answer=p0.toString()
+                                    Log.d("loopaddition", answer.toString())
                                     var currentinput = p0.toString()
                                     if (question_type == "LOOP") {
                                         if (currentinput != lastInput) {

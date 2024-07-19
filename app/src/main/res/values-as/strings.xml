@@ -83,7 +83,7 @@
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
     <string name="other">अन्य</string>
-    <string name="basic_info">मूल जानकारी</string>
+    <string name="basic_info">মৌলিক তথ্য</string>
     <string name="attach_file">फ़ाइल जोड़ें</string>
     <string name="capture_image">छवि कैप्चर करें</string>
     <string name="select">चुनना</string>
@@ -98,17 +98,17 @@
 
 
 
-    <string name="Unique_farmer_id">1. यूनिक फार्मर आईडी<font color='#EA0C27'>*</font></string>
-    <string name="father_name">2. किसान का नाम<font color='#EA0C27'>*</font></string>
-    <string name="id_proof">3. आधार संख्या या पहचान प्रमाण<font color='#EA0C27'>*</font></string>
-    <string name="mobilenumber">4. मोबाइल नंबर<font color='#EA0C27'>*</font></string>
-    <string name="alt_mob_no">5. वैकल्पिक मोबाइल नंबर<font color='#EA0C27'>*</font></string>
-    <string name="resaddress">6. घर का पता<font color='#EA0C27'>*</font></string>
-    <string name="statename">7. राज्य का नाम<font color='#EA0C27'>*</font></string>
-    <string name="districtname">8. जिले का नाम<font color='#EA0C27'>*</font></string>
-    <string name="tehsilname">9. तहसील का नाम<font color='#EA0C27'>*</font></string>
-    <string name="panchayatname">10. पंचायत का नाम<font color='#EA0C27'>*</font></string>
-    <string name="villagename">11. गाँव का नाम<font color='#EA0C27'>*</font></string>
+    <string name="Unique_farmer_id">1. অনন্য কৃষক আইডি<font color='#EA0C27'>*</font></string>
+    <string name="father_name">2. কৃষকৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="id_proof">3. আধাৰ নম্বৰ বা পৰিচয় প্ৰমাণ<font color='#EA0C27'>*</font></string>
+    <string name="mobilenumber">4. মোবাইল নম্বৰ<font color='#EA0C27'>*</font></string>
+    <string name="alt_mob_no">5. বিকল্প মোবাইল নম্বৰ<font color='#EA0C27'>*</font></string>
+    <string name="resaddress">6. আৱাসিক ঠিকনা<font color='#EA0C27'>*</font></string>
+    <string name="statename">7. ৰাজ্যৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="districtname">8. জিলাৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="tehsilname">9. তহচিলৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="panchayatname">10. পঞ্চায়তৰ নাম<font color='#EA0C27'>*</font></string>
+    <string name="villagename">11. গাঁৱৰ নাম<font color='#EA0C27'>*</font></string>
 
 
 </resources>

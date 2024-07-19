@@ -118,7 +118,6 @@ class DashboardActivity : BaseActivity() {
                     startActivity(this)
                 }
             }
-
         }
 
         binding.surveyType.text = preferenceManager.getForm().title
@@ -135,15 +134,18 @@ class DashboardActivity : BaseActivity() {
                     val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
                     a.dynamicAnswersList=dynamicAns
                     a.commonAnswersEntity=commonAns
-                    /*if (a.tbl_forms_id=="2"){
+                    if (a.tbl_forms_id!="1"){
                         a.parent_survey_id=commonAns.parent_survey_id
-                        a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
-                    }*/
+                       // a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+                    }
                 }
                 for (a in answers){
                     for (d in a.dynamicAnswersList){
                         if (d.answer!!.startsWith("/")){
                             d.answer = d.answer!!.substring(d.answer!!.lastIndexOf("/")+1)
+                        }
+                        if (!d.questionType.equals("")) {
+                            d.tbl_form_questions_id = d.questionType.toInt()
                         }
                     }
                 }
@@ -160,7 +162,7 @@ class DashboardActivity : BaseActivity() {
                             val json=JSONObject(response.body().toString())
                             UtilMethods.showToast(this@DashboardActivity,json.getString("message"))
                             if (json.getString("success")=="1"){
-                               // syncMedia()
+                               syncMedia()
                                 for (ans in answers){
                                     AppDatabase.getInstance(this@DashboardActivity).formDao().updateSync(ans.id!!)
                                 }
@@ -184,14 +186,11 @@ class DashboardActivity : BaseActivity() {
             }
         }
         binding.btnContinue.setOnClickListener {
-           // Log.d("testdcd2",preferenceManager.getForm().tbl_forms_id.toString())
-
             if (preferenceManager.getForm().tbl_forms_id!=1 && preferenceManager.getForm().tbl_forms_id!=4 ){
                 Intent(this,SurveySelectActivity::class.java).apply {
                     startActivity(this)
                 }
             } else if(preferenceManager.getForm().tbl_forms_id == 4) {
-               // Log.d("testdcd2",list.toString())
                 if (!list.isNullOrEmpty()) {
                     Intent(this, FormsDetailsActivity::class.java).apply {
                         putExtra("assigned", gson.toJson(list.get(0)))
@@ -261,11 +260,11 @@ class DashboardActivity : BaseActivity() {
                 val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
                 a.dynamicAnswersList=dynamicAns
                 a.commonAnswersEntity=commonAns
-                /*if (a.tbl_forms_id=="2"){
+                if (a.tbl_forms_id != "1"){
                     a.parent_survey_id=commonAns.parent_survey_id
-                    a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+                   // a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
                 }
-                if (commonAns.font_photo_of_aadar_card.isNotEmpty()){
+                /*if (commonAns.font_photo_of_aadar_card.isNotEmpty()){
                     mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.font_photo_of_aadar_card.substring(commonAns.font_photo_of_aadar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.font_photo_of_aadar_card))
                 }
                 if (commonAns.back_photo_of_aadhar_card.isNotEmpty()){

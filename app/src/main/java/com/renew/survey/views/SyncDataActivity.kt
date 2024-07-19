@@ -576,7 +576,7 @@ class SyncDataActivity : BaseActivity() {
                             d.banficary_name,d.aadhar_card, d.mobile_number, d.alternate_mobile_number, d.residential_address,
                             d.mst_district_id.toInt(),d.mst_state_id.toInt(),
                             d.mst_tehsil_id.toInt(),panchayathId,d.mst_village_id.toInt(),d.tbl_forms_id,d.answer_id,d.next_form_id.toInt(),d.tbl_projects_id.toInt(),
-                            0,d.tbl_project_survey_common_data_id.toInt())
+                            0,d.tbl_project_survey_common_data_id.toInt(),d.parent_survey_id)
                         nbsassignedSurveyList.add(nbsAssigned)
                     } else {
                         val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,
