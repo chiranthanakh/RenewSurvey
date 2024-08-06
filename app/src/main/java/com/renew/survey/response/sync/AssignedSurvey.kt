@@ -44,8 +44,7 @@ data class AssignedSurvey(
     var do_you_have_ration_or_aadhar: String,
     var farmland_is_owned_by_benficary: String,
     var if_5m_area_is_available_near_by: String,
-
-    var farmer_unique_id:Int?,
+    var farmer_unique_id:String?,
     var alternate_mobile_number : String,
     var residential_address: String,
     var tbl_forms_id:Int?,

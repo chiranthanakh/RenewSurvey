@@ -125,7 +125,6 @@
                         android:background="@null"
                         android:hint="Project Code"
                         android:inputType="textCapCharacters"
-                        android:maxLength="12"
                         android:padding="@dimen/dp_0"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"

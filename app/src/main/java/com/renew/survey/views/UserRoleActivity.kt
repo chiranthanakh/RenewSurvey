@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
     lateinit var binding: ActivityUserRoleBinding
-    var testquestionList: List<TestQuestionLanguage> = arrayListOf()
+    var testquestionList: MutableList<TestQuestionLanguage> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +57,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
                         preferenceManager.getProject().mst_categories_id
                     )
             }
+            Log.d("formsDetailsTest",forms.toString())
             binding.recyclerView.adapter=FormTypeAdapter(this@UserRoleActivity,forms,this@UserRoleActivity)
         }
     }
@@ -65,6 +66,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
         preferenceManager.saveForm(form)
         val job = lifecycleScope.launch {
             val testDetails = AppDatabase.getInstance(this@UserRoleActivity).formDao().getTest(preferenceManager.getLanguage(),form.tbl_forms_id,preferenceManager.getProject().mst_categories_id)
+            testquestionList.clear()
             if(testDetails?.equals(null) == false){
                 testquestionList = AppDatabase.getInstance(this@UserRoleActivity).formDao()
                     .getAllTestQuestions(preferenceManager.getLanguage(), testDetails.tbl_tests_id)

@@ -10,5 +10,5 @@ data class FormLanguageEntity(
     val module_id: Int,
     val mst_form_language_id: Int,
     val mst_language_id: Int,
-    val title: String
+    val title: String? = ""
 )

@@ -3,6 +3,7 @@ package com.renew.survey.utilities
 import com.google.gson.JsonElement
 import com.renew.survey.request.MediaSyncReqItem
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AnswerEntity2
 import okhttp3.Interceptor.*
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -159,6 +160,12 @@ interface ApiInterface {
         @Body data: List<AnswerEntity>,
     ) : Response<JsonElement>
 
+    @POST("ProjectMaster/sync_survey")
+    suspend fun syncSubmitForms2(
+        @Header("Authorization") headers: String,
+        @Body data: List<AnswerEntity2>,
+    ) : Response<JsonElement>
+
     @Multipart
     @POST("ProjectMaster/sync_media")
     suspend fun syncMediaFiles(
@@ -171,9 +178,9 @@ interface ApiInterface {
     companion object {
         var retrofitService: ApiInterface?=null
         //val BASE_URL="https://devrenewsms.proteam.co.in/api/v2/"
-         //val BASE_URL="https://renewsms.proteam.co.in/api/v2/"
-        val BASE_URL ="https://devnbs.proteam.co.in/api/v3/"
-       // val BASE_URL ="https://nbs.proteam.co.in/api/v3/"
+        // val BASE_URL="https://renewsms.proteam.co.in/api/v2/"
+         val BASE_URL ="https://devnbs.proteam.co.in/api/v3/"
+//        val BASE_URL ="https://nbs.proteam.co.in/api/v3/"
 
         fun getInstance() : ApiInterface? {
 

@@ -35,11 +35,9 @@ class DashboardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-      //  setContentView(R.layout.activity_dashboard)
         binding= ActivityDashboardBinding.inflate(layoutInflater)
         bindingNav=binding.navLayout
         setContentView(binding.root)
-        Log.e("ksdkhs","user ${preferenceManager.getUserId()}")
         if (preferenceManager.getForm().tbl_forms_id == 4) {
             bindingNav.llChangePassword.visibility = View.GONE
             bindingNav.llProject1.visibility = View.GONE
@@ -127,64 +125,13 @@ class DashboardActivity : BaseActivity() {
         }
 
         binding.btnSync.setOnClickListener {
-            lifecycleScope.launch {
-                val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswers()
-                for (a in answers){
-                    val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getNbsCommonAnswers(a.id!!)
-                    val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
-                    a.dynamicAnswersList=dynamicAns
-                    a.commonAnswersEntity=commonAns
-                    if (a.tbl_forms_id!="1"){
-                        a.parent_survey_id=commonAns.parent_survey_id
-                       // a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
-                    }
-                }
-                for (a in answers){
-                    for (d in a.dynamicAnswersList){
-                        if (d.answer!!.startsWith("/")){
-                            d.answer = d.answer!!.substring(d.answer!!.lastIndexOf("/")+1)
-                        }
-                        if (!d.questionType.equals("")) {
-                            d.tbl_form_questions_id = d.questionType.toInt()
-                        }
-                    }
-                }
-                val jsonData=gson.toJson(answers)
-                Log.e("dataAnswers",answers.toString())
-                if(answers.size>0){
-                   // syncMedia()
-                    binding.llProgress.visibility=View.VISIBLE
-                    ApiInterface.getInstance()?.apply {
-                        val response=syncSubmitForms(preferenceManager.getToken()!!,answers)
-                        binding.llProgress.visibility=View.GONE
-                        if (response.isSuccessful){
-                            Log.e("response","${response.body()}")
-                            val json=JSONObject(response.body().toString())
-                            UtilMethods.showToast(this@DashboardActivity,json.getString("message"))
-                            if (json.getString("success")=="1"){
-                               syncMedia()
-                                for (ans in answers){
-                                    AppDatabase.getInstance(this@DashboardActivity).formDao().updateSync(ans.id!!)
-                                }
-                                getCounts()
-                            }else {
-                                val data=json.getJSONObject("data")
-                                if (data.getBoolean("is_access_disable")){
-                                    preferenceManager.clear()
-                                    Intent(this@DashboardActivity,LoginActivity::class.java).apply {
-                                        finishAffinity()
-                                        startActivity(this)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }else{
-                    UtilMethods.showToast(this@DashboardActivity,"No data to sync")
-                    syncMedia()
-                }
+            if (preferenceManager.getUsertype()) {
+                synchCbs()
+            }else {
+                synchNbs()
             }
         }
+
         binding.btnContinue.setOnClickListener {
             if (preferenceManager.getForm().tbl_forms_id!=1 && preferenceManager.getForm().tbl_forms_id!=4 ){
                 Intent(this,SurveySelectActivity::class.java).apply {
@@ -203,6 +150,123 @@ class DashboardActivity : BaseActivity() {
                 Intent(this,FormsDetailsActivity::class.java).apply {
                     startActivity(this)
                 }
+            }
+        }
+    }
+
+    fun synchCbs(){
+        lifecycleScope.launch {
+            val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswersCbs()
+            for (a in answers){
+                val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
+                val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
+                a.dynamicAnswersList=dynamicAns
+                a.commonAnswersEntity=commonAns
+                if (a.tbl_forms_id=="2"){
+                    a.parent_survey_id=commonAns.parent_survey_id
+                    a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+                }
+            }
+            for (a in answers){
+                for (d in a.dynamicAnswersList){
+                    if (d.answer!!.startsWith("/")){
+                        d.answer = d.answer!!.substring(d.answer!!.lastIndexOf("/")+1)
+                    }
+                }
+            }
+           // val jsonData=gson.toJson(answers)
+          //  Log.e("dataAnswers",answers.toString())
+            if(answers.size>0){
+                // syncMedia()
+                binding.llProgress.visibility=View.VISIBLE
+                ApiInterface.getInstance()?.apply {
+                    val response=syncSubmitForms2(preferenceManager.getToken()!!,answers)
+                    binding.llProgress.visibility=View.GONE
+                    if (response.isSuccessful){
+                        Log.e("response","${response.body()}")
+                        val json=JSONObject(response.body().toString())
+                        UtilMethods.showToast(this@DashboardActivity,json.getString("message"))
+                        if (json.getString("success")=="1"){
+                            syncMedia()
+                            for (ans in answers){
+                                AppDatabase.getInstance(this@DashboardActivity).formDao().updateSync(ans.id!!)
+                            }
+                            getCounts()
+                        }else {
+                            val data=json.getJSONObject("data")
+                            if (data.getBoolean("is_access_disable")){
+                                preferenceManager.clear()
+                                Intent(this@DashboardActivity,LoginActivity::class.java).apply {
+                                    finishAffinity()
+                                    startActivity(this)
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                UtilMethods.showToast(this@DashboardActivity,"No data to sync")
+                syncMedia()
+            }
+        }
+    }
+
+    fun synchNbs(){
+        lifecycleScope.launch {
+            val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedAnswers()
+            for (a in answers){
+                val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getNbsCommonAnswers(a.id!!)
+                val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
+                a.dynamicAnswersList=dynamicAns
+                a.commonAnswersEntity=commonAns
+                if (a.tbl_forms_id!="1"){
+                    a.parent_survey_id=commonAns.parent_survey_id
+                    // a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+                }
+            }
+            for (a in answers){
+                for (d in a.dynamicAnswersList){
+                    if (d.answer!!.startsWith("/")){
+                        d.answer = d.answer!!.substring(d.answer!!.lastIndexOf("/")+1)
+                    }
+                    if (!d.questionType.equals("")) {
+                        d.tbl_form_questions_id = d.questionType+"_"
+                    }
+                }
+            }
+            val jsonData=gson.toJson(answers)
+            Log.e("dataAnswers",answers.toString())
+            if(answers.size>0){
+                // syncMedia()
+                binding.llProgress.visibility=View.VISIBLE
+                ApiInterface.getInstance()?.apply {
+                    val response=syncSubmitForms(preferenceManager.getToken()!!,answers)
+                    binding.llProgress.visibility=View.GONE
+                    if (response.isSuccessful){
+                        Log.e("response","${response.body()}")
+                        val json=JSONObject(response.body().toString())
+                        UtilMethods.showToast(this@DashboardActivity,json.getString("message"))
+                        if (json.getString("success")=="1"){
+                            syncMedia()
+                            for (ans in answers){
+                                AppDatabase.getInstance(this@DashboardActivity).formDao().updateSync(ans.id!!)
+                            }
+                            getCounts()
+                        }else {
+                            val data=json.getJSONObject("data")
+                            if (data.getBoolean("is_access_disable")){
+                                preferenceManager.clear()
+                                Intent(this@DashboardActivity,LoginActivity::class.java).apply {
+                                    finishAffinity()
+                                    startActivity(this)
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                UtilMethods.showToast(this@DashboardActivity,"No data to sync")
+                syncMedia()
             }
         }
     }
@@ -264,6 +328,7 @@ class DashboardActivity : BaseActivity() {
                     a.parent_survey_id=commonAns.parent_survey_id
                    // a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
                 }
+
                 /*if (commonAns.font_photo_of_aadar_card.isNotEmpty()){
                     mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.font_photo_of_aadar_card.substring(commonAns.font_photo_of_aadar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.font_photo_of_aadar_card))
                 }
@@ -277,6 +342,7 @@ class DashboardActivity : BaseActivity() {
 
             for (a in answers){
                 for (d in a.dynamicAnswersList){
+
                     if (d.answer!!.startsWith("/")){
                         mediaList.add(MediaSyncReqItem(a.app_unique_code,d.answer!!.substring(d.answer!!.lastIndexOf("/")+1),a.phase,d.tbl_form_questions_id.toString(),a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,d.answer!!))
                     }

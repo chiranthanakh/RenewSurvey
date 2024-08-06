@@ -270,9 +270,12 @@ class SyncDataActivity : BaseActivity() {
                     }
                     "tbl_forms"->{
                         val formEntityList= arrayListOf<FormEntity>()
+                        var index = 0
                         for (d in s.data){
+                            Log.d("categoryIdData",s.data.toString())
+                            index = index+1
                             if (!d.tbl_forms_id.isNullOrEmpty() && !d.mst_categories_id.isNullOrEmpty() && !d.mst_divisions_id.isNullOrEmpty() && !d.tbl_forms_id.isNullOrEmpty()) {
-                                val formEntity=FormEntity(d.tbl_forms_id.toInt(),d.mst_categories_id.toInt(),d.mst_divisions_id.toInt(),d.tbl_forms_id.toInt())
+                                val formEntity=FormEntity(index ,d.mst_categories_id.toInt(),d.mst_divisions_id.toInt(),d.tbl_forms_id.toInt())
                             formEntityList.add(formEntity)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                             } else {
@@ -288,11 +291,15 @@ class SyncDataActivity : BaseActivity() {
                     "mst_question_group"->{
                         val formQuestionGroups= arrayListOf<FormQuestionGroupEntity>()
                         for (d in s.data){
-                            if (!d.mst_question_group_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.order_by.isNullOrEmpty()) {
-                                val formQuestionGroup=FormQuestionGroupEntity(d.mst_question_group_id.toInt(),d.mst_question_group_id.toInt(),d.order_by.toInt())
+                            if (!d.mst_question_group_id.isNullOrEmpty() && !d.mst_question_group_id.isNullOrEmpty() && !d.order_by.isNullOrEmpty() && !d.mst_divisions_id.isNullOrEmpty()) {
+                                val formQuestionGroup=FormQuestionGroupEntity(d.mst_question_group_id.toInt(),d.mst_question_group_id.toInt(),d.order_by.toInt(), d.mst_divisions_id.toInt())
                             formQuestionGroups.add(formQuestionGroup)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
+                            } else if(d.mst_divisions_id.isNullOrEmpty()){
+                                val formQuestionGroup=FormQuestionGroupEntity(d.mst_question_group_id.toInt(),d.mst_question_group_id.toInt(),d.order_by.toInt(), null)
+                                formQuestionGroups.add(formQuestionGroup)
                             } else {
+
                                 navigate = false
                                 UtilMethods.showToast(
                                     this@SyncDataActivity,
@@ -310,7 +317,7 @@ class SyncDataActivity : BaseActivity() {
                                     d.allowed_file_type,d.format,d.is_mandatory,d.is_special_char_allowed,
                                     d.is_validation_required,d.max_file_size,d.max_length,d.min_length,
                                     d.mst_question_group_id.toInt(),d.order_by.toInt(),d.question_type,d.tbl_form_questions_id.toInt(),
-                                    d.tbl_forms_id.toInt(),d.has_dependancy_question,d.parent_question_id,d.parent_option)
+                                    d.tbl_forms_id.toInt(),d.has_dependancy_question,d.parent_question_id,d.parent_option,d.mst_categories_id.toInt(),d.mst_divisions_id.toInt())
                             formQuestions.add(formQuestion)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                             } else {
@@ -343,15 +350,15 @@ class SyncDataActivity : BaseActivity() {
                     "mst_form_language"->{
                         val formLanguages= arrayListOf<FormLanguageEntity>()
                         for (d in s.data){
-                          //  Log.d("printprojectentry123",s.data.toString())
-
-                            if (!d.mst_form_language_id.isNullOrEmpty()  && !d.module_id.isNullOrEmpty() && !d.mst_language_id.isNullOrEmpty() && !d.title.isNullOrEmpty()) {
+                            //Log.d("printprojectentry",d.mst_form_language_id+"--"+d.title+"--"+d.mst_language_id+"--"+d.module_id+"--"+d.module)
+                            if (!d.mst_form_language_id.isNullOrEmpty()  && !d.module_id.isNullOrEmpty() && !d.mst_language_id.isNullOrEmpty()  /*!d.title.isNullOrEmpty()*/) {
                                 val formLanguage=FormLanguageEntity(d.mst_form_language_id.toInt(),d.module,d.module_id.toInt(),d.mst_form_language_id.toInt(),d.mst_language_id.toInt(),d.title)
                             formLanguages.add(formLanguage)
                             //AppDatabase.getInstance(this@SyncDataActivity).languageDao().insertLanguage(languageEntity)
                             } else {
+                                Log.d("printprojectentry",d.mst_form_language_id+"--"+d.title+"--"+d.mst_language_id+"--"+d.module_id+"--"+d.module)
                                 navigate = false
-                                UtilMethods.showToast(
+                               UtilMethods.showToast(
                                     this@SyncDataActivity,
                                     "Some Data is Missing in mst_form_language, Please Correct it and Try Again"
                                 )
@@ -571,6 +578,7 @@ class SyncDataActivity : BaseActivity() {
                 try {
 
                     if (d.electricity_connection_available.isNullOrEmpty()) {
+                        Log.d("flowType","nbs")
                         preferenceManager.saveUsertype(true)
                         val nbsAssigned = NbsAssignedSurveyEntity(d.parent_survey_id.toInt(),d.farmer_unique_id, d.date_and_time_of_visit!!,d.gps_location!!,
                             d.banficary_name,d.aadhar_card, d.mobile_number, d.alternate_mobile_number, d.residential_address,
@@ -579,6 +587,7 @@ class SyncDataActivity : BaseActivity() {
                             0,d.tbl_project_survey_common_data_id.toInt(),d.parent_survey_id)
                         nbsassignedSurveyList.add(nbsAssigned)
                     } else {
+                        Log.d("flowType","cbs")
                         val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,
                             d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),
                             d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cylinder_per_year,d.device_serial_number, d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,above15,below15,
@@ -615,30 +624,41 @@ class SyncDataActivity : BaseActivity() {
     }
     var answers= listOf<AnswerEntity>()
     fun getDataToSync(){
+        if (preferenceManager.getUsertype()) {
+            synchCbs()
+        }else {
+            synchNbs()
+        }
+    }
+
+    fun synchCbs(){
         lifecycleScope.launch {
-            answers=AppDatabase.getInstance(this@SyncDataActivity).formDao().getAllUnsyncedAnswers()
+            val answers=AppDatabase.getInstance(this@SyncDataActivity).formDao().getAllUnsyncedAnswersCbs()
             for (a in answers){
-                //val commonAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getCommonAnswers(a.id!!)
                 val commonAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getCommonAnswers(a.id!!)
                 val dynamicAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getDynamicAns(a.id!!)
                 a.dynamicAnswersList=dynamicAns
-                a.nbscommonAnswersEntity = commonAns
-               // a.commonAnswersEntity=commonAns
+                a.commonAnswersEntity=commonAns
                 if (a.tbl_forms_id=="2"){
                     a.parent_survey_id=commonAns.parent_survey_id
                     a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
                 }
             }
-            val jsonData=gson.toJson(answers)
-            Log.e("data",jsonData)
+            for (a in answers){
+                for (d in a.dynamicAnswersList){
+                    if (d.answer!!.startsWith("/")){
+                        d.answer = d.answer!!.substring(d.answer!!.lastIndexOf("/")+1)
+                    }
+                }
+            }
+            // val jsonData=gson.toJson(answers)
+            //  Log.e("dataAnswers",answers.toString())
             if(answers.size>0){
+                // syncMedia()
                 binding.llProgress.visibility=View.VISIBLE
-                binding.btnContinue.visibility=View.GONE
-                binding.tvText.text="Synchronizing the data to server"
                 ApiInterface.getInstance()?.apply {
-                    val response=syncSubmitForms(preferenceManager.getToken()!!,answers)
+                    val response=syncSubmitForms2(preferenceManager.getToken()!!,answers)
                     binding.llProgress.visibility=View.GONE
-                    binding.btnContinue.visibility=View.VISIBLE
                     if (response.isSuccessful){
                         Log.e("response","${response.body()}")
                         val json=JSONObject(response.body().toString())
@@ -648,7 +668,7 @@ class SyncDataActivity : BaseActivity() {
                             for (ans in answers){
                                 AppDatabase.getInstance(this@SyncDataActivity).formDao().updateSync(ans.id!!)
                             }
-                           // getCounts()
+                            getCounts()
                         }else {
                             val data=json.getJSONObject("data")
                             if (data.getBoolean("is_access_disable")){
@@ -662,8 +682,67 @@ class SyncDataActivity : BaseActivity() {
                     }
                 }
             }else{
+                UtilMethods.showToast(this@SyncDataActivity,"No data to sync")
                 syncMedia()
-                //UtilMethods.showToast(this@SyncDataActivity,"No data to sync")
+            }
+        }
+    }
+    fun synchNbs(){
+        lifecycleScope.launch {
+            val answers=AppDatabase.getInstance(this@SyncDataActivity).formDao().getAllUnsyncedAnswers()
+            for (a in answers){
+                val commonAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getNbsCommonAnswers(a.id!!)
+                val dynamicAns=AppDatabase.getInstance(this@SyncDataActivity).formDao().getDynamicAns(a.id!!)
+                a.dynamicAnswersList=dynamicAns
+                a.commonAnswersEntity=commonAns
+                if (a.tbl_forms_id!="1"){
+                    a.parent_survey_id=commonAns.parent_survey_id
+                    // a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+                }
+            }
+            for (a in answers){
+                for (d in a.dynamicAnswersList){
+                    if (d.answer!!.startsWith("/")){
+                        d.answer = d.answer!!.substring(d.answer!!.lastIndexOf("/")+1)
+                    }
+                    if (!d.questionType.equals("")) {
+                        d.tbl_form_questions_id = d.questionType+"_"
+                    }
+                }
+            }
+            val jsonData=gson.toJson(answers)
+            Log.e("dataAnswers",answers.toString())
+            if(answers.size>0){
+                // syncMedia()
+                binding.llProgress.visibility=View.VISIBLE
+                ApiInterface.getInstance()?.apply {
+                    val response=syncSubmitForms(preferenceManager.getToken()!!,answers)
+                    binding.llProgress.visibility=View.GONE
+                    if (response.isSuccessful){
+                        Log.e("response","${response.body()}")
+                        val json=JSONObject(response.body().toString())
+                        UtilMethods.showToast(this@SyncDataActivity,json.getString("message"))
+                        if (json.getString("success")=="1"){
+                            syncMedia()
+                            for (ans in answers){
+                                AppDatabase.getInstance(this@SyncDataActivity).formDao().updateSync(ans.id!!)
+                            }
+                            getCounts()
+                        }else {
+                            val data=json.getJSONObject("data")
+                            if (data.getBoolean("is_access_disable")){
+                                preferenceManager.clear()
+                                Intent(this@SyncDataActivity,LoginActivity::class.java).apply {
+                                    finishAffinity()
+                                    startActivity(this)
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                UtilMethods.showToast(this@SyncDataActivity,"No data to sync")
+                syncMedia()
             }
         }
     }

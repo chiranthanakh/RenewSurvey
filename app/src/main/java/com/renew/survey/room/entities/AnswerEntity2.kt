@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity
-data class AnswerEntity(
+data class AnswerEntity2(
     @PrimaryKey
     var id:Int?,
     val app_unique_code: String,
@@ -24,14 +24,12 @@ data class AnswerEntity(
     var draft: Int,
     @Ignore
     @SerializedName("common_question_answer")
-    var commonAnswersEntity: NbsCommonAnswersEntity?,
-    @Ignore
-    @SerializedName("common_question_answer")
-    var commonAnswersEntityCbs: CommonAnswersEntity?,
+    var commonAnswersEntity: CommonAnswersEntity?,
+
     @Ignore
     @SerializedName("question_answer")
     var dynamicAnswersList : List<DynamicAnswersEntity>
-) {
+){
 
     constructor(
         id: Int?,
@@ -62,7 +60,6 @@ data class AnswerEntity(
         sync,
         media_sync,
         draft,
-        null,
         null,
         listOf()
     )

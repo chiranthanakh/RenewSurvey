@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class NbsAssignedFilterSurveyEntity(
     @PrimaryKey
     var id:Int?,
-    var farmer_unique_id:Int?,
+    var farmer_unique_id:String?,
     var date_and_time_of_visit: String,
     var gps_location : String,
     var banficary_name: String,

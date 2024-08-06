@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.renew.survey.room.entities.DraftCommonAnswer
 import com.renew.survey.room.entities.AnswerEntity
+import com.renew.survey.room.entities.AnswerEntity2
 import com.renew.survey.room.entities.AssignedFilterSurveyEntity
 import com.renew.survey.room.entities.AssignedFormEntry
 import com.renew.survey.room.entities.AssignedSurveyEntity
@@ -73,7 +74,8 @@ interface FormsDao {
             " inner JOIN FormEntity tf ON tf.tbl_forms_id = ap.tbl_forms_id " +
             "inner JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_forms' AND mfl.module_id = tf.tbl_forms_id AND mfl.mst_language_id = :language" +
             " inner JOIN FormLanguageEntity mfl1 ON mfl1.module = 'tbl_projects' AND mfl1.module_id = tp.tbl_projects_id AND mfl1.mst_language_id =:language " +
-            "WHERE tf.mst_divisions_id =:divisionId and tf.mst_categories_id =:categoryId and ap.tbl_users_id = :userid AND ap.tbl_projects_id =:projectId  AND tpp.is_released = 'Y'")
+            "WHERE tf.mst_divisions_id =:divisionId and tf.mst_categories_id =:categoryId and ap.tbl_users_id = :userid AND ap.tbl_projects_id =:projectId  AND " +
+            "tpp.is_released = 'Y' GROUP BY ap.tbl_forms_id" )
     suspend fun getAssignedFormsWithLanguage(language:Int,projectId:Int,userid:Int,divisionId:Int,categoryId:Int):List<FormWithLanguage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -85,7 +87,7 @@ interface FormsDao {
             "( p.tbl_projects_id=:project and q.parent_question_id = null or q.parent_question_id = 0) \n" +
             "inner join FormLanguageEntity as l on l.module_id = q.id and l.module='tbl_form_questions' \n" +
             "inner join FormEntity as fe on fe.tbl_forms_id = p.tbl_forms_id \n" +
-            "where fe.mst_divisions_id =:divisionId and fe.mst_categories_id =:categoryId and l.mst_language_id=:language and" +
+            "where q.mst_divisions_id =:divisionId and q.mst_categories_id =:categoryId and l.mst_language_id=:language and" +
             " q.mst_question_group_id=:group and p.tbl_forms_id=:formId group by q.tbl_form_questions_id order by q.order_by " )
     suspend fun getAllFormsQuestions(language: Int,group:Int,formId:Int,project: Int,divisionId:Int,categoryId:Int):MutableList<FormQuestionLanguage>
 
@@ -143,7 +145,7 @@ interface FormsDao {
     @Query("SELECT mfl.title, tq.* from" +
             " TestQuestionsEntry as tq LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_test_questions' AND mfl.module_id = tbl_test_questions_id " +
             "WHERE tbl_tests_id = :formId AND is_active AND mst_language_id =:language")
-    suspend fun getAllTestQuestions(language: Int,formId:Int):List<TestQuestionLanguage>
+    suspend fun getAllTestQuestions(language: Int,formId:Int):MutableList<TestQuestionLanguage>
 
     @Query("SELECT mfl.title,tt.* from" +
             " TestEntry as tt LEFT JOIN FormLanguageEntity mfl ON mfl.module = 'tbl_tests' AND mfl.module_id = tt.tbl_tests_id " +
@@ -156,6 +158,13 @@ interface FormsDao {
     suspend fun getTutorial(formId:Int): TutorialsDetailsEntry
 
 
+
+    /*@Query("SELECT title,tbl_project_phase_id,version,mqg.* FROM ProjectPhaseQuestionEntity pq " +
+            "LEFT JOIN FormQuestionGroupEntity mqg ON mqg.mst_question_group_id = pq.mst_question_group_id " +
+            "LEFT JOIN FormLanguageEntity mfl ON mfl.module_id = mqg.mst_question_group_id AND mfl.module = 'mst_question_group' " +
+            "WHERE mfl.mst_language_id = :language AND pq.tbl_projects_id =:project AND mqg.mst_divisions_id = :divisionId  AND " +
+            "pq.tbl_forms_id = :formId GROUP BY mqg.mst_question_group_id order by mqg.order_by ")
+    suspend fun getAllFormsQuestionGroup(language: Int,project:Int,formId: Int, divisionId: Int):List<QuestionGroupWithLanguage>*/
 
     @Query("SELECT title,tbl_project_phase_id,version,mqg.* FROM ProjectPhaseQuestionEntity pq " +
             "LEFT JOIN FormQuestionGroupEntity mqg ON mqg.mst_question_group_id = pq.mst_question_group_id " +
@@ -254,6 +263,9 @@ interface FormsDao {
 
     @Query("Select * from AnswerEntity where sync=0 and draft=0")
     suspend fun getAllUnsyncedAnswers(): List<AnswerEntity>
+
+    @Query("Select * from AnswerEntity where sync=0 and draft=0")
+    suspend fun getAllUnsyncedAnswersCbs(): List<AnswerEntity2>
 
     @Query("Select * from AnswerEntity where media_sync=0 and draft=0")
     suspend fun getAllUnsyncedMediaAnswers(): List<AnswerEntity>

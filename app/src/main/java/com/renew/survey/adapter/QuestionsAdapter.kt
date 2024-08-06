@@ -4,16 +4,11 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
-import android.icu.lang.UProperty.INT_START
 import android.text.Editable
 import android.text.InputType
-import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
-import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -28,22 +23,23 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.text.bold
 import androidx.core.text.color
+import androidx.core.text.isDigitsOnly
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.RangeSlider
 import com.renew.survey.R
 import com.renew.survey.databinding.ItemQuestionLayoutBinding
-import com.renew.survey.request.MultiSelectItem
 import com.renew.survey.room.entities.FormQuestionLanguage
 import com.renew.survey.room.entities.Options
+import com.renew.survey.utilities.MyDiffUtilCallback
 import com.renew.survey.utilities.PreferenceManager
 import com.renew.survey.utilities.UtilMethods
-import com.renew.survey.views.MapManagerActivity
 import java.util.Calendar
 
 
 class QuestionsAdapter(
-    val context:Context, private var list: List<FormQuestionLanguage>,
+    val context:Context, private var list: MutableList<FormQuestionLanguage>,
     var clickListener: ClickListener) :
     RecyclerView.Adapter<QuestionsAdapter.ViewHolder>() {
     var previousSelected=0;
@@ -54,11 +50,9 @@ class QuestionsAdapter(
     val hour = c.get(Calendar.HOUR)
     val minute = c.get(Calendar.MINUTE)
     private var lastInput: String = ""
-    var mainPosition = 0
-    var subPosition = 0
     val preferenceManager=PreferenceManager(context)
 
-    fun setData(list: List<FormQuestionLanguage>){
+    fun setData(list: MutableList<FormQuestionLanguage>){
         this.list=list
         notifyDataSetChanged()
     }
@@ -74,13 +68,15 @@ class QuestionsAdapter(
         return list.size
     }
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         with(holder){
-            Log.d("dependencyCheck",list.toString())
-            //setIsRecyclable(false)
+            setIsRecyclable(false)
             with(list[position]){
+                Log.d("questionPosition1234",list[position].toString())
                 when(question_type){
-                    "DATETIME","TEXT","NUMBER","GEO_LOCATION","DATE","TIME","EMAIL","MAP","LOOP","SUB"->{
+                    "LOOP"->{
                         val form = this
                         val pos = position
                         binding.llEdittext.visibility = View.VISIBLE
@@ -91,19 +87,55 @@ class QuestionsAdapter(
                         binding.llCheckbox.visibility = View.GONE
                         binding.llFile.visibility = View.GONE
                         binding.llRating.visibility = View.GONE
+
                         binding.txtEditTextLable.text =
                             getHintText(this.title, position + 1, this.is_mandatory)
-                        /*if (this.parent_question_id == null || this.parent_question_id == 0 ) {
-                            mainPosition = position+1
-                            subPosition = 0
-                            binding.txtEditTextLable.text =
-                                getHintText(this.title, position + 1, this.is_mandatory)
-                        } else {
-                            subPosition = subPosition + 1
-                            binding.txtEditTextLable.text =
-                                getHintText2(this.title, mainPosition.toString()+"."+subPosition, this.is_mandatory)
-                        }*/
-                       Log.d("checktitle",getHintText(this.title,position+1,this.is_mandatory).toString())
+
+                        binding.edittext.addTextChangedListener(object :TextWatcher{
+                            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                             //   Log.d("questionPosition1234",holder.adapterPosition.toString()+"--"+binding.txtEditTextLable.text)
+                            }
+
+                            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                                if (holder.binding.edittext.hasWindowFocus()){
+                                    answer=p0.toString()
+                                    var currentinput = p0.toString()
+                                    if (question_type == "LOOP") {
+                                        if (currentinput != lastInput) {
+                                            lastInput = p0.toString()
+                                            if(lastInput.isDigitsOnly()) {
+                                                clickListener.onLoopSelect(
+                                                    position,
+                                                    form,
+                                                    p0.toString()
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun afterTextChanged(p0: Editable?) {
+                            }
+                        })
+                        binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
+                        binding.edittext.setText(this.answer)
+                        binding.edittext.isFocusable=true
+                        binding.edittext.isFocusableInTouchMode=true
+                        binding.edittext.isEnabled=true
+                        binding.edittext.inputType=InputType.TYPE_CLASS_TEXT
+                    }
+                    "DATETIME","TEXT","NUMBER","GEO_LOCATION","DATE","TIME","EMAIL","MAP","SUB"->{
+                        binding.llEdittext.visibility = View.VISIBLE
+                        binding.llMultiselect.visibility = View.GONE
+                        binding.llSpinner.visibility = View.GONE
+                        binding.llRadio.visibility = View.GONE
+                        binding.llRange.visibility = View.GONE
+                        binding.llCheckbox.visibility = View.GONE
+                        binding.llFile.visibility = View.GONE
+                        binding.llRating.visibility = View.GONE
+                        binding.txtEditTextLable.text =
+                            getHintText(this.title, holder.adapterPosition + 1, this.is_mandatory)
 
                         binding.edittext.addTextChangedListener(object :TextWatcher{
                             override fun beforeTextChanged(
@@ -111,7 +143,9 @@ class QuestionsAdapter(
                                 p1: Int,
                                 p2: Int,
                                 p3: Int
-                            ) {}
+                            ) {
+                               // Log.d("questionPosition1234",holder.adapterPosition.toString()+"--"+binding.txtEditTextLable.text)
+                            }
 
                             override fun onTextChanged(
                                 p0: CharSequence?,
@@ -119,20 +153,8 @@ class QuestionsAdapter(
                                 p2: Int,
                                 p3: Int
                             ) {
-                                if (binding.edittext.isFocused){
+                                if (holder.binding.edittext.hasWindowFocus()){
                                     answer=p0.toString()
-                                    Log.d("loopaddition", answer.toString())
-                                    var currentinput = p0.toString()
-                                    if (question_type == "LOOP") {
-                                        if (currentinput != lastInput) {
-                                            lastInput = p0.toString()
-                                            Log.d("checkcallintimes","times")
-                                            clickListener.onLoopSelect(
-                                                form,
-                                                p0.toString()
-                                            )
-                                        }
-                                    }
                                 }
                             }
 
@@ -316,15 +338,21 @@ class QuestionsAdapter(
                         binding.llRating.visibility = View.GONE
                         binding.txtRadio.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.rgRadio.removeAllViews()
-                        for(option in this.options){
-                            val radioButton=RadioButton(context)
-                            radioButton.setText(option.title)
-                            if (option.title==this.answer){
-                                radioButton.isChecked=true
+
+                        val radioGroup = binding.rgRadio // Get the RadioGroup from your layout
+
+                        for (option in this.options) {
+                            val radioButton = RadioButton(context)
+                            radioButton.text = option.title
+                            if (option.title == this.answer) {
+                                radioButton.isChecked = true // Set checked based on answer
+                            } else {
+                                radioButton.isChecked = false
                             }
                             radioButton.setOnCheckedChangeListener { compoundButton, b ->
-                                if (b){
-                                    answer=compoundButton.text.toString()
+                                if (b) {
+                                    Log.d("checkRadioButton",radioButton.text.toString())
+                                    answer = compoundButton.text.toString()
                                     if (this.has_dependancy_question.equals("YES")) {
                                         clickListener.onDependentSelect(
                                             this,
@@ -334,7 +362,7 @@ class QuestionsAdapter(
                                     }
                                 }
                             }
-                            binding.rgRadio.addView(radioButton)
+                            radioGroup.addView(radioButton) // Add RadioButton to the existing RadioGroup
                         }
                     }
                     "RANGE"->{
@@ -373,7 +401,6 @@ class QuestionsAdapter(
                         })
                     }
                     "FILE","CAPTURE"->{
-
                         binding.llEdittext.visibility = View.GONE
                         binding.llMultiselect.visibility = View.GONE
                         binding.llSpinner.visibility = View.GONE
@@ -391,6 +418,7 @@ class QuestionsAdapter(
                             binding.fileImage.setImageResource(R.drawable.ic_camera)
                         }
                         if (this.answer!=""){
+                            binding.tvFile.setText("")
                             binding.tvFile.setText(this.answer!!.substring(this.answer!!.lastIndexOf("/")+1))
                         }
                         binding.tvFile.setOnClickListener {
@@ -448,7 +476,7 @@ class QuestionsAdapter(
     interface ClickListener{
         fun onFileSelect(question: FormQuestionLanguage,pos:Int,type:String,capture: String)
         fun onDependentSelect(question: FormQuestionLanguage,pos:Int,answer: String)
-        fun onLoopSelect(question: FormQuestionLanguage,answer: String)
+        fun onLoopSelect(pos:Int, question: FormQuestionLanguage,answer: String)
     }
     fun getStringList(optionList:List<Options>):List<String>{
         val list= arrayListOf<String>()
@@ -497,20 +525,6 @@ class QuestionsAdapter(
             Log.e("HintText","mandatory   $mandatory")
             SpannableStringBuilder()
                 .bold { append("$num. ") }
-                .append(text)
-        }
-    }
-    fun getHintText2(text:String, num:String,mandatory:String):SpannableStringBuilder{
-        return if (mandatory=="YES"){
-            Log.e("HintText","mandatory   $mandatory")
-            SpannableStringBuilder()
-                .bold { append("$num ") }
-                .append(text)
-                .color(Color.RED) { append("*") }
-        }else{
-            Log.e("HintText","mandatory   $mandatory")
-            SpannableStringBuilder()
-                .bold { append("$num ") }
                 .append(text)
         }
     }

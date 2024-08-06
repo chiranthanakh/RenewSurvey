@@ -22,6 +22,8 @@ data class FormQuestionEntity(
     val has_dependancy_question:String? = "",
     val parent_question_id: Int? = null,
     val parent_option: String? = "",
+    val mst_categories_id: Int,
+    val mst_divisions_id: Int,
     val answer:String="",
 
 )

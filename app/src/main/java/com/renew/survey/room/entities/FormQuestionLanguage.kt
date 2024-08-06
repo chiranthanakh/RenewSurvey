@@ -22,8 +22,9 @@ data class FormQuestionLanguage (
     var tbl_form_questions_id: Int,
     val title: String,
     var answer:String?,
-    val has_dependancy_question:String,
+    val has_dependancy_question:String? = "",
     val parent_question_id: Int?,
+
     @Ignore
     var options: List<Options>
 ) {
@@ -43,7 +44,7 @@ data class FormQuestionLanguage (
         tbl_form_questions_id: Int,
         title: String,
         answer: String?,
-        has_dependancy_question: String,
+        has_dependancy_question: String?,
         parent_question_id: Int,
     )
             : this(

@@ -27,12 +27,14 @@ class DraftSelectActivity : BaseActivity() ,DraftSurveyAdapter.ClickListener,Dra
     }
     fun getData(){
         lifecycleScope.launch {
-            //val list= AppDatabase.getInstance(this@DraftSelectActivity).formDao().getAllDraftSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
-           // binding.recyclerView.adapter= DraftSurveyAdapter(this@DraftSelectActivity,list,this@DraftSelectActivity)
+            if (!preferenceManager.getUsertype()) {
+                val list= AppDatabase.getInstance(this@DraftSelectActivity).formDao().getAllDraftSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
+                 binding.recyclerView.adapter= DraftSurveyAdapter(this@DraftSelectActivity,list,this@DraftSelectActivity)
+            } else {
+                val list= AppDatabase.getInstance(this@DraftSelectActivity).formDao().getAllNbsDraftSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
+                binding.recyclerView.adapter= DraftNbsSurveyAdapter(this@DraftSelectActivity,list,this@DraftSelectActivity)
 
-            val list= AppDatabase.getInstance(this@DraftSelectActivity).formDao().getAllNbsDraftSurvey(preferenceManager.getForm().tbl_forms_id,preferenceManager.getProject().tbl_projects_id)
-            binding.recyclerView.adapter= DraftNbsSurveyAdapter(this@DraftSelectActivity,list,this@DraftSelectActivity)
-
+            }
         }
     }
 

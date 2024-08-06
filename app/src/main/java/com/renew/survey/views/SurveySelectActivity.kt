@@ -161,6 +161,8 @@ class SurveySelectActivity : BaseActivity() ,AssignedSurveyAdapter.ClickListener
                     AssignedNbsSurveyAdapter(this@SurveySelectActivity, list2, this@SurveySelectActivity)
 
             } else {
+                Log.d("filteredList123", preferenceManager.getForm().tbl_forms_id.toString())
+
                 list = AppDatabase.getInstance(this@SurveySelectActivity).formDao()
                  .getAllFilteredAssignedSurvey(preferenceManager.getForm().tbl_forms_id, preferenceManager.getProject().tbl_projects_id) as ArrayList<AssignedFilterSurveyEntity>
 

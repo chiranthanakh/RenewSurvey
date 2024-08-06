@@ -8,7 +8,7 @@ data class DynamicAnswersEntity(
     val id: Int?,
     val mst_question_group_id: Int,
     var answer:String? = "",
-    var tbl_form_questions_id: Int,
+    var tbl_form_questions_id: String,
     val answer_id:Int,
     val questionType : String
 )

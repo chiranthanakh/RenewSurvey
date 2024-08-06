@@ -138,20 +138,4 @@ class TrainingActivity : AppCompatActivity() {
             true
         }
     }
-
-    private fun requestPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            101
-        )
-    }
-
-    fun isVideoFileAvailable(filePath: String): Boolean {
-        val videoFile = File(filePath)
-        return videoFile.exists() && videoFile.isFile()
-    }
 }

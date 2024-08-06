@@ -71,7 +71,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
     var assigned: AssignedFilterSurveyEntity?=null
     var assignedNbs: NbsAssignedFilterSurveyEntity?=null
     var draftAnsId:Int?=null
-    var formType = 2
+    var formType = 1
     var commonAnswersEntity: CommonAnswersEntity=CommonAnswersEntity(null,"","","","","","","","","","","","","","","","","","","","","","","","","","",
         "","","","","","","","","","","",0)
     var nbsCommonAnswersEntity: NbsCommonAnswersEntity=NbsCommonAnswersEntity(null,null,"","","","","","","","","","","","","",null)
@@ -80,6 +80,11 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         binding = ActivityFormsDetailsBinding.inflate(layoutInflater)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContentView(binding.root)
+        if(preferenceManager.getUsertype()) {
+            formType = 2
+        }else{
+            formType = 1
+        }
         if (intent.hasExtra("assigned")){
             assigned=gson.fromJson(intent.getStringExtra("assigned"),AssignedFilterSurveyEntity::class.java)
             commonAnswersEntity= CommonAnswersEntity(
@@ -217,7 +222,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                             Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id} answerId=${ansId}")
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,ansId.toInt())
                         } else {
-                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,ansId.toInt(),"")
+                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id.toString(),ansId.toInt(),"")
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
                         }
                     }
@@ -283,7 +288,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                 if (status>3) {
                     ans.id=preferenceManager.getDraft()
                     ansId= preferenceManager.getDraft()
-                    Log.e("patedsj",gson.toJson(ans))
+                    //Log.e("patedsj",gson.toJson(ans))
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAnswer(ans)
                 } else {
                     ansId = AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertAnswer(ans).toInt()
@@ -330,13 +335,12 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                             Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,ansId)
                         } else {
-                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,ansId.toInt(),"")
+                            val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id.toString(),ansId.toInt(),"")
                             Log.d("insertDatae",dynamicAnswersEntity.toString())
                             AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
                         }
                     }
                 }
-                Log.d("checkLogs",assignedNbs!!.id.toString())
 
                 if (intent.hasExtra("assigned")){
                     AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateAssignedStatus(assigned!!.id!!)
@@ -388,7 +392,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
 
     fun getAllQuestionGroup(){
         lifecycleScope.launch {
-            questionGroupList=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getAllFormsQuestionGroup(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,preferenceManager.getForm().tbl_forms_id) as ArrayList<QuestionGroupWithLanguage>
+            questionGroupList=AppDatabase.getInstance(this@FormsDetailsActivity).formDao().getAllFormsQuestionGroup(preferenceManager.getLanguage(),preferenceManager.getProject().id!!,preferenceManager.getForm().tbl_forms_id/*,preferenceManager.getProject().mst_divisions_id*/) as ArrayList<QuestionGroupWithLanguage>
             Log.e("roomData","data=$questionGroupList")
 
             questionGroupList.add(0,QuestionGroupWithLanguage(0,0,"1",0,getString(R.string.basic_info),12,0,true,
@@ -795,7 +799,7 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
                         Log.d("UpdatingQeuery","ans ${q.answer} group=${qg.mst_question_group_id} question=${q.tbl_form_questions_id}")
                         AppDatabase.getInstance(this@FormsDetailsActivity).formDao().updateDynamicAnswer(q.answer!!,qg.mst_question_group_id,q.tbl_form_questions_id,draftAnsId!!)
                     } else{
-                        val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id,draftAnsId!!.toInt(),"")
+                        val dynamicAnswersEntity=DynamicAnswersEntity(null,qg.mst_question_group_id,q.answer,q.tbl_form_questions_id.toString(),draftAnsId!!.toInt(),"")
                         Log.d("UpdatingQeuery1",dynamicAnswersEntity.toString())
                         AppDatabase.getInstance(this@FormsDetailsActivity).formDao().insertDynamicAnswer(dynamicAnswersEntity)
                     }

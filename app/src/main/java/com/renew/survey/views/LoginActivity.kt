@@ -34,7 +34,7 @@ class LoginActivity : BaseActivity() {
         }
         binding.btnContinue.setOnClickListener {
             if (binding.etUserName.text.toString() != "") {
-                if (binding.etPassword.text.toString() != "") {
+                if (binding.passwordEditText.text.toString() != "") {
                     if (UtilMethods.isNetworkAvailable(this)){
                         callLoginApi()
                     }else{
@@ -57,7 +57,7 @@ class LoginActivity : BaseActivity() {
         binding.progressLayout.visibility= View.VISIBLE
         lifecycleScope.launch {
             ApiInterface.getInstance()?.apply {
-                val response=login(binding.etUserName.text.toString().trim(),binding.etPassword.text.toString(),AppConstants.AppKey)
+                val response=login(binding.etUserName.text.toString().trim(),binding.passwordEditText.text.toString(),AppConstants.AppKey)
                 binding.progressLayout.visibility= View.GONE
                 if (response.isSuccessful){
                     val jsonObject=JSONObject(response.body().toString())

@@ -70,6 +70,7 @@ class TestQuestionsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
+            Log.d("checkOptionForTest",list.toString())
             with(list[position]){
                 when(question_type){
                     "DATETIME","TEXT","NUMBER","GEO_LOCATION","DATE","TIME","EMAIL"->{
@@ -221,6 +222,8 @@ class TestQuestionsAdapter(
                         binding.llRating.visibility = View.GONE
                         binding.txtRadio.text = getHintText(this.title,position+1,this.is_mandatory)
                         binding.rgRadio.removeAllViews()
+                        Log.d("checkOptionForTest1",this.options.toString())
+
                         for(option in this.options){
                             val radioButton=RadioButton(context)
                             radioButton.setText(option.title)
