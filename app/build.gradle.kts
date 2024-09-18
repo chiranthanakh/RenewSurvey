@@ -76,5 +76,7 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.mapbox.maps:android:10.7.0")
     implementation("com.mapbox.mapboxsdk:mapbox-android-sdk:9.3.0")
+    implementation ("com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.7.0")
+   // implementation ("com.mapbox.mapboxsdk:mapbox-sdk-services:6.7.0'")
 
 }

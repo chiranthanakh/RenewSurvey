@@ -35,8 +35,12 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
             binding.tvProjectSate.text = "State : " +AppDatabase.getInstance(this@UserRoleActivity).placesDao()
                 .getStates(preferenceManager.getProject().mst_state_id)?.lowercase()
 
-            binding.tvProjectDivision.text = "Division :${AppDatabase.getInstance(this@UserRoleActivity).formDao()
-                .getDivisions(preferenceManager.getProject().mst_divisions_id).division_name}"
+            val division = AppDatabase.getInstance(this@UserRoleActivity).formDao()
+            .getDivisions(preferenceManager.getProject().mst_divisions_id).division_name
+            binding.tvProjectDivision.text = "Division :${division}"
+            if(division.uppercase() == "NBS") {
+                preferenceManager.saveUsertype(true)
+            }
 
             binding.tvProjectCategory.text = "Category : ${AppDatabase.getInstance(this@UserRoleActivity).formDao()
                 .getCategories(preferenceManager.getProject().mst_categories_id).category_name}"
@@ -50,8 +54,7 @@ class UserRoleActivity : BaseActivity() ,FormTypeAdapter.ClickListener{
                     preferenceManager.getProject().id!!,
                     preferenceManager.getProject().mst_divisions_id,preferenceManager.getProject().mst_categories_id)
             } else {
-                AppDatabase.getInstance(this@UserRoleActivity).formDao()
-                    .getAssignedFormsWithLanguage(
+                AppDatabase.getInstance(this@UserRoleActivity).formDao().getAssignedFormsWithLanguage(
                         preferenceManager.getLanguage(), preferenceManager.getProject().id!!,
                         preferenceManager.getUserId()?.toInt()!!,preferenceManager.getProject().mst_divisions_id,
                         preferenceManager.getProject().mst_categories_id

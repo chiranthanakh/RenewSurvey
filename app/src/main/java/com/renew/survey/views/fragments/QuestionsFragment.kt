@@ -324,7 +324,7 @@ class QuestionsFragment(
                     Log.d("MapPointsCo", formattedList.toString())
                     questionGroupList[fragPos].questions[position].answer =
                         formattedList?.toString()
-                    questionsAdapter.notifyItemChanged(position)
+                    questionsAdapter.notifyDataSetChanged()
                 }
             }
         }

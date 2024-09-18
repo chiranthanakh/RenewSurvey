@@ -90,6 +90,7 @@
                                android:padding="0dp"
                                android:hint="Mobile"
                                android:paddingStart="50dp"
+                               android:maxLength="10"
                                android:textColor="@color/black"
                                android:textColorHint="@color/black"
                                android:inputType="number"

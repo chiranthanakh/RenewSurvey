@@ -560,6 +560,7 @@ class SyncDataActivity : BaseActivity() {
             val nbsassignedSurveyList= arrayListOf<NbsAssignedSurveyEntity>()
 
             Log.d("assignedSurvaytest",data.assigned_survey.toString())
+            var index = 0
             for (d in data.assigned_survey){
                 var panchayathId=0
                 var above15=""
@@ -579,16 +580,18 @@ class SyncDataActivity : BaseActivity() {
 
                     if (d.electricity_connection_available.isNullOrEmpty()) {
                         Log.d("flowType","nbs")
+                        index = index+1
                         preferenceManager.saveUsertype(true)
-                        val nbsAssigned = NbsAssignedSurveyEntity(d.parent_survey_id.toInt(),d.farmer_unique_id, d.date_and_time_of_visit!!,d.gps_location!!,
+                        val nbsAssigned = NbsAssignedSurveyEntity(index,d.farmer_unique_id, d.date_and_time_of_visit!!,d.gps_location!!,
                             d.banficary_name,d.aadhar_card, d.mobile_number, d.alternate_mobile_number, d.residential_address,
                             d.mst_district_id.toInt(),d.mst_state_id.toInt(),
                             d.mst_tehsil_id.toInt(),panchayathId,d.mst_village_id.toInt(),d.tbl_forms_id,d.answer_id,d.next_form_id.toInt(),d.tbl_projects_id.toInt(),
                             0,d.tbl_project_survey_common_data_id.toInt(),d.parent_survey_id)
                         nbsassignedSurveyList.add(nbsAssigned)
                     } else {
+                        index = index+1
                         Log.d("flowType","cbs")
-                        val assigned=AssignedSurveyEntity(d.parent_survey_id.toInt(),0,d.aadhar_card,d.annual_family_income,d.app_unique_code,
+                        val assigned=AssignedSurveyEntity(index,0,d.aadhar_card,d.annual_family_income,d.app_unique_code,
                             d.banficary_name,d.electricity_connection_available,d.family_size,d.gender,d.house_type,d.is_cow_dung,d.is_lpg_using,d.mobile_number,d.mst_district_id.toInt(),panchayathId,d.mst_state_id.toInt(),
                             d.mst_tehsil_id.toInt(),d.mst_village_id.toInt(),d.next_form_id.toInt(),d.no_of_cattles_own,d.no_of_cylinder_per_year,d.device_serial_number, d.parent_survey_id,d.reason,d.system_approval,d.tbl_project_survey_common_data_id.toInt(),d.tbl_projects_id.toInt(),d.willing_to_contribute_clean_cooking,above15,below15,
                             d.wood_use_per_day_in_kg, d.date_and_time_of_visit!!,d.did_the_met_person_allowed_for_data!!,d.gps_location!!,d.do_you_have_aadhar_card,d.font_photo_of_aadar_card,d.back_photo_of_aadhar_card,d.total_electricity_bill,d.frequency_of_bill_payment,d.photo_of_bill,d.cost_of_lpg_cyliner,d.do_you_have_ration_or_aadhar,
@@ -596,7 +599,7 @@ class SyncDataActivity : BaseActivity() {
                         assignedSurveyList.add(assigned)
                     }
 
-                preferenceManager.saveUsertype(true)
+                //preferenceManager.saveUsertype(true)
 
                 } catch (e : NumberFormatException){
 

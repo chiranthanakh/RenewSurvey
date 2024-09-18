@@ -2,7 +2,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -72,6 +71,30 @@
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/ic_list_24dp"
             android:text="Locations"
+            android:textAllCaps="false"
+            android:textColor="@color/mapboxWhite"
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/start_location_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_start_24"
+            android:text="Start Tracking"
+            android:textAllCaps="false"
+            android:textColor="@color/mapboxWhite"
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/stop_location_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_stop_24"
+            android:text="Stop Tracking"
             android:textAllCaps="false"
             android:textColor="@color/mapboxWhite"
             android:textSize="12sp"/>

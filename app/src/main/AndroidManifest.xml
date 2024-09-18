@@ -66,6 +66,11 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
+            android:name=".views.MapManagerActivity2"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".views.DraftSelectActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -140,6 +145,7 @@
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+        <service android:name=".utilities.LocationUpdateService" />
         <activity
             android:name=".views.SplashActivity"
             android:exported="true"

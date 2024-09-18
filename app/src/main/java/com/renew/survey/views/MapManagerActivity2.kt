@@ -66,15 +66,13 @@ import org.json.JSONObject
 /**
  * Download, view, navigate to, and delete an offline region.
  */
-class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
+class MapManagerActivity2 : AppCompatActivity(), MapboxMap.OnMapClickListener,
     PermissionsListener {
     private var mapView: MapView? = null
     private var map: MapboxMap? = null
     private var progressBar: ProgressBar? = null
     private var downloadButton: Button? = null
     private var listButton: Button? = null
-    private var startlocation: Button? = null
-    private var stopLocation: Button? = null
     private var savebutton: Button? = null
     private var isEndNotified = false
     private var regionSelected = 0
@@ -82,7 +80,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
     private var offlineRegion: OfflineRegion? = null
     private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private var own_location: Point? = null
-    private var points: MutableSet<LatLng> = mutableSetOf()
+    private var points: MutableList<LatLng> = mutableListOf()
     private lateinit var locationEngine: LocationEngine
     private lateinit var locationManager: LocationManager
     private lateinit var handler: Handler
@@ -90,40 +88,31 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
     private lateinit var geoJsonSource: GeoJsonSource
     private lateinit var lineLayer: LineLayer
     private var polyline: Polyline? = null
-    var place : String? = ""
     private val lineCoordinates = mutableListOf<LatLng>()
 
-     override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, "sk.eyJ1IjoiY2hpcnVoZW1hIiwiYSI6ImNsd3NtcjkzYzAxZ2EybXNjaTAwcWN3eWYifQ.m1qVAeCqngttwSX6hr_K3A")
         setContentView(R.layout.activity_map_manager)
 
-         val intent = intent
-         place = intent.getStringExtra("place")
+        val intent = intent
+        val place = intent.getStringExtra("place")
         mapView = findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
-         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         mapView?.getMapAsync(object : OnMapReadyCallback {
             override fun onMapReady(mapboxMap: MapboxMap) {
                 map = mapboxMap
                 mapboxMap?.setStyle(Style.SATELLITE_STREETS, object : Style.OnStyleLoaded {
                     override fun onStyleLoaded(style: Style) {
-                        initializeLocationEngine()
-                        //startLocationUpdates()
                         progressBar = findViewById(R.id.progress_bar)
-                        offlineManager = OfflineManager.getInstance(this@MapManagerActivity)
+                        offlineManager = OfflineManager.getInstance(this@MapManagerActivity2)
                         downloadButton = findViewById(R.id.download_button)
                         savebutton = findViewById(R.id.save_button)
-                        startlocation = findViewById(R.id.start_location_button)
-                        stopLocation = findViewById(R.id.stop_location_button)
                         if(place.equals("1")){
                             savebutton?.visibility = View.GONE
-                            startlocation?.visibility = View.GONE
-                            stopLocation?.visibility = View.GONE
                         } else {
                             downloadButton?.visibility = View.GONE
-                            // startlocation?.visibility = View.GONE
-                            stopLocation?.visibility = View.GONE
                         }
                         downloadButton?.setOnClickListener {
                             downloadRegionDialog()
@@ -135,41 +124,38 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                             setResult(RESULT_OK, resultIntent)
                             finish()
                         }
-                        startlocation?.setOnClickListener{
-                            startLocationUpdates()
-                        }
-                        stopLocation?.setOnClickListener{
-                            stopLocationUpdates()
-                        }
 
                         val polylineOptions = PolylineOptions()
                             .color(Color.RED)
                             .width(5f)
 
                         // Add polyline to the map and store the reference
-                         polyline = map?.addPolyline(polylineOptions)
+                        polyline = map?.addPolyline(polylineOptions)
+                        initializeLocationEngine()
+                        startLocationUpdates()
 
                         listButton = findViewById(R.id.list_button)
                         listButton?.setOnClickListener { downloadedRegionList() }
-                        mapboxMap.addOnMapClickListener(this@MapManagerActivity)
+                        mapboxMap.addOnMapClickListener(this@MapManagerActivity2)
                         enableLocationComponent(style)
 
                     }
                 })
+
             }
         })
 
-         mapView?.getMapAsync { mapboxMap ->
+        mapView?.getMapAsync { mapboxMap ->
             // initializeLocationEngine()
-             //startLocationUpdates()
-         }
+            //startLocationUpdates()
+        }
     }
 
     override fun onMapClick(p0: LatLng): Boolean {
         Log.d("latlogpoints",p0.toString())
-        points.add(p0)
-        if (points.size >= 2 && place != "1") {
-            drawRectangle()
+        //points.add(p0)
+        if (points.size >= 2) {
+            // drawRectangle()
         }
         updatePolyline(p0)
         val destination = Point.fromLngLat(p0.getLongitude(), p0.getLatitude())
@@ -182,13 +168,11 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
             PolygonOptions()
                 .addAll(points)
                 .fillColor(resources.getColor(R.color.mapbox_blue_opacity))
-                .strokeColor(resources.getColor(R.color.mapbox_blue_opacity)) // Replace Color.RED with your desired color
-
         )
-
         Log.d("Rectangle Coordinates", points.toString())
     }
 
+    // Override Activity lifecycle methods
     override fun onResume() {
         super.onResume()
         mapView?.onResume()
@@ -207,15 +191,14 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
     override fun onPause() {
         super.onPause()
         mapView?.onPause()
-        //stopLocationUpdates()
     }
 
-     override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mapView?.onSaveInstanceState(outState)
     }
 
-     override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         mapView?.onDestroy()
     }
@@ -226,8 +209,8 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
     }
 
     private fun downloadRegionDialog() {
-        val builder = AlertDialog.Builder(this@MapManagerActivity)
-        val regionNameEdit: EditText = EditText(this@MapManagerActivity)
+        val builder = AlertDialog.Builder(this@MapManagerActivity2)
+        val regionNameEdit: EditText = EditText(this@MapManagerActivity2)
         regionNameEdit.setHint("Enter name")
         builder.setTitle("Name new region")
             .setView(regionNameEdit)
@@ -242,12 +225,12 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                         // a toast message and do not begin download.
                         if (regionName.length == 0) {
                             Toast.makeText(
-                                this@MapManagerActivity,
+                                this@MapManagerActivity2,
                                 "Region name cannot be empty.",
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            //Begin download process
+                            // Begin download process
                             downloadRegion(regionName)
                         }
                     }
@@ -285,12 +268,12 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                 // Activate the LocationComponent with options
                 activateLocationComponent(locationComponentActivationOptions)
                 // Enable to make the LocationComponent visible
-                 isLocationComponentEnabled = true
+                isLocationComponentEnabled = true
                 // Set the LocationComponent's camera mode
                 cameraMode = CameraMode.TRACKING
                 // Set the LocationComponent's render mode
                 renderMode = RenderMode.COMPASS
-              //  own_location = Point.fromLngLat(map!!.locationComponent.lastKnownLocation!!.longitude, map!!.locationComponent.lastKnownLocation!!.latitude)
+                //  own_location = Point.fromLngLat(map!!.locationComponent.lastKnownLocation!!.longitude, map!!.locationComponent.lastKnownLocation!!.latitude)
                 own_location = Point.fromLngLat(79.6608, 9.5530)
             }
         } else {
@@ -308,7 +291,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                 val minZoom: Double = map!!.getCameraPosition().zoom
                 val maxZoom: Double = map!!.getMaxZoomLevel()
                 val pixelRatio: Float =
-                    this@MapManagerActivity.getResources().getDisplayMetrics().density
+                    this@MapManagerActivity2.getResources().getDisplayMetrics().density
                 val definition: OfflineTilePyramidRegionDefinition =
                     OfflineTilePyramidRegionDefinition(
                         styleUrl, bounds, minZoom, maxZoom, pixelRatio
@@ -329,7 +312,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                     object : OfflineManager.CreateOfflineRegionCallback {
                         override fun onCreate(offlineRegion: OfflineRegion) {
                             //Timber.d("Offline region created: %s", regionName)
-                            this@MapManagerActivity.offlineRegion = offlineRegion
+                            this@MapManagerActivity2.offlineRegion = offlineRegion
                             launchDownload()
                         }
 
@@ -394,7 +377,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                 val items = offlineRegionsNames.toTypedArray<CharSequence>()
 
                 // Build a dialog containing the list of regions
-                val dialog: AlertDialog = AlertDialog.Builder(this@MapManagerActivity)
+                val dialog: AlertDialog = AlertDialog.Builder(this@MapManagerActivity2)
                     .setTitle("List")
                     .setSingleChoiceItems(items, 0, object : DialogInterface.OnClickListener {
                         override fun onClick(dialog: DialogInterface, which: Int) {
@@ -407,7 +390,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                         object : DialogInterface.OnClickListener {
                             override fun onClick(dialog: DialogInterface, id: Int) {
                                 Toast.makeText(
-                                    this@MapManagerActivity,
+                                    this@MapManagerActivity2,
                                     items[regionSelected],
                                     Toast.LENGTH_LONG
                                 ).show()
@@ -484,7 +467,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
             val jsonObject: JSONObject = JSONObject(json)
             regionName = jsonObject.getString(JSON_FIELD_REGION_NAME)
         } catch (exception: Exception) {
-           // Timber.e("Failed to decode metadata: %s", exception.message)
+            // Timber.e("Failed to decode metadata: %s", exception.message)
             regionName = String.format("Region %1", offlineRegion.getID())
         }
         return regionName
@@ -516,7 +499,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
         isEndNotified = true
         progressBar?.setIndeterminate(false)
         progressBar?.setVisibility(View.GONE)
-        Toast.makeText(this@MapManagerActivity, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(this@MapManagerActivity2, message, Toast.LENGTH_LONG).show()
     }
 
 
@@ -570,51 +553,34 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
         runnable = object : Runnable {
             override fun run() {
                 if (ActivityCompat.checkSelfPermission(
-                        this@MapManagerActivity,
+                        this@MapManagerActivity2,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        this@MapManagerActivity,
+                        this@MapManagerActivity2,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
-                ) { return }
-                points.clear()
-                startlocation?.visibility = View.GONE
-                stopLocation?.visibility = View.VISIBLE
-
+                ) {
+                    return
+                }
                 locationEngine.getLastLocation(callback)
-                handler.postDelayed(this, 60000) // 30 seconds
+                handler.postDelayed(this, 30000) // 30 seconds
             }
         }
         handler.post(runnable)
-    }
-
-    private fun stopLocationUpdates() {
-        // Remove any pending callbacks for the Runnable
-        handler.removeCallbacks(runnable)
-
-        // If the locationEngine is not null, remove its location updates
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            startlocation?.visibility = View.VISIBLE
-            stopLocation?.visibility = View.GONE
-            locationEngine.removeLocationUpdates(callback)
-        }
     }
 
     private val callback = object : LocationEngineCallback<LocationEngineResult> {
         override fun onSuccess(result: LocationEngineResult?) {
             result?.lastLocation?.let { location ->
                 val latLng = LatLng(location.latitude, location.longitude)
-                points.add(latLng)
-                drawRectangle()
+                //updatePolyline(latLng)
                 Log.d("printlocationcoorinates",location.longitude.toString())
-
+                map?.setCameraPosition(
+                    CameraPosition.Builder()
+                        .target(LatLng(location.latitude, location.longitude))
+                        .zoom(15.0)
+                        .build()
+                )
             }
         }
 
@@ -628,7 +594,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
     private fun updatePolyline(newLatLng: LatLng) {
         points.add(newLatLng)
         Log.d("printlocationcoorinates",points.toString())
-       // polyline?.setPoints(points)
+        polyline?.setPoints(points)
     }
 
 }

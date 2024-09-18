@@ -218,7 +218,7 @@ class QuestionsAdapter(
                                             clickListener.onFileSelect(this,position, this.allowed_file_type!!,this.question_type)
                                         }
                                         if (this.answer!=""){
-                                            binding.edittext.setText("Done")
+                                            binding.edittext.setText(this.answer)
                                         }
                                     }
                                 }

@@ -106,7 +106,6 @@ class DashboardActivity : BaseActivity() {
             val intent = Intent(this,MapManagerActivity::class.java)
             intent.putExtra("place", "1");
             startActivity(intent)
-
         }
         binding.cardDraft.setOnClickListener {
             if (draftCount==0){
