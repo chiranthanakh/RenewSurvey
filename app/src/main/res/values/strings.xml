@@ -41,7 +41,7 @@
     <string name="driving_cert">Upload Driving Liceence<font color='#EA0C27'>*</font></string>
     <string name="nationality">Nationality<font color='#EA0C27'>*</font></string>
     <string name="date_and_time_of_visit">1. Date and Time of visit<font color='#EA0C27'>*</font></string>
-    <string name="gps_location">3. GPS Location<font color='#EA0C27'>*</font></string>
+    <string name="gps_location">2. GPS Location<font color='#EA0C27'>*</font></string>
     <string name="beneficiary_name">4. Beneficiary Name<font color='#EA0C27'>*</font></string>
     <string name="family_size">13. Family size<font color='#EA0C27'>*</font></string>
     <string name="lpg_using">14. LPG using<font color='#EA0C27'>*</font></string>
@@ -153,17 +153,17 @@
 
 
     <string name="Unique_farmer_id">1. Unique Farmer ID<font color='#EA0C27'>*</font></string>
-    <string name="date_and_time_of_visit_nbs">2. Date and Time of visit<font color='#EA0C27'>*</font></string>
-    <string name="father_name">4. Farmer Name<font color='#EA0C27'>*</font></string>
-    <string name="id_proof">5. Aadhar number or identity proof<font color='#EA0C27'>*</font></string>
-    <string name="mobilenumber">6. Mobile Number<font color='#EA0C27'>*</font></string>
-    <string name="alt_mob_no">7. Alternate mobile number<font color='#EA0C27'>*</font></string>
-    <string name="resaddress">8. Residential Address<font color='#EA0C27'>*</font></string>
-    <string name="statename">9. State Name<font color='#EA0C27'>*</font></string>
-    <string name="districtname">10. District Name<font color='#EA0C27'>*</font></string>
-    <string name="tehsilname">11. Tehsil Name<font color='#EA0C27'>*</font></string>
-    <string name="panchayatname">12. Panchayat Name<font color='#EA0C27'>*</font></string>
-    <string name="villagename">13. Village Name<font color='#EA0C27'>*</font></string>
+    <string name="date_and_time_of_visit_nbs">1. Date and Time of visit<font color='#EA0C27'>*</font></string>
+    <string name="father_name">3. Farmer Name<font color='#EA0C27'>*</font></string>
+    <string name="id_proof">4. Aadhar number or identity proof<font color='#EA0C27'>*</font></string>
+    <string name="mobilenumber">5. Mobile Number<font color='#EA0C27'>*</font></string>
+    <string name="alt_mob_no">6. Alternate mobile number<font color='#EA0C27'>*</font></string>
+    <string name="resaddress">7. Residential Address<font color='#EA0C27'>*</font></string>
+    <string name="statename">8. State Name<font color='#EA0C27'>*</font></string>
+    <string name="districtname">9. District Name<font color='#EA0C27'>*</font></string>
+    <string name="tehsilname">10. Tehsil Name<font color='#EA0C27'>*</font></string>
+    <string name="panchayatname">11. Panchayat Name<font color='#EA0C27'>*</font></string>
+    <string name="villagename">12. Village Name<font color='#EA0C27'>*</font></string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

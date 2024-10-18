@@ -87,6 +87,10 @@ class LoginActivity : BaseActivity() {
             }
         }
     }
+
+    fun testing() : Boolean {
+        return 2 == 2
+    }
     fun openRegisterAsDialog(){
         val dialogBinding=DialogRegisterAsUserTeamBinding.inflate(layoutInflater)
         val dialog=BottomSheetDialog(this).apply {

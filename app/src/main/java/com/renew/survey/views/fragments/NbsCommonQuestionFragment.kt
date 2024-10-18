@@ -151,7 +151,7 @@ class NbsCommonQuestionFragment constructor(var commonAnswersEntity: NbsCommonAn
                 commonAnswersEntity.gps_location = preferenceManager.getLocation().toString()
             }
         }
-
+        commonAnswersEntity.farmer_unique_id="1234"
         binding.edtUniqueFarmerId.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
