@@ -71,7 +71,7 @@ class QuestionsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
-            //setIsRecyclable(false)
+            setIsRecyclable(false)
             with(list[position]){
                 when(question_type){
                     "DATETIME","TEXT","NUMBER","GEO_LOCATION","DATE","TIME","EMAIL"->{
@@ -170,7 +170,7 @@ class QuestionsAdapter(
                         }
                         when(question_type){
                             "NUMBER"->{
-                                binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
+                                binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
                             }
                             "TEXT"->{
                                 binding.edittext.inputType=InputType.TYPE_CLASS_TEXT

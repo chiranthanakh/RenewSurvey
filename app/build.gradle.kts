@@ -14,8 +14,8 @@ android {
         applicationId = "com.renew.survey"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "2.0.1"
+        versionCode = 2
+        versionName = "3.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -74,7 +74,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
-    implementation ("com.mapbox.mapboxsdk:mapbox-android-sdk:9.3.0")
-    implementation ("com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6")
+   // implementation ("com.mapbox.mapboxsdk:mapbox-android-sdk:9.3.0")
+    //implementation ("com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6")
 
 }

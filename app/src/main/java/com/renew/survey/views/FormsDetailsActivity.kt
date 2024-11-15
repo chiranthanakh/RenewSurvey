@@ -254,23 +254,27 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         locationRequest!!.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         locationRequest!!.setInterval(20 * 1000)
             enableLoc()
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                for (location in locationResult.locations) {
-                    Log.e("roomData12",location?.latitude.toString())
-                    if (location != null) {
-                        preferenceManager.saveLocation("${location.latitude},${location.longitude}")
+            locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    for (location in locationResult.locations) {
+                        val latitude = String.format("%.9f", location.latitude)
+                        val longitude = String.format("%.9f", location.longitude)
+                        Log.e("roomData12",location?.latitude.toString())
+                        if (location != null) {
+                            preferenceManager.saveLocation("${latitude},${longitude}")
+                        }
                     }
                 }
             }
-        }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                Log.e("roomData123",location?.latitude.toString())
-                if (location != null) {
-                    preferenceManager.saveLocation("${location.latitude},${location.longitude}")
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) {
+                        val latitude = String.format("%.9f", location.latitude)
+                        val longitude = String.format("%.9f", location.longitude)
+                        Log.e("roomData123", "$latitude, $longitude")
+                        preferenceManager.saveLocation("$latitude, $longitude")
+                    }
                 }
-            }
        }
     }
 
@@ -460,14 +464,8 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             UtilMethods.showToast(this,"Please select annual family income")
             return false
         }
-        if (commonAnswersEntity.farmland_is_owned_by_benficary==""){
-            UtilMethods.showToast(this,"Please select farmland details")
-            return false
-        }
-        if (commonAnswersEntity.if_5m_area_is_available_near_by==""){
-            UtilMethods.showToast(this,"Please answer if area available near by")
-            return false
-        }
+
+
         if (commonAnswersEntity.willing_to_contribute_clean_cooking==""){
             UtilMethods.showToast(this,"Please select weather he is willing to contribute to clean cooking")
             return false
@@ -476,15 +474,27 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             UtilMethods.showToast(this,"Please select wood used per day")
             return false
         }*/
+        if(preferenceManager.getProject().mst_categories_id != 1 && preferenceManager.getProject().mst_categories_id != 10){
         if (commonAnswersEntity.electricity_connection_available==""){
             UtilMethods.showToast(this,"Please select electricity connection is available or not")
             return false
         }
+            if (commonAnswersEntity.farmland_is_owned_by_benficary==""){
+                UtilMethods.showToast(this,"Please select farmland details")
+                return false
+            }
+            if (commonAnswersEntity.if_5m_area_is_available_near_by==""){
+                UtilMethods.showToast(this,"Please answer if area available near by")
+                return false
+            }
+        }
+        if(preferenceManager.getProject().mst_categories_id != 1 && preferenceManager.getProject().mst_categories_id != 9){
+
         if (commonAnswersEntity.no_of_cattles_own==""){
             UtilMethods.showToast(this,"Please select no of cattle owned")
             return false
         }
-
+}
 
         if (preferenceManager.getForm().tbl_forms_id==1){
             val totalFamily=commonAnswersEntity.family_member_above_15_year!!.toInt() + commonAnswersEntity.family_member_below_15_year!!.toInt()-commonAnswersEntity.family_size.toInt()

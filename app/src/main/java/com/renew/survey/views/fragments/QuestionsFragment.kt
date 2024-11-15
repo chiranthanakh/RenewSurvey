@@ -180,7 +180,9 @@ class QuestionsFragment(
                     lifecycleScope.launch {
                         val compressed=Compressor.compress(requireContext(),File(newPath!!.path))
                         questionGroupList[fragPos].questions[position].answer= compressed.path
-                        questionsAdapter.notifyItemChanged(position)
+                        //questionsAdapter.notifyItemChanged(position)
+                        questionsAdapter.notifyDataSetChanged()
+
                         deleteFile(path)
                     }
                 }
@@ -192,7 +194,9 @@ class QuestionsFragment(
                     var test = filePath.split("/")
                     Log.d("filePickPath",test.get(test.size-1))
                     questionGroupList[fragPos].questions[position].answer=filePath
-                    questionsAdapter.notifyItemChanged(position)
+                //    questionsAdapter.notifyItemChanged(position)
+                    questionsAdapter.notifyDataSetChanged()
+
                 }
             }
         }

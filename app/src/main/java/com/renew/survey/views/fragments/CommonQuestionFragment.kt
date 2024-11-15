@@ -105,6 +105,7 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
         if (status==2||status==3||status==5||status==6||status==7||status==8){
             disableViews=true
         }
+        hideviews()
         if (status==0){
             commonAnswersEntity.do_you_have_aadhar_card = "YES"
             commonAnswersEntity.did_the_met_person_allowed_for_data = "YES"
@@ -714,6 +715,22 @@ class CommonQuestionFragment constructor(var commonAnswersEntity: CommonAnswersE
 
 
         return binding.root
+    }
+
+    private fun hideviews() {
+        if(preferenceManager.getProject().mst_categories_id == 1){
+            binding.llCylinderCost.visibility = View.GONE
+            binding.llElectricity.visibility = View.GONE
+
+        } else if(preferenceManager.getProject().mst_categories_id == 9){
+            binding.llCylinderCost.visibility = View.GONE
+            binding.llCattel.visibility = View.GONE
+
+        } else if(preferenceManager.getProject().mst_categories_id == 10){
+            binding.llCylinderCost.visibility = View.GONE
+            binding.llEleonly.visibility = View.GONE
+
+        }
     }
 
     fun geFrequancyData(){
