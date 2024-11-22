@@ -233,7 +233,7 @@ class QuestionsAdapter(
                                 binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
                             }
                             "NUMBER"->{
-                                binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER
+                                binding.edittext.inputType=InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
                             }
                             "TEXT"->{
                                 binding.edittext.inputType=InputType.TYPE_CLASS_TEXT

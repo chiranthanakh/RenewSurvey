@@ -373,20 +373,24 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
+                    val latitude = String.format("%.9f", location.latitude)
+                    val longitude = String.format("%.9f", location.longitude)
                     Log.e("roomData12",location?.latitude.toString())
                     if (location != null) {
-                        preferenceManager.saveLocation("${location.latitude},${location.longitude}")
+                        preferenceManager.saveLocation("${latitude},${longitude}")
                     }
                 }
             }
         }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                Log.e("roomData123",location?.latitude.toString())
-                if (location != null) {
-                    preferenceManager.saveLocation("${location.latitude},${location.longitude}")
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) {
+                        val latitude = String.format("%.9f", location.latitude)
+                        val longitude = String.format("%.9f", location.longitude)
+                        Log.e("roomData123", "$latitude, $longitude")
+                        preferenceManager.saveLocation("$latitude, $longitude")
+                    }
                 }
-            }
        }
     }
 

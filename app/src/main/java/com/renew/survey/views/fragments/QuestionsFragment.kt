@@ -313,9 +313,9 @@ class QuestionsFragment(
                     val wrappedPoints = data.getParcelableArrayListExtra<LatLagWrapper>("key")
                     val formattedList = wrappedPoints?.let {
                         it.map {
-                            "\"${String.format("%.4f", it.latitude)},${
+                            "\"${String.format("%.9f", it.latitude)},${
                                 String.format(
-                                    "%.4f",
+                                    "%.9f",
                                     it.longitude
                                 )
                             }\""

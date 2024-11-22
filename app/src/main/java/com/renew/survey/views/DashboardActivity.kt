@@ -124,11 +124,12 @@ class DashboardActivity : BaseActivity() {
         }
 
         binding.btnSync.setOnClickListener {
-            if (preferenceManager.getUsertype()) {
-                synchCbs()
-            }else {
-                synchNbs()
-            }
+//            if (preferenceManager.getUsertype()) {
+//                synchCbs()
+//            }else {
+//                synchNbs()
+//            }
+            synchNbs()
         }
 
         binding.btnContinue.setOnClickListener {
@@ -173,7 +174,7 @@ class DashboardActivity : BaseActivity() {
                     }
                 }
             }
-           // val jsonData=gson.toJson(answers)
+            val jsonData=gson.toJson(answers)
           //  Log.e("dataAnswers",answers.toString())
             if(answers.size>0){
                 // syncMedia()
@@ -234,7 +235,7 @@ class DashboardActivity : BaseActivity() {
                 }
             }
             val jsonData=gson.toJson(answers)
-            Log.e("dataAnswers",answers.toString())
+            Log.d("dataAnswers",answers.toString())
             if(answers.size>0){
                 // syncMedia()
                 binding.llProgress.visibility=View.VISIBLE

@@ -144,6 +144,7 @@ class NbsCommonQuestionFragment constructor(var commonAnswersEntity: NbsCommonAn
             dpd.show()
         }
         binding.edtGpsLocation.setOnClickListener {
+            Log.d("testLocation",preferenceManager.getLocation().toString())
             binding.edtGpsLocation.setText(preferenceManager.getLocation())
             if (preferenceManager.getLocation()==""){
                 UtilMethods.showToast(requireContext(),"Location not available. Please make sure that you enabled the location and internet in your device")
