@@ -248,77 +248,182 @@ class DashboardActivity : BaseActivity() {
             startActivity(this)
         }
     }
-    fun syncMedia(){
+
+    fun syncMedia() {
         lifecycleScope.launch {
-            val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedMediaAnswers()
-            val mediaList= arrayListOf<MediaSyncReqItem>()
-            for (a in answers){
-                val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
-                val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
-                a.dynamicAnswersList=dynamicAns
-                a.commonAnswersEntity=commonAns
-                if (a.tbl_forms_id=="2"){
-                    a.parent_survey_id=commonAns.parent_survey_id
-                    a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+            val answers = AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedMediaAnswers()
+            val mediaList = arrayListOf<MediaSyncReqItem>()
+
+            // Prepare the mediaList
+            for (a in answers) {
+                val commonAns = AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
+                val dynamicAns = AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
+                a.dynamicAnswersList = dynamicAns
+                a.commonAnswersEntity = commonAns
+                if (a.tbl_forms_id == "2") {
+                    a.parent_survey_id = commonAns.parent_survey_id
+                    a.tbl_project_survey_common_data_id = commonAns.tbl_project_survey_common_data_id
                 }
-                if (commonAns.font_photo_of_aadar_card.isNotEmpty()){
-                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.font_photo_of_aadar_card.substring(commonAns.font_photo_of_aadar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.font_photo_of_aadar_card))
+                if (commonAns.font_photo_of_aadar_card.isNotEmpty()) {
+                    mediaList.add(
+                        MediaSyncReqItem(a.app_unique_code, commonAns.font_photo_of_aadar_card.substringAfterLast("/"), a.phase,
+                            "", a.tbl_forms_id, a.tbl_projects_id, a.tbl_users_id, a.version, commonAns.font_photo_of_aadar_card
+                        )
+                    )
                 }
-                if (commonAns.back_photo_of_aadhar_card.isNotEmpty()){
-                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.back_photo_of_aadhar_card.substring(commonAns.back_photo_of_aadhar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.back_photo_of_aadhar_card))
+                if (commonAns.back_photo_of_aadhar_card.isNotEmpty()) {
+                    mediaList.add(
+                        MediaSyncReqItem(a.app_unique_code, commonAns.back_photo_of_aadhar_card.substringAfterLast("/"), a.phase, "",
+                            a.tbl_forms_id, a.tbl_projects_id, a.tbl_users_id, a.version, commonAns.back_photo_of_aadhar_card
+                        )
+                    )
                 }
-                if (commonAns.photo_of_bill.isNotEmpty()){
-                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.photo_of_bill.substring(commonAns.photo_of_bill.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.photo_of_bill))
+                if (commonAns.photo_of_bill.isNotEmpty()) {
+                    mediaList.add(
+                        MediaSyncReqItem(a.app_unique_code, commonAns.photo_of_bill.substringAfterLast("/"), a.phase,
+                            "", a.tbl_forms_id, a.tbl_projects_id, a.tbl_users_id, a.version, commonAns.photo_of_bill
+                        )
+                    )
                 }
             }
 
-            for (a in answers){
-                for (d in a.dynamicAnswersList){
-                    if (d.answer!!.startsWith("/")){
-                        mediaList.add(MediaSyncReqItem(a.app_unique_code,d.answer!!.substring(d.answer!!.lastIndexOf("/")+1),a.phase,d.tbl_form_questions_id.toString(),a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,d.answer!!))
+            for (a in answers) {
+                for (d in a.dynamicAnswersList) {
+                    if (d.answer!!.startsWith("/")) {
+                        mediaList.add(
+                            MediaSyncReqItem(a.app_unique_code, d.answer!!.substringAfterLast("/"), a.phase, d.tbl_form_questions_id.toString(),
+                                a.tbl_forms_id, a.tbl_projects_id, a.tbl_users_id, a.version, d.answer!!)
+                        )
                     }
                 }
             }
-            val surveyImagesParts: Array<MultipartBody.Part?> = arrayOfNulls<MultipartBody.Part>(mediaList.size)
-           // Log.d("mediaListcheck",mediaList)
-            if (mediaList.size>0) {
+
+            Log.e("params==>", mediaList.size.toString())
+
+            if (mediaList.isNotEmpty()) {
+                val batchSize = 20 // Number of items per batch
+                val batches = mediaList.chunked(batchSize) // Divide the list into chunks
+
+                binding.llProgress.visibility = View.VISIBLE
+                binding.progressMessage.text = "Synchronizing media with server"
+
                 try {
-                    for (i in mediaList.indices) {
-                        val file = File(mediaList[i].path)
-                        if (file.exists()) {
-                            val mimeType = UtilMethods.getMimeType(file)
-                            val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
-                            surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
-                        }
-                    }
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
+                    for ((index, batch) in batches.withIndex()) {
+                        val surveyImagesParts: Array<MultipartBody.Part?> = arrayOfNulls(batch.size)
 
-                val jsonData=gson.toJson(mediaList)
-                Log.e("params",mediaList.toString())
-                binding.llProgress.visibility=View.VISIBLE
-                binding.progressMessage.text="Synchronizing media with server"
-                ApiInterface.getInstance()?.apply {
-                    val datapart=RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
-                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
-                    binding.llProgress.visibility=View.GONE
-                    if (response.isSuccessful){
-                        val jsonObject=JSONObject(response.body().toString())
-                        Log.e("response",jsonObject.toString())
-                        UtilMethods.showToast(this@DashboardActivity,jsonObject.getString("message"))
-                        if (jsonObject.getString("success")=="1"){
-                            for (ans in answers){
-                                AppDatabase.getInstance(this@DashboardActivity).formDao().updateMediaSync(ans.id!!)
+                        for (i in batch.indices) {
+                            val file = File(batch[i].path)
+                            if (file.exists()) {
+                                val mimeType = UtilMethods.getMimeType(file)
+                                val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
+                                surveyImagesParts[i] =
+                                    MultipartBody.Part.createFormData("files[]", batch[i].file_name, surveyBody)
                             }
                         }
+
+                        val jsonData = gson.toJson(batch)
+                        val datapart = RequestBody.create(MultipartBody.FORM, jsonData)
+                        val response = ApiInterface.getInstance()?.syncMediaFiles(
+                            preferenceManager.getToken()!!, datapart, surveyImagesParts )
+
+                        if (response != null && response.isSuccessful) {
+                            val jsonObject = JSONObject(response.body().toString())
+                            Log.e("response - Batch ${index + 1}", jsonObject.toString())
+                            UtilMethods.showToast(this@DashboardActivity, jsonObject.getString("message"))
+                            if (jsonObject.getString("success") == "1") {
+                                for (ans in answers) {
+                                     AppDatabase.getInstance(this@DashboardActivity).formDao().updateMediaSync(ans.id!!)
+                                }
+                            }
+                        } else {
+                            Log.e("Error - Batch ${index + 1}", "Failed to upload batch")
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    binding.llProgress.visibility = View.GONE
                 }
-            }else{
-                UtilMethods.showToast(this@DashboardActivity,"No media to sync")
+            } else {
+                UtilMethods.showToast(this@DashboardActivity, "No media to sync")
             }
         }
     }
+
+
+//    fun syncMedia(){
+//        lifecycleScope.launch {
+//            val answers=AppDatabase.getInstance(this@DashboardActivity).formDao().getAllUnsyncedMediaAnswers()
+//            val mediaList= arrayListOf<MediaSyncReqItem>()
+//            for (a in answers){
+//                val commonAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getCommonAnswers(a.id!!)
+//                val dynamicAns=AppDatabase.getInstance(this@DashboardActivity).formDao().getDynamicAns(a.id!!)
+//                a.dynamicAnswersList=dynamicAns
+//                a.commonAnswersEntity=commonAns
+//                if (a.tbl_forms_id=="2"){
+//                    a.parent_survey_id=commonAns.parent_survey_id
+//                    a.tbl_project_survey_common_data_id=commonAns.tbl_project_survey_common_data_id
+//                }
+//                if (commonAns.font_photo_of_aadar_card.isNotEmpty()){
+//                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.font_photo_of_aadar_card.substring(commonAns.font_photo_of_aadar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.font_photo_of_aadar_card))
+//                }
+//                if (commonAns.back_photo_of_aadhar_card.isNotEmpty()){
+//                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.back_photo_of_aadhar_card.substring(commonAns.back_photo_of_aadhar_card.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.back_photo_of_aadhar_card))
+//                }
+//                if (commonAns.photo_of_bill.isNotEmpty()){
+//                    mediaList.add(MediaSyncReqItem(a.app_unique_code,commonAns.photo_of_bill.substring(commonAns.photo_of_bill.lastIndexOf("/")+1),a.phase,"",a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,commonAns.photo_of_bill))
+//                }
+//            }
+//
+//            for (a in answers){
+//                for (d in a.dynamicAnswersList){
+//                    if (d.answer!!.startsWith("/")){
+//                       // Log.e("params==>dynamic",mediaList.size.toString())
+//                        mediaList.add(MediaSyncReqItem(a.app_unique_code,d.answer!!.substring(d.answer!!.lastIndexOf("/")+1),a.phase,d.tbl_form_questions_id.toString(),a.tbl_forms_id,a.tbl_projects_id,a.tbl_users_id,a.version,d.answer!!))
+//                    }
+//                }
+//            }
+//            Log.e("params==>",mediaList.size.toString())
+//            val surveyImagesParts: Array<MultipartBody.Part?> = arrayOfNulls<MultipartBody.Part>(mediaList.size)
+//           // Log.d("mediaListcheck",mediaList)
+//            if (mediaList.size>0) {
+//                try {
+//                    for (i in mediaList.indices) {
+//                        val file = File(mediaList[i].path)
+//                        if (file.exists()) {
+//                            val mimeType = UtilMethods.getMimeType(file)
+//                            val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
+//
+//                            surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
+//                        }
+//                    }
+//                }catch (e:Exception){
+//                    e.printStackTrace()
+//                }
+//
+//                val jsonData=gson.toJson(mediaList)
+//                binding.llProgress.visibility=View.VISIBLE
+//                binding.progressMessage.text="Synchronizing media with server"
+//                ApiInterface.getInstance()?.apply {
+//                    val datapart=RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
+//                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
+//                    binding.llProgress.visibility=View.GONE
+//                    if (response.isSuccessful){
+//                        val jsonObject=JSONObject(response.body().toString())
+//                        Log.e("response",jsonObject.toString())
+//                        UtilMethods.showToast(this@DashboardActivity,jsonObject.getString("message"))
+//                        if (jsonObject.getString("success")=="1"){
+//                            for (ans in answers){
+//                              //  AppDatabase.getInstance(this@DashboardActivity).formDao().updateMediaSync(ans.id!!)
+//                            }
+//                        }
+//                    }
+//                }
+//            }else{
+//                UtilMethods.showToast(this@DashboardActivity,"No media to sync")
+//            }
+//        }
+//    }
 
     override fun onResume() {
         super.onResume()

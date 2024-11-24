@@ -479,14 +479,14 @@ class FormsDetailsActivity : BaseActivity() ,QuestionGroupAdapter.ClickListener,
             UtilMethods.showToast(this,"Please select electricity connection is available or not")
             return false
         }
-            if (commonAnswersEntity.farmland_is_owned_by_benficary==""){
-                UtilMethods.showToast(this,"Please select farmland details")
-                return false
-            }
-            if (commonAnswersEntity.if_5m_area_is_available_near_by==""){
-                UtilMethods.showToast(this,"Please answer if area available near by")
-                return false
-            }
+//            if (commonAnswersEntity.farmland_is_owned_by_benficary==""){
+//                UtilMethods.showToast(this,"Please select farmland details")
+//                return false
+//            }
+//            if (commonAnswersEntity.if_5m_area_is_available_near_by==""){
+//                UtilMethods.showToast(this,"Please answer if area available near by")
+//                return false
+//            }
         }
         if(preferenceManager.getProject().mst_categories_id != 1 && preferenceManager.getProject().mst_categories_id != 9){
 
