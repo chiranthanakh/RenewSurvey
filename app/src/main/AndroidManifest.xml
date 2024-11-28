@@ -171,9 +171,9 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="your.fileprovider.authority"
+            android:authorities="your.cbs.authority"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"> 8197940755
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
