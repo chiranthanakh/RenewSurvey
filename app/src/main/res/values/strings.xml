@@ -26,8 +26,8 @@
     <string name="driving">Driving licence no<font color='#EA0C27'>*</font></string>
     <string name="induction_state">Induction Status<font color='#EA0C27'>*</font></string>
     <string name="aadhar">6.1. Aadhaar Card<font color='#EA0C27'>*</font></string>
-    <string name="aadhar_front">6.2. Capture Front Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
-    <string name="aadhar_back">6.3. Capture Back Photo Of Aadhar Card<font color='#EA0C27'>*</font></string>
+    <string name="aadhar_front">6.2. Capture Front Photo Of Aadhar Card<font color='#EA0C27'></font></string>
+    <string name="aadhar_back">6.3. Capture Back Photo Of Aadhar Card<font color='#EA0C27'></font></string>
 
 
     <string name="medical_states">Medical test status<font color='#EA0C27'>*</font></string>
@@ -58,7 +58,7 @@
     <string name="electricity_connection_available">18. Electricity connection available<font color='#EA0C27'>*</font></string>
     <string name="total_electricity_bill">18.1.Total Electricity Bill<font color='#EA0C27'>*</font></string>
     <string name="frequancy_of_electricity_bill">18.2.Frequency of bill payment<font color='#EA0C27'>*</font></string>
-    <string name="e_bill_photo">18.3. If bill available than capture photo<font color='#EA0C27'>*</font></string>
+    <string name="e_bill_photo">18.3. If bill available than capture photo<font color='#EA0C27'></font></string>
 
     <string name="no_of_cattle_own">19. No of cattle own<font color='#EA0C27'>*</font></string>
     <string name="mobile_number">5. Mobile number<font color='#EA0C27'>*</font></string>
