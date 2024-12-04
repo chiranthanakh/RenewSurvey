@@ -7,15 +7,15 @@ plugins {
 }
 
 android {
-    namespace = "com.renew.survey"
+    namespace = "com.renew.globalsurvey"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.renew.survey"
+        applicationId = "com.renew.globalsurvey"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
-        versionName = "3.0.1"
+        versionCode = 40
+        versionName = "4.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

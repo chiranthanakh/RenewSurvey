@@ -2,14 +2,14 @@
   "project_info": {
     "project_number": "724105982877",
     "project_id": "carbon-business-app",
-    "storage_bucket": "carbon-business-app.appspot.com"
+    "storage_bucket": "carbon-business-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:724105982877:android:cb9eaa86c02b1869a2f574",
+        "mobilesdk_app_id": "1:724105982877:android:81c04ad796b51e59a2f574",
         "android_client_info": {
-          "package_name": "com.renew.survey"
+          "package_name": "com.renew.globalsurvey"
         }
       },
       "oauth_client": [],
