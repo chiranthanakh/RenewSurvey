@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
@@ -12,7 +13,18 @@
         mapbox:mapbox_cameraTargetLat="29.720"
         mapbox:mapbox_cameraTargetLng="-95.342"
         mapbox:mapbox_cameraZoom="15.27"
-        mapbox:mapbox_cameraZoomMin="10"/>
+        mapbox:mapbox_cameraZoomMin="10">
+
+        <TextView
+            android:id="@+id/tv_sqft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/red"
+            android:text="0.0 Sqft" />
+    </com.mapbox.mapboxsdk.maps.MapView>
 
     <ProgressBar
         android:id="@+id/progress_bar"

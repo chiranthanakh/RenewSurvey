@@ -349,43 +349,92 @@ class DashboardActivity : BaseActivity() {
                 }
             }
             val surveyImagesParts: Array<MultipartBody.Part?> = arrayOfNulls<MultipartBody.Part>(mediaList.size)
-           // Log.d("mediaListcheck",mediaList)
-            if (mediaList.size>0) {
-                try {
-                    for (i in mediaList.indices) {
-                        val file = File(mediaList[i].path)
-                        if (file.exists()) {
-                            val mimeType = UtilMethods.getMimeType(file)
-                            val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
-                            surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
-                        }
-                    }
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
 
-                val jsonData=gson.toJson(mediaList)
-                Log.e("params",mediaList.toString())
-                binding.llProgress.visibility=View.VISIBLE
-                binding.progressMessage.text="Synchronizing media with server"
-                ApiInterface.getInstance()?.apply {
-                    val datapart=RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
-                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
-                    binding.llProgress.visibility=View.GONE
-                    if (response.isSuccessful){
-                        val jsonObject=JSONObject(response.body().toString())
-                        Log.e("response",jsonObject.toString())
-                        UtilMethods.showToast(this@DashboardActivity,jsonObject.getString("message"))
-                        if (jsonObject.getString("success")=="1"){
-                            for (ans in answers){
-                                AppDatabase.getInstance(this@DashboardActivity).formDao().updateMediaSync(ans.id!!)
+            if (mediaList.isNotEmpty()) {
+                val batchSize = 20 // Number of items per batch
+                val batches = mediaList.chunked(batchSize) // Divide the list into chunks
+
+                binding.llProgress.visibility = View.VISIBLE
+                binding.progressMessage.text = "Synchronizing media with server"
+
+                try {
+                    for ((index, batch) in batches.withIndex()) {
+                        val surveyImagesParts: Array<MultipartBody.Part?> = arrayOfNulls(batch.size)
+
+                        for (i in batch.indices) {
+                            val file = File(batch[i].path)
+                            if (file.exists()) {
+                                val mimeType = UtilMethods.getMimeType(file)
+                                val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
+                                surveyImagesParts[i] =
+                                    MultipartBody.Part.createFormData("files[]", batch[i].file_name, surveyBody)
                             }
                         }
+
+                        val jsonData = gson.toJson(batch)
+                        val datapart = RequestBody.create(MultipartBody.FORM, jsonData)
+                        val response = ApiInterface.getInstance()?.syncMediaFiles(
+                            preferenceManager.getToken()!!, datapart, surveyImagesParts )
+
+                        if (response != null && response.isSuccessful) {
+                            val jsonObject = JSONObject(response.body().toString())
+                            Log.e("response - Batch ${index + 1}", jsonObject.toString())
+                            UtilMethods.showToast(this@DashboardActivity, jsonObject.getString("message"))
+                            if (jsonObject.getString("success") == "1") {
+                                for (ans in answers) {
+                                    AppDatabase.getInstance(this@DashboardActivity).formDao().updateMediaSync(ans.id!!)
+                                }
+                            }
+                        } else {
+                            Log.e("Error - Batch ${index + 1}", "Failed to upload batch")
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    binding.llProgress.visibility = View.GONE
                 }
-            }else{
-                UtilMethods.showToast(this@DashboardActivity,"No media to sync")
+            } else {
+                UtilMethods.showToast(this@DashboardActivity, "No media to sync")
             }
+
+           // Log.d("mediaListcheck",mediaList)
+//            if (mediaList.size>0) {
+//                try {
+//                    for (i in mediaList.indices) {
+//                        val file = File(mediaList[i].path)
+//                        if (file.exists()) {
+//                            val mimeType = UtilMethods.getMimeType(file)
+//                            val surveyBody = RequestBody.create(mimeType!!.toMediaTypeOrNull(), file)
+//                            surveyImagesParts[i] = MultipartBody.Part.createFormData("files[]",mediaList[i].file_name, surveyBody)
+//                        }
+//                    }
+//                }catch (e:Exception){
+//                    e.printStackTrace()
+//                }
+//
+//                val jsonData=gson.toJson(mediaList)
+//                Log.e("params",mediaList.toString())
+//                binding.llProgress.visibility=View.VISIBLE
+//                binding.progressMessage.text="Synchronizing media with server"
+//                ApiInterface.getInstance()?.apply {
+//                    val datapart=RequestBody.create(MultipartBody.FORM, gson.toJson(mediaList))
+//                    val response=syncMediaFiles(preferenceManager.getToken()!!,datapart,surveyImagesParts)
+//                    binding.llProgress.visibility=View.GONE
+//                    if (response.isSuccessful){
+//                        val jsonObject=JSONObject(response.body().toString())
+//                        Log.e("response",jsonObject.toString())
+//                        UtilMethods.showToast(this@DashboardActivity,jsonObject.getString("message"))
+//                        if (jsonObject.getString("success")=="1"){
+//                            for (ans in answers){
+//                                AppDatabase.getInstance(this@DashboardActivity).formDao().updateMediaSync(ans.id!!)
+//                            }
+//                        }
+//                    }
+//                }
+//            }else{
+//                UtilMethods.showToast(this@DashboardActivity,"No media to sync")
+//            }
         }
     }
 

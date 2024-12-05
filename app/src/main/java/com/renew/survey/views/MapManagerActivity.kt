@@ -20,6 +20,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -62,6 +63,12 @@ import com.renew.survey.R
 import com.renew.survey.utilities.LatLagWrapper
 import com.renew.survey.utilities.LocationUpdateService
 import org.json.JSONObject
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Download, view, navigate to, and delete an offline region.
@@ -70,6 +77,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
     PermissionsListener {
     private var mapView: MapView? = null
     private var map: MapboxMap? = null
+    private var tv_sqft : TextView? = null
     private var progressBar: ProgressBar? = null
     private var downloadButton: Button? = null
     private var listButton: Button? = null
@@ -82,13 +90,16 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
     private var offlineRegion: OfflineRegion? = null
     private var permissionsManager: PermissionsManager = PermissionsManager(this)
     private var own_location: Point? = null
-    private var points: MutableSet<LatLng> = mutableSetOf()
+    private var points: MutableList<LatLng> = mutableListOf()
+    //private var points: MutableSet<LatLng> = mutableSetOf()
     private lateinit var locationEngine: LocationEngine
     private lateinit var locationManager: LocationManager
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
     private lateinit var geoJsonSource: GeoJsonSource
     private lateinit var lineLayer: LineLayer
+    var latLngArrayListPolygon = mutableListOf<LatLng>()
+    val distancesFromMidPointsOfPolygonEdges = mutableListOf<Double>()
     private var polyline: Polyline? = null
     var place : String? = ""
     private val lineCoordinates = mutableListOf<LatLng>()
@@ -101,6 +112,7 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
          val intent = intent
          place = intent.getStringExtra("place")
         mapView = findViewById(R.id.mapView)
+         tv_sqft = findViewById(R.id.tv_sqft)
         mapView?.onCreate(savedInstanceState)
          locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         mapView?.getMapAsync(object : OnMapReadyCallback {
@@ -165,28 +177,124 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
          }
     }
 
-    override fun onMapClick(p0: LatLng): Boolean {
-        Log.d("latlogpoints",p0.toString())
-        points.add(p0)
-        if (points.size >= 2 && place != "1") {
-            drawRectangle()
+    private fun sortPoints(points: List<LatLng>): List<LatLng> {
+        // Calculate the centroid of the points
+        val centroid = LatLng(
+            points.map { it.latitude }.average(),
+            points.map { it.longitude }.average()
+        )
+
+        // Sort points by angle relative to the centroid (clockwise)
+        return points.sortedWith { p1, p2 ->
+            val angle1 = atan2(p1.latitude - centroid.latitude, p1.longitude - centroid.longitude)
+            val angle2 = atan2(p2.latitude - centroid.latitude, p2.longitude - centroid.longitude)
+            angle1.compareTo(angle2)
         }
+    }
+
+    // Function to update the polyline with the new point
+    private fun updatePolyline(newPoint: LatLng) {
+        points.add(newPoint)
+        if (points.size >= 2) {
+            val polylineOptions = PolylineOptions()
+                .addAll(points)  // Add all points to the polyline
+                .color(Color.BLUE)  // You can customize the color of the polyline here
+                .width(5f)  // Set width of the polyline if necessary
+
+            map?.addPolyline(polylineOptions)
+        }
+    }
+    private fun drawPolygon() {
+        map?.clear()
+        val sortedPoints = sortPoints(points)
+        if (sortedPoints.size >= 3) {  // Ensure there are at least 3 points to form a polygon
+            val polygonOptions = PolygonOptions()
+                .addAll(sortedPoints)  // Add sorted points to form the polygon
+                .fillColor(Color.argb(128, 0, 0, 255))  // Set fill color (semi-transparent blue)
+                .strokeColor(Color.BLUE)  // Set the border color of the polygon
+                //.strokeWidth(5f)  // Set border width if necessary
+
+            map?.addPolygon(polygonOptions)
+        }
+    }
+    override fun onMapClick(p0: LatLng): Boolean {
+        points.add(p0)
         updatePolyline(p0)
-        val destination = Point.fromLngLat(p0.getLongitude(), p0.getLatitude())
-        Log.d("RectangleCoordinates", destination.toString())
+        val areaInSquareFeet = calculateAreaInSquareFeet(points)
+        tv_sqft?.text = "$areaInSquareFeet Sqft"
+        Log.d("latlogpoints", areaInSquareFeet.toString())
+        if (points.size >= 3) {
+            drawPolygon()
+        }
         return true
     }
 
-    private fun drawRectangle() {
-        map?.addPolygon(
-            PolygonOptions()
-                .addAll(points)
-                .fillColor(resources.getColor(R.color.mapbox_blue_opacity))
-                .strokeColor(resources.getColor(R.color.mapbox_blue_opacity)) // Replace Color.RED with your desired color
+//    override fun onMapClick(p0: LatLng): Boolean {
+//
+//
+//        Log.d("latlogpoints", p0.toString())
+//        points.add(p0)
+//        updatePolyline(p0)
+//        if (points.size >= 2 && place != "1") {
+//            drawRectangle()
+//        }
+//        val destination = Point.fromLngLat(p0.longitude, p0.latitude)
+//        return true
+//    }
+//
+//
+//
+//    private fun updatePolyline(newPoint: LatLng) {
+//        if (points.size >= 2) {
+//            val previousPoint = points[points.size - 1]
+//            val polylineOptions = PolylineOptions()
+//                //.add(previousPoint)
+//                .add(newPoint)
+//            map?.addPolyline(polylineOptions)
+//        }
+//    }
+//
+//    private fun drawRectangle() {
+//        // Clear previous polygon if exists
+//        map?.clear()
+//
+//        // Add the polygon with all points up to this point.
+//        map?.addPolygon(
+//            PolygonOptions()
+//                .addAll(points) // Add all points so far
+//                .fillColor(resources.getColor(R.color.mapbox_blue_opacity))
+//                .strokeColor(resources.getColor(R.color.mapbox_blue_opacity))
+//        )
+//        Log.d("Rectangle Coordinates", points.toString())
+//    }
 
-        )
 
-        Log.d("Rectangle Coordinates", points.toString())
+    fun minIndex(list: List<Double>): Int {
+        return list.indexOf(list.minOrNull() ?: Double.MAX_VALUE)
+    }
+
+    fun <T> rotate(aL: MutableList<T>, shift: Int): MutableList<T> {
+        if (aL.isEmpty()) return aL
+
+        for (i in 0 until shift) {
+            val element = aL.removeAt(aL.size - 1)
+            aL.add(0, element)
+        }
+
+        return aL
+    }
+
+    private fun computeCentroid(points: List<LatLng>): LatLng {
+        var latitude = 0.0
+        var longitude = 0.0
+        val n = points.size
+
+        for (point in points) {
+            latitude += point.latitude
+            longitude += point.longitude
+        }
+
+        return LatLng(latitude / n, longitude / n)
     }
 
     override fun onResume() {
@@ -411,20 +519,14 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
                                     items[regionSelected],
                                     Toast.LENGTH_LONG
                                 ).show()
-
-                                // Get the region bounds and zoom
                                 val bounds: LatLngBounds =
                                     offlineRegions[regionSelected].getDefinition().getBounds()
                                 val regionZoom: Double =
                                     offlineRegions[regionSelected].getDefinition().getMinZoom()
-
-                                // Create new camera position
                                 val cameraPosition: CameraPosition = CameraPosition.Builder()
                                     .target(bounds.getCenter())
                                     .zoom(regionZoom)
                                     .build()
-
-                                // Move camera to new position
                                 map?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
                             }
                         })
@@ -475,7 +577,6 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
         })
     }
     private fun getRegionName(offlineRegion: OfflineRegion): String {
-        // Get the region name from the offline region metadata
         var regionName: String
 
         try {
@@ -611,8 +712,8 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
         override fun onSuccess(result: LocationEngineResult?) {
             result?.lastLocation?.let { location ->
                 val latLng = LatLng(location.latitude, location.longitude)
-                points.add(latLng)
-                drawRectangle()
+                //points.add(latLng)
+                //drawPolygon()
                 Log.d("printlocationcoorinates",location.longitude.toString())
 
             }
@@ -625,10 +726,43 @@ class MapManagerActivity : AppCompatActivity(), MapboxMap.OnMapClickListener,
         }
     }
 
-    private fun updatePolyline(newLatLng: LatLng) {
-        points.add(newLatLng)
-        Log.d("printlocationcoorinates",points.toString())
-       // polyline?.setPoints(points)
+
+    val EARTH_RADIUS = 6371000.0  // in meters
+    fun degreesToRadians(degrees: Double): Double {
+        return degrees * (Math.PI / 180.0)
+    }
+
+    fun haversineDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val lat1Rad = degreesToRadians(lat1)
+        val lon1Rad = degreesToRadians(lon1)
+        val lat2Rad = degreesToRadians(lat2)
+        val lon2Rad = degreesToRadians(lon2)
+
+        val deltaLat = lat2Rad - lat1Rad
+        val deltaLon = lon2Rad - lon1Rad
+
+        val a = sin(deltaLat / 2).pow(2) + cos(lat1Rad) * cos(lat2Rad) * sin(deltaLon / 2).pow(2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return EARTH_RADIUS * c  // Returns the distance in meters
+    }
+
+    fun calculatePolygonArea(points: List<LatLng>): Double {
+        var area = 0.0
+
+        for (i in 0 until points.size) {
+            val j = (i + 1) % points.size  // The next point, wrapping around
+            area += points[i].longitude * points[j].latitude
+            area -= points[i].latitude * points[j].longitude
+        }
+
+        area = abs(area) / 2.0
+        return area  // Returns the area in square meters
+    }
+
+    fun calculateAreaInSquareFeet(points: List<LatLng>): Double {
+        val areaInSquareMeters = calculatePolygonArea(points)
+        return areaInSquareMeters * 10.7639  // Convert square meters to square feet
     }
 
 }

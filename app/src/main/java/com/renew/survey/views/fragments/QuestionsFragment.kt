@@ -1,9 +1,11 @@
 package com.renew.survey.views.fragments
 
+import android.Manifest
 import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -11,6 +13,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -21,12 +24,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.renew.survey.R
@@ -70,12 +76,18 @@ class QuestionsFragment(
     lateinit var prefsManager: PreferenceManager
     lateinit var questionsAdapter: QuestionsAdapter
     lateinit var testquestionsAdapter: TestQuestionsAdapter
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    var latitude = ""
+    var longitude = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentQuestionsBinding.inflate(inflater, container, false)
         prefsManager = PreferenceManager(requireContext())
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         if (isTraingForm) {
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
             testquestionsAdapter = TestQuestionsAdapter(requireContext(), testquestionList)
@@ -268,6 +280,28 @@ class QuestionsFragment(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                     latitude = String.format("%.9f", location.latitude)
+                     longitude = String.format("%.9f", location.longitude)
+
+                }
+            }
+    }
+
     var filePath = ""
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -281,7 +315,7 @@ class QuestionsFragment(
                     val bmTimeStamp = drawTextToBitmap(
                         scaledBitmap,
                         18,
-                        UtilMethods.getFormattedDate(Date(), "dd-MM-yyyy HH:mm:ss")
+                        "${UtilMethods.getFormattedDate(Date(), "dd-MM-yyyy HH:mm:ss")}/n ${longitude} /n ${latitude} "
                     )
                     val newPath = saveImageToExternal(bmTimeStamp, requireContext())
                     lifecycleScope.launch {
@@ -373,7 +407,6 @@ class QuestionsFragment(
             if (answer.isNotEmpty()) {
 
                 for (i in 1..answer.toInt()) {
-
                     for (j in 0 until loopDependentQuestion.size) {
                         val baseData = assignData(loopDependentQuestion, j,"loop")
                         val questionid = baseData.tbl_form_questions_id
@@ -421,11 +454,34 @@ class QuestionsFragment(
     override fun onDependentSelect(question: FormQuestionLanguage, pos: Int, answer: String) {
         lifecycleScope.launch {
             //if ans already present delete it
+
+            val filteredQuestions = questionGroupList[fragPos].questions.filter {
+                it.parent_question_id == question.tbl_form_questions_id
+            }
+
+            if(filteredQuestions.size != 0){
+                questionGroupList[fragPos].questions.removeAll {
+                    it.parent_question_id == filteredQuestions.get(0).tbl_form_questions_id
+                }
+            }
+
             questionGroupList[fragPos].questions.removeAll {
                 it.parent_question_id == question.tbl_form_questions_id
             }
+
+            val questions =  questionGroupList[fragPos].questions.removeAll {
+                it.parent_question_id == question.tbl_form_questions_id
+            }
+
+//            questionGroupList[fragPos].questions.removeAll {
+//                it.has_dependancy_question == question.tbl_form_questions_id
+//            }
+
+//            questionGroupList[fragPos].questions.removeAll {
+//                it.question_type == "LOOP"
+//            }
+
             questionsAdapter.notifyDataSetChanged()
-            //get all dependency question
             var deleteDependentQuestion = AppDatabase.getInstance(requireContext()).formDao()
                 .getDependentFormsQuestionsToDelete(
                     prefsManager.getLanguage(),
